@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<database name="default" defaultIdMethod="native" defaultPhpNamingMethod="underscore">
+  <table name="unemployment" idMethod="native" phpName="Unemployment">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="unemployment_adult" phpName="UnemploymentAdult" type="DECIMAL" size="8" scale="2" required="true"/>
+    <column name="unemployment_youth" phpName="UnemploymentYouth" type="DECIMAL" size="8" scale="2" required="true"/>
+    <column name="region_id" phpName="RegionId" type="VARCHAR" size="255" required="true"/>
+    <column name="region_name" phpName="RegionName" type="VARCHAR" size="255" required="true"/>
+    <column name="year" phpName="Year" type="INTEGER" required="true"/>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+</database>
