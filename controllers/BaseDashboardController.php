@@ -7,6 +7,7 @@ use Yii;
 use yii\helpers\ArrayHelper;
 use yii\helpers\StringHelper;
 use yii\web\Controller;
+use yii\web\View;
 
 class BaseDashboardController extends Controller
 {
@@ -67,7 +68,6 @@ class BaseDashboardController extends Controller
         return $result;
     }
 
-    // TODO: Перенести в класс Filter на event trigger
     public function renderSimple($view, $params = [])
     {
         foreach ($this->_filters as $name => $filter) {
@@ -82,4 +82,30 @@ class BaseDashboardController extends Controller
     {
         $this->_filters[$name] = new Filter($selectedValues);
     }
+
+    protected function injectFiltersInView(&$params)
+    {
+        foreach ($this->_filters as $name => $filter) {
+            $params[$name] = $filter->selectedValues;
+            $params[$name.self::FILTER_GET_POSSIBLE_VALUES_SUFFIX] = $filter->possibleValues;
+        }
+    }
+
+    protected function injectJsVars(&$params)
+    {
+        $this->view->registerJs("var template = ".json_encode($params,JSON_PRETTY_PRINT).";", View::POS_END, 'template');
+    }
+
+    public function render($view, $params = [])
+    {
+        $this->beforeRender($params);
+        return parent::render($view, $params);
+    }
+
+    private function beforeRender(&$params)
+    {
+        $this->injectFiltersInView($params);
+        $this->injectJsVars($params);
+    }
+
 }

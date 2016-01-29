@@ -58,8 +58,8 @@ class DashboardController extends BaseDashboardController
     {
         $model = UnemploymentAR::find();
 
-        $regionFilter = $this->getFilter('filter_region')
-            ->setPossibleValues(\UnemploymentQuery::create()->distinct()->select('region_name')->find());
+        $regionFilter = $this->getFilter('filter_region');
+        $regionFilter->setPossibleValues(\UnemploymentQuery::create()->distinct()->select('region_name')->find());
 
         if ($regionFilter->isSelected())
             $model->where(['region_name' => $regionFilter->selectedValue]);
@@ -77,7 +77,7 @@ class DashboardController extends BaseDashboardController
             ],
         ]);
 
-        return $this->renderSimple('table.tpl', [
+        return $this->render('table.tpl', [
             'dataProvider' => $dataProvider,  // GridView
         ]);
 
