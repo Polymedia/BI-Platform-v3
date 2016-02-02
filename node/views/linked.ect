@@ -1,0 +1,35 @@
+<% extend 'layout.ect' %>
+
+<div>
+    Parent page id: <%- @id %>
+</div>
+<div>
+    Parent page url: <span id="link">/</span>
+</div>
+
+<script>
+    var client = new Eureca.Client()
+       
+    client.ready(function (remote) {
+        console.log('Connected to server')
+    })
+    
+    client.exports.parent = function () {
+        return "<%- @id %>"
+    }
+    
+    // Generic signal handler
+    client.exports.signal = function (name, data) {
+        console.log('Signal recieved:', name)
+        console.log(data)
+    }
+    
+    // Refresh handler
+    client.exports.refresh = function () {
+        console.log('Refresh recieved')
+    }
+    
+    client.exports.changed = function (link) {
+        $('#link').text(link)
+    }
+</script>
