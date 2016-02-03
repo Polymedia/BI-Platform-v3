@@ -1,5 +1,8 @@
 {use class="yii\grid\GridView"}
 {use class="yii\helpers\Url"}
+{use class="yii\widgets\ActiveForm" type="block"}
+{use class="yii\helpers\Html"}
+{use class="app\components\FilterWidget"}
 {use class="miloschuman\highcharts\Highcharts"}
 {use class="miloschuman\highcharts\HighchartsAsset"}
 {assign "hc" HighchartsAsset::register($this)->withScripts(['highcharts', 'modules/exporting', 'modules/drilldown', 'modules/data'])}
@@ -36,6 +39,10 @@
             {/foreach}
         ]
     </script>
+
+{FilterWidget::widget(['name' => 'filter_people', 'allValues' => $filter_people_all, 'selectedValues' => $filter_people,
+                        'initialText' => 'Select Names...'])}
+{GridView::widget(['dataProvider' => $dataProvider2])}
 
 
 {registerJs}        {*@formatter:off*}

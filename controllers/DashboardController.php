@@ -3,10 +3,12 @@
 namespace app\controllers;
 
 use UnemploymentQuery;
+use PeopleQuery;
 use Yii;
 use yii\data\ActiveDataProvider;
 
 use app\models\UnemploymentAR;
+use app\models\PeopleAR;
 use models;
 
 class DashboardController extends BaseDashboardController
@@ -55,10 +57,10 @@ class DashboardController extends BaseDashboardController
     public function actionTable()
     {
         $model = UnemploymentAR::find();
-        $model2 = \UnemploymentQuery::create();
+        $model2 = UnemploymentQuery::create();
 
         $regionFilter = $this->getFilter('filter_region');
-        $regionFilter->setPossibleValues(\UnemploymentQuery::create()->distinct()->select('region_name')->find());
+        $regionFilter->setPossibleValues(UnemploymentQuery::create()->distinct()->select('region_name')->find());
 
         if ($regionFilter->isSelected()) {
             $model->where(['region_name' => $regionFilter->selectedValue]);
@@ -79,9 +81,38 @@ class DashboardController extends BaseDashboardController
             ],
         ]);
 
+
+
+
+        $peopleModel = PeopleAR::find();
+        $peopleModel2 = \PeopleQuery::create();
+
+        $peopleFilter = $this->getFilter('filter_people');
+        $peopleFilter->setPossibleValues(PeopleQuery::create()->distinct()->select('name')->find());
+
+        if ($peopleFilter->isSelected()) {
+            $peopleModel->where(['name' => $peopleFilter->selectedValues]);
+            $peopleModel2->filterByName($peopleFilter->selectedValues);
+        }
+
+        $peopleModel2 = $peopleModel2->find();
+        $dataProvider2 = new ActiveDataProvider([
+            'query' => $peopleModel,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+            'sort' => [
+                'defaultOrder' => [
+                    'id' => SORT_ASC
+                ]
+            ],
+        ]);
+
         return $this->render('table.tpl', [
             'dataProvider' => $dataProvider,  // GridView
             'model2' => $model2,
+            'peopleModel2' => $peopleModel2,
+            'dataProvider2' => $dataProvider2
         ]);
     }
 }
