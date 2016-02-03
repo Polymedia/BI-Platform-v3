@@ -18,7 +18,7 @@ use yii\helpers\Html;
             'dataFile',
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{remove}',
+                'template' => '{preview}{remove}',
                 'contentOptions' => ['class' => 'action-column', 'data-method' => 'post'],
                 'buttons' => [
                     'remove' => function ($url, $model, $key) {
@@ -28,6 +28,12 @@ use yii\helpers\Html;
                                     'data-confirm' => \Yii::t('yii', 'Are you sure to delete this item?'),
                                     'data-method' => 'post',
                                     'data-pjax' => '0',
+                        ]);
+                    },
+                    'preview' => function ($url, $model, $key) {
+                        $remove_url = '/files/preview?name=' . $model['dataFile'];
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $remove_url, [
+                                    'title' => \Yii::t('yii', 'Preview')
                         ]);
                     }
                 ]
