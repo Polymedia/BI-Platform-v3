@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use Base\UnemploymentQuery;
+use UnemploymentQuery;
 use Yii;
 use yii\data\ActiveDataProvider;
 
@@ -13,7 +13,7 @@ class DashboardController extends BaseDashboardController
 {
     public function actionIndex()
     {
-        $models = \UnemploymentQuery::create();
+        $models = UnemploymentQuery::create();
 
         $yearSelected = Yii::$app->request->get('year');
         if ($yearSelected)
@@ -21,7 +21,7 @@ class DashboardController extends BaseDashboardController
 
         $models->find();
 
-        $possibleYears = \UnemploymentQuery::create()->distinct()->select('year')->find();
+        $possibleYears = UnemploymentQuery::create()->distinct()->select('year')->find();
 
         $data = array();
         $dataChart = array();
@@ -33,12 +33,10 @@ class DashboardController extends BaseDashboardController
         }
 
 
-
         $dataChart[] = array(
             'name' => 'Серия',
             'data' => [$model->getUnemploymentAdult()]
         );
-
 
         var_dump($this->getFilter('filter_region'));
 
@@ -57,13 +55,17 @@ class DashboardController extends BaseDashboardController
     public function actionTable()
     {
         $model = UnemploymentAR::find();
+        $model2 = \UnemploymentQuery::create();
 
-        $regionFilter = $this->getFilter('filter_region')
-            ->setPossibleValues(\UnemploymentQuery::create()->distinct()->select('region_name')->find());
+        $regionFilter = $this->getFilter('filter_region');
+        $regionFilter->setPossibleValues(\UnemploymentQuery::create()->distinct()->select('region_name')->find());
 
-        if ($regionFilter->isSelected())
+        if ($regionFilter->isSelected()) {
             $model->where(['region_name' => $regionFilter->selectedValue]);
+            $model2->filterByRegionName($regionFilter->selectedValue);
+        }
 
+        $model2 = $model2->find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $model,
@@ -77,15 +79,9 @@ class DashboardController extends BaseDashboardController
             ],
         ]);
 
-        return $this->renderSimple('table.tpl', [
+        return $this->render('table.tpl', [
             'dataProvider' => $dataProvider,  // GridView
+            'model2' => $model2,
         ]);
-
-//        return $this->render('table.tpl', [
-//            'dataProvider' => $dataProvider,  // GridView
-//
-//            'regionFilterValue' => $regionFilter, // filter
-//            'possibleRegions' => $possibleRegions, // filter
-//        ]);
     }
 }
