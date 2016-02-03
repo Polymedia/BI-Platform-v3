@@ -2,6 +2,7 @@
 {use class="yii\helpers\Url"}
 {use class="miloschuman\highcharts\Highcharts"}
 {use class="miloschuman\highcharts\HighchartsAsset"}
+{use class="app\components\ChildDashboard"}
 {assign "hc" HighchartsAsset::register($this)->withScripts(['highcharts', 'modules/exporting', 'modules/drilldown', 'modules/data'])}
 
 
@@ -25,7 +26,7 @@
     <div id="container" data-pjax-exclude style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
 
-
+{ChildDashboard::widget()}
 
 
 {GridView::widget(['dataProvider' => $dataProvider])}
