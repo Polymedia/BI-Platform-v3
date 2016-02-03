@@ -16,7 +16,7 @@ use Yii;
  * @property string $normal
  * @property string $company
  */
-class People extends \yii\db\ActiveRecord
+class PeopleAR extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
