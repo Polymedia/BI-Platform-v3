@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\controllers\classes\Filter;
 use Yii;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Json;
 use yii\helpers\StringHelper;
 use yii\web\Controller;
 use yii\web\View;
@@ -93,7 +94,7 @@ class BaseDashboardController extends Controller
 
     protected function injectJsVars(&$params)
     {
-        $this->view->registerJs("var template = ".json_encode($params,JSON_PRETTY_PRINT).";", View::POS_END, 'template');
+        $this->view->registerJs("var template = ".Json::encode($params,JSON_PRETTY_PRINT).";", View::POS_END, 'template');
     }
 
     public function render($view, $params = [])

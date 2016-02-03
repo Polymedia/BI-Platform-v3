@@ -1,8 +1,9 @@
 {use class="yii\grid\GridView"}
-{use class="yii\widgets\Pjax"}
 {use class="yii\helpers\Url"}
+{use class="miloschuman\highcharts\Highcharts"}
+{use class="miloschuman\highcharts\HighchartsAsset"}
+{assign "hc" HighchartsAsset::register($this)->withScripts(['highcharts', 'modules/exporting', 'modules/drilldown', 'modules/data'])}
 
-{assign "startPjax" Pjax::begin()}
 
 <div class="dropdown">
     <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -20,9 +21,58 @@
     </ul>
 </div>
 
+
+    <div id="container" data-pjax-exclude style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+
+
+
+
 {GridView::widget(['dataProvider' => $dataProvider])}
 
+    <script type="text/javascript">
+        var data = [ {foreach $model2 as $model}
+            {$model->getUnemploymentYouth()},
+            {/foreach}
+        ]
+    </script>
 
-{*$this->registerJs("var options = ".json_encode($options).";", View::POS_END, 'my-options');*}
 
-{assign "endPjax" Pjax::end()}
+{registerJs}        {*@formatter:off*}
+
+    function refreshChart() {
+        var chart = $('#container').highcharts();
+        chart.series[0].setData(data);
+    }
+
+    $('#container').highcharts({
+        title: {
+            text: 'Unemployment'
+        },
+        xAxis: [{
+            categories: [
+                {foreach $model2 as $model}
+                '{$model->getRegionName()}',
+                {/foreach},
+            ]
+        }],
+        yAxis: [{ // Primary yAxis
+            labels: {
+                format: {literal} '{value}', {/literal}
+            },
+            title: {
+                text: 'Count',
+            }
+        }],
+        tooltip: {
+            shared: true
+        },
+        series: [{
+            name: 'Tokyo',
+            type: 'column',
+            data: data
+        }]
+    });
+
+    $(document).on('pjax:complete', refreshChart);
+{/registerJs}
