@@ -3,6 +3,7 @@
 {use class="yii\widgets\ActiveForm" type="block"}
 {use class="yii\helpers\Html"}
 {use class="app\components\FilterWidget"}
+{use class="app\components\HistogramWidget"}
 {use class="miloschuman\highcharts\Highcharts"}
 {use class="miloschuman\highcharts\HighchartsAsset"}
 {assign "hc" HighchartsAsset::register($this)->withScripts(['highcharts', 'modules/exporting', 'modules/drilldown', 'modules/data'])}
@@ -29,57 +30,10 @@
 
 
 
-
+{HistogramWidget::widget(['model2' => $model2, 'title' => "Безработные"])}
 
 {GridView::widget(['dataProvider' => $dataProvider])}
-
-    <script type="text/javascript">
-        var data = [ {foreach $model2 as $model}
-            {$model->getUnemploymentYouth()},
-            {/foreach}
-        ]
-    </script>
 
 {FilterWidget::widget(['name' => 'filter_people', 'allValues' => $filter_people_all, 'selectedValues' => $filter_people,
                         'initialText' => 'Select Names...'])}
 {GridView::widget(['dataProvider' => $dataProvider2])}
-
-
-{registerJs}        {*@formatter:off*}
-
-    function refreshChart() {
-        var chart = $('#container').highcharts();
-        chart.series[0].setData(data);
-    }
-
-    $('#container').highcharts({
-        title: {
-            text: 'Unemployment'
-        },
-        xAxis: [{
-            categories: [
-                {foreach $model2 as $model}
-                '{$model->getRegionName()}',
-                {/foreach},
-            ]
-        }],
-        yAxis: [{ // Primary yAxis
-            labels: {
-                format: {literal} '{value}', {/literal}
-            },
-            title: {
-                text: 'Count',
-            }
-        }],
-        tooltip: {
-            shared: true
-        },
-        series: [{
-            name: 'Tokyo',
-            type: 'column',
-            data: data
-        }]
-    });
-
-    $(document).on('pjax:complete', refreshChart);
-{/registerJs}
