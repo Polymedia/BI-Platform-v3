@@ -2,10 +2,10 @@
 
 namespace Base;
 
-use \UnemploymentQuery as ChildUnemploymentQuery;
+use \PeopleQuery as ChildPeopleQuery;
 use \Exception;
 use \PDO;
-use Map\UnemploymentTableMap;
+use Map\PeopleTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -19,18 +19,18 @@ use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
 
 /**
- * Base class that represents a row from the 'unemployment' table.
+ * Base class that represents a row from the 'people' table.
  *
  *
  *
 * @package    propel.generator..Base
 */
-abstract class Unemployment implements ActiveRecordInterface
+abstract class People implements ActiveRecordInterface
 {
     /**
      * TableMap class name
      */
-    const TABLE_MAP = '\\Map\\UnemploymentTableMap';
+    const TABLE_MAP = '\\Map\\PeopleTableMap';
 
 
     /**
@@ -67,39 +67,53 @@ abstract class Unemployment implements ActiveRecordInterface
     protected $id;
 
     /**
-     * The value for the unemployment_adult field.
+     * The value for the name field.
      *
      * @var        string
      */
-    protected $unemployment_adult;
+    protected $name;
 
     /**
-     * The value for the unemployment_youth field.
+     * The value for the date field.
      *
      * @var        string
      */
-    protected $unemployment_youth;
+    protected $date;
 
     /**
-     * The value for the region_id field.
+     * The value for the city field.
      *
      * @var        string
      */
-    protected $region_id;
+    protected $city;
 
     /**
-     * The value for the region_name field.
+     * The value for the street field.
      *
      * @var        string
      */
-    protected $region_name;
+    protected $street;
 
     /**
-     * The value for the year field.
+     * The value for the fix_text field.
      *
-     * @var        int
+     * @var        string
      */
-    protected $year;
+    protected $fix_text;
+
+    /**
+     * The value for the normal field.
+     *
+     * @var        string
+     */
+    protected $normal;
+
+    /**
+     * The value for the company field.
+     *
+     * @var        string
+     */
+    protected $company;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -110,7 +124,7 @@ abstract class Unemployment implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
-     * Initializes internal state of Base\Unemployment object.
+     * Initializes internal state of Base\People object.
      */
     public function __construct()
     {
@@ -205,9 +219,9 @@ abstract class Unemployment implements ActiveRecordInterface
     }
 
     /**
-     * Compares this with another <code>Unemployment</code> instance.  If
-     * <code>obj</code> is an instance of <code>Unemployment</code>, delegates to
-     * <code>equals(Unemployment)</code>.  Otherwise, returns <code>false</code>.
+     * Compares this with another <code>People</code> instance.  If
+     * <code>obj</code> is an instance of <code>People</code>, delegates to
+     * <code>equals(People)</code>.  Otherwise, returns <code>false</code>.
      *
      * @param  mixed   $obj The object to compare to.
      * @return boolean Whether equal to the object specified.
@@ -273,7 +287,7 @@ abstract class Unemployment implements ActiveRecordInterface
      * @param string $name  The virtual column name
      * @param mixed  $value The value to give to the virtual column
      *
-     * @return $this|Unemployment The current object, for fluid interface
+     * @return $this|People The current object, for fluid interface
      */
     public function setVirtualColumn($name, $value)
     {
@@ -345,60 +359,80 @@ abstract class Unemployment implements ActiveRecordInterface
     }
 
     /**
-     * Get the [unemployment_adult] column value.
+     * Get the [name] column value.
      *
      * @return string
      */
-    public function getUnemploymentAdult()
+    public function getName()
     {
-        return $this->unemployment_adult;
+        return $this->name;
     }
 
     /**
-     * Get the [unemployment_youth] column value.
+     * Get the [date] column value.
      *
      * @return string
      */
-    public function getUnemploymentYouth()
+    public function getDate()
     {
-        return $this->unemployment_youth;
+        return $this->date;
     }
 
     /**
-     * Get the [region_id] column value.
+     * Get the [city] column value.
      *
      * @return string
      */
-    public function getRegionId()
+    public function getCity()
     {
-        return $this->region_id;
+        return $this->city;
     }
 
     /**
-     * Get the [region_name] column value.
+     * Get the [street] column value.
      *
      * @return string
      */
-    public function getRegionName()
+    public function getStreet()
     {
-        return $this->region_name;
+        return $this->street;
     }
 
     /**
-     * Get the [year] column value.
+     * Get the [fix_text] column value.
      *
-     * @return int
+     * @return string
      */
-    public function getYear()
+    public function getFixText()
     {
-        return $this->year;
+        return $this->fix_text;
+    }
+
+    /**
+     * Get the [normal] column value.
+     *
+     * @return string
+     */
+    public function getNormal()
+    {
+        return $this->normal;
+    }
+
+    /**
+     * Get the [company] column value.
+     *
+     * @return string
+     */
+    public function getCompany()
+    {
+        return $this->company;
     }
 
     /**
      * Set the value of [id] column.
      *
      * @param int $v new value
-     * @return $this|\Unemployment The current object (for fluent API support)
+     * @return $this|\People The current object (for fluent API support)
      */
     public function setId($v)
     {
@@ -408,111 +442,151 @@ abstract class Unemployment implements ActiveRecordInterface
 
         if ($this->id !== $v) {
             $this->id = $v;
-            $this->modifiedColumns[UnemploymentTableMap::COL_ID] = true;
+            $this->modifiedColumns[PeopleTableMap::COL_ID] = true;
         }
 
         return $this;
     } // setId()
 
     /**
-     * Set the value of [unemployment_adult] column.
+     * Set the value of [name] column.
      *
      * @param string $v new value
-     * @return $this|\Unemployment The current object (for fluent API support)
+     * @return $this|\People The current object (for fluent API support)
      */
-    public function setUnemploymentAdult($v)
+    public function setName($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->unemployment_adult !== $v) {
-            $this->unemployment_adult = $v;
-            $this->modifiedColumns[UnemploymentTableMap::COL_UNEMPLOYMENT_ADULT] = true;
+        if ($this->name !== $v) {
+            $this->name = $v;
+            $this->modifiedColumns[PeopleTableMap::COL_NAME] = true;
         }
 
         return $this;
-    } // setUnemploymentAdult()
+    } // setName()
 
     /**
-     * Set the value of [unemployment_youth] column.
+     * Set the value of [date] column.
      *
      * @param string $v new value
-     * @return $this|\Unemployment The current object (for fluent API support)
+     * @return $this|\People The current object (for fluent API support)
      */
-    public function setUnemploymentYouth($v)
+    public function setDate($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->unemployment_youth !== $v) {
-            $this->unemployment_youth = $v;
-            $this->modifiedColumns[UnemploymentTableMap::COL_UNEMPLOYMENT_YOUTH] = true;
+        if ($this->date !== $v) {
+            $this->date = $v;
+            $this->modifiedColumns[PeopleTableMap::COL_DATE] = true;
         }
 
         return $this;
-    } // setUnemploymentYouth()
+    } // setDate()
 
     /**
-     * Set the value of [region_id] column.
+     * Set the value of [city] column.
      *
      * @param string $v new value
-     * @return $this|\Unemployment The current object (for fluent API support)
+     * @return $this|\People The current object (for fluent API support)
      */
-    public function setRegionId($v)
+    public function setCity($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->region_id !== $v) {
-            $this->region_id = $v;
-            $this->modifiedColumns[UnemploymentTableMap::COL_REGION_ID] = true;
+        if ($this->city !== $v) {
+            $this->city = $v;
+            $this->modifiedColumns[PeopleTableMap::COL_CITY] = true;
         }
 
         return $this;
-    } // setRegionId()
+    } // setCity()
 
     /**
-     * Set the value of [region_name] column.
+     * Set the value of [street] column.
      *
      * @param string $v new value
-     * @return $this|\Unemployment The current object (for fluent API support)
+     * @return $this|\People The current object (for fluent API support)
      */
-    public function setRegionName($v)
+    public function setStreet($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->region_name !== $v) {
-            $this->region_name = $v;
-            $this->modifiedColumns[UnemploymentTableMap::COL_REGION_NAME] = true;
+        if ($this->street !== $v) {
+            $this->street = $v;
+            $this->modifiedColumns[PeopleTableMap::COL_STREET] = true;
         }
 
         return $this;
-    } // setRegionName()
+    } // setStreet()
 
     /**
-     * Set the value of [year] column.
+     * Set the value of [fix_text] column.
      *
-     * @param int $v new value
-     * @return $this|\Unemployment The current object (for fluent API support)
+     * @param string $v new value
+     * @return $this|\People The current object (for fluent API support)
      */
-    public function setYear($v)
+    public function setFixText($v)
     {
         if ($v !== null) {
-            $v = (int) $v;
+            $v = (string) $v;
         }
 
-        if ($this->year !== $v) {
-            $this->year = $v;
-            $this->modifiedColumns[UnemploymentTableMap::COL_YEAR] = true;
+        if ($this->fix_text !== $v) {
+            $this->fix_text = $v;
+            $this->modifiedColumns[PeopleTableMap::COL_FIX_TEXT] = true;
         }
 
         return $this;
-    } // setYear()
+    } // setFixText()
+
+    /**
+     * Set the value of [normal] column.
+     *
+     * @param string $v new value
+     * @return $this|\People The current object (for fluent API support)
+     */
+    public function setNormal($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->normal !== $v) {
+            $this->normal = $v;
+            $this->modifiedColumns[PeopleTableMap::COL_NORMAL] = true;
+        }
+
+        return $this;
+    } // setNormal()
+
+    /**
+     * Set the value of [company] column.
+     *
+     * @param string $v new value
+     * @return $this|\People The current object (for fluent API support)
+     */
+    public function setCompany($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->company !== $v) {
+            $this->company = $v;
+            $this->modifiedColumns[PeopleTableMap::COL_COMPANY] = true;
+        }
+
+        return $this;
+    } // setCompany()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -550,23 +624,29 @@ abstract class Unemployment implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : UnemploymentTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : PeopleTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : UnemploymentTableMap::translateFieldName('UnemploymentAdult', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->unemployment_adult = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : PeopleTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->name = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : UnemploymentTableMap::translateFieldName('UnemploymentYouth', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->unemployment_youth = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : PeopleTableMap::translateFieldName('Date', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->date = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : UnemploymentTableMap::translateFieldName('RegionId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->region_id = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : PeopleTableMap::translateFieldName('City', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->city = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : UnemploymentTableMap::translateFieldName('RegionName', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->region_name = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : PeopleTableMap::translateFieldName('Street', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->street = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : UnemploymentTableMap::translateFieldName('Year', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->year = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : PeopleTableMap::translateFieldName('FixText', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->fix_text = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : PeopleTableMap::translateFieldName('Normal', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->normal = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : PeopleTableMap::translateFieldName('Company', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->company = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -575,10 +655,10 @@ abstract class Unemployment implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 6; // 6 = UnemploymentTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 8; // 8 = PeopleTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\Unemployment'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\People'), 0, $e);
         }
     }
 
@@ -620,13 +700,13 @@ abstract class Unemployment implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(UnemploymentTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(PeopleTableMap::DATABASE_NAME);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $dataFetcher = ChildUnemploymentQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
+        $dataFetcher = ChildPeopleQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
         $row = $dataFetcher->fetch();
         $dataFetcher->close();
         if (!$row) {
@@ -645,8 +725,8 @@ abstract class Unemployment implements ActiveRecordInterface
      * @param      ConnectionInterface $con
      * @return void
      * @throws PropelException
-     * @see Unemployment::setDeleted()
-     * @see Unemployment::isDeleted()
+     * @see People::setDeleted()
+     * @see People::isDeleted()
      */
     public function delete(ConnectionInterface $con = null)
     {
@@ -655,11 +735,11 @@ abstract class Unemployment implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(UnemploymentTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(PeopleTableMap::DATABASE_NAME);
         }
 
         $con->transaction(function () use ($con) {
-            $deleteQuery = ChildUnemploymentQuery::create()
+            $deleteQuery = ChildPeopleQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -690,7 +770,7 @@ abstract class Unemployment implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(UnemploymentTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(PeopleTableMap::DATABASE_NAME);
         }
 
         return $con->transaction(function () use ($con) {
@@ -709,7 +789,7 @@ abstract class Unemployment implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                UnemploymentTableMap::addInstanceToPool($this);
+                PeopleTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -766,33 +846,35 @@ abstract class Unemployment implements ActiveRecordInterface
         $modifiedColumns = array();
         $index = 0;
 
-        $this->modifiedColumns[UnemploymentTableMap::COL_ID] = true;
-        if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . UnemploymentTableMap::COL_ID . ')');
-        }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(UnemploymentTableMap::COL_ID)) {
+        if ($this->isColumnModified(PeopleTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
-        if ($this->isColumnModified(UnemploymentTableMap::COL_UNEMPLOYMENT_ADULT)) {
-            $modifiedColumns[':p' . $index++]  = 'unemployment_adult';
+        if ($this->isColumnModified(PeopleTableMap::COL_NAME)) {
+            $modifiedColumns[':p' . $index++]  = 'name';
         }
-        if ($this->isColumnModified(UnemploymentTableMap::COL_UNEMPLOYMENT_YOUTH)) {
-            $modifiedColumns[':p' . $index++]  = 'unemployment_youth';
+        if ($this->isColumnModified(PeopleTableMap::COL_DATE)) {
+            $modifiedColumns[':p' . $index++]  = 'date';
         }
-        if ($this->isColumnModified(UnemploymentTableMap::COL_REGION_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'region_id';
+        if ($this->isColumnModified(PeopleTableMap::COL_CITY)) {
+            $modifiedColumns[':p' . $index++]  = 'city';
         }
-        if ($this->isColumnModified(UnemploymentTableMap::COL_REGION_NAME)) {
-            $modifiedColumns[':p' . $index++]  = 'region_name';
+        if ($this->isColumnModified(PeopleTableMap::COL_STREET)) {
+            $modifiedColumns[':p' . $index++]  = 'street';
         }
-        if ($this->isColumnModified(UnemploymentTableMap::COL_YEAR)) {
-            $modifiedColumns[':p' . $index++]  = 'year';
+        if ($this->isColumnModified(PeopleTableMap::COL_FIX_TEXT)) {
+            $modifiedColumns[':p' . $index++]  = 'fix_text';
+        }
+        if ($this->isColumnModified(PeopleTableMap::COL_NORMAL)) {
+            $modifiedColumns[':p' . $index++]  = 'normal';
+        }
+        if ($this->isColumnModified(PeopleTableMap::COL_COMPANY)) {
+            $modifiedColumns[':p' . $index++]  = 'company';
         }
 
         $sql = sprintf(
-            'INSERT INTO unemployment (%s) VALUES (%s)',
+            'INSERT INTO people (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -804,20 +886,26 @@ abstract class Unemployment implements ActiveRecordInterface
                     case 'id':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case 'unemployment_adult':
-                        $stmt->bindValue($identifier, $this->unemployment_adult, PDO::PARAM_STR);
+                    case 'name':
+                        $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
                         break;
-                    case 'unemployment_youth':
-                        $stmt->bindValue($identifier, $this->unemployment_youth, PDO::PARAM_STR);
+                    case 'date':
+                        $stmt->bindValue($identifier, $this->date, PDO::PARAM_STR);
                         break;
-                    case 'region_id':
-                        $stmt->bindValue($identifier, $this->region_id, PDO::PARAM_STR);
+                    case 'city':
+                        $stmt->bindValue($identifier, $this->city, PDO::PARAM_STR);
                         break;
-                    case 'region_name':
-                        $stmt->bindValue($identifier, $this->region_name, PDO::PARAM_STR);
+                    case 'street':
+                        $stmt->bindValue($identifier, $this->street, PDO::PARAM_STR);
                         break;
-                    case 'year':
-                        $stmt->bindValue($identifier, $this->year, PDO::PARAM_INT);
+                    case 'fix_text':
+                        $stmt->bindValue($identifier, $this->fix_text, PDO::PARAM_STR);
+                        break;
+                    case 'normal':
+                        $stmt->bindValue($identifier, $this->normal, PDO::PARAM_STR);
+                        break;
+                    case 'company':
+                        $stmt->bindValue($identifier, $this->company, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -826,13 +914,6 @@ abstract class Unemployment implements ActiveRecordInterface
             Propel::log($e->getMessage(), Propel::LOG_ERR);
             throw new PropelException(sprintf('Unable to execute INSERT statement [%s]', $sql), 0, $e);
         }
-
-        try {
-            $pk = $con->lastInsertId();
-        } catch (Exception $e) {
-            throw new PropelException('Unable to get autoincrement id.', 0, $e);
-        }
-        $this->setId($pk);
 
         $this->setNew(false);
     }
@@ -865,7 +946,7 @@ abstract class Unemployment implements ActiveRecordInterface
      */
     public function getByName($name, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = UnemploymentTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = PeopleTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -885,19 +966,25 @@ abstract class Unemployment implements ActiveRecordInterface
                 return $this->getId();
                 break;
             case 1:
-                return $this->getUnemploymentAdult();
+                return $this->getName();
                 break;
             case 2:
-                return $this->getUnemploymentYouth();
+                return $this->getDate();
                 break;
             case 3:
-                return $this->getRegionId();
+                return $this->getCity();
                 break;
             case 4:
-                return $this->getRegionName();
+                return $this->getStreet();
                 break;
             case 5:
-                return $this->getYear();
+                return $this->getFixText();
+                break;
+            case 6:
+                return $this->getNormal();
+                break;
+            case 7:
+                return $this->getCompany();
                 break;
             default:
                 return null;
@@ -922,18 +1009,20 @@ abstract class Unemployment implements ActiveRecordInterface
     public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
     {
 
-        if (isset($alreadyDumpedObjects['Unemployment'][$this->hashCode()])) {
+        if (isset($alreadyDumpedObjects['People'][$this->hashCode()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['Unemployment'][$this->hashCode()] = true;
-        $keys = UnemploymentTableMap::getFieldNames($keyType);
+        $alreadyDumpedObjects['People'][$this->hashCode()] = true;
+        $keys = PeopleTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getUnemploymentAdult(),
-            $keys[2] => $this->getUnemploymentYouth(),
-            $keys[3] => $this->getRegionId(),
-            $keys[4] => $this->getRegionName(),
-            $keys[5] => $this->getYear(),
+            $keys[1] => $this->getName(),
+            $keys[2] => $this->getDate(),
+            $keys[3] => $this->getCity(),
+            $keys[4] => $this->getStreet(),
+            $keys[5] => $this->getFixText(),
+            $keys[6] => $this->getNormal(),
+            $keys[7] => $this->getCompany(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -953,11 +1042,11 @@ abstract class Unemployment implements ActiveRecordInterface
      *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                Defaults to TableMap::TYPE_PHPNAME.
-     * @return $this|\Unemployment
+     * @return $this|\People
      */
     public function setByName($name, $value, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = UnemploymentTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = PeopleTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
 
         return $this->setByPosition($pos, $value);
     }
@@ -968,7 +1057,7 @@ abstract class Unemployment implements ActiveRecordInterface
      *
      * @param  int $pos position in xml schema
      * @param  mixed $value field value
-     * @return $this|\Unemployment
+     * @return $this|\People
      */
     public function setByPosition($pos, $value)
     {
@@ -977,19 +1066,25 @@ abstract class Unemployment implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setUnemploymentAdult($value);
+                $this->setName($value);
                 break;
             case 2:
-                $this->setUnemploymentYouth($value);
+                $this->setDate($value);
                 break;
             case 3:
-                $this->setRegionId($value);
+                $this->setCity($value);
                 break;
             case 4:
-                $this->setRegionName($value);
+                $this->setStreet($value);
                 break;
             case 5:
-                $this->setYear($value);
+                $this->setFixText($value);
+                break;
+            case 6:
+                $this->setNormal($value);
+                break;
+            case 7:
+                $this->setCompany($value);
                 break;
         } // switch()
 
@@ -1015,25 +1110,31 @@ abstract class Unemployment implements ActiveRecordInterface
      */
     public function fromArray($arr, $keyType = TableMap::TYPE_PHPNAME)
     {
-        $keys = UnemploymentTableMap::getFieldNames($keyType);
+        $keys = PeopleTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
             $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setUnemploymentAdult($arr[$keys[1]]);
+            $this->setName($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setUnemploymentYouth($arr[$keys[2]]);
+            $this->setDate($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setRegionId($arr[$keys[3]]);
+            $this->setCity($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setRegionName($arr[$keys[4]]);
+            $this->setStreet($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setYear($arr[$keys[5]]);
+            $this->setFixText($arr[$keys[5]]);
+        }
+        if (array_key_exists($keys[6], $arr)) {
+            $this->setNormal($arr[$keys[6]]);
+        }
+        if (array_key_exists($keys[7], $arr)) {
+            $this->setCompany($arr[$keys[7]]);
         }
     }
 
@@ -1054,7 +1155,7 @@ abstract class Unemployment implements ActiveRecordInterface
      * @param string $data The source data to import from
      * @param string $keyType The type of keys the array uses.
      *
-     * @return $this|\Unemployment The current object, for fluid interface
+     * @return $this|\People The current object, for fluid interface
      */
     public function importFrom($parser, $data, $keyType = TableMap::TYPE_PHPNAME)
     {
@@ -1074,25 +1175,31 @@ abstract class Unemployment implements ActiveRecordInterface
      */
     public function buildCriteria()
     {
-        $criteria = new Criteria(UnemploymentTableMap::DATABASE_NAME);
+        $criteria = new Criteria(PeopleTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(UnemploymentTableMap::COL_ID)) {
-            $criteria->add(UnemploymentTableMap::COL_ID, $this->id);
+        if ($this->isColumnModified(PeopleTableMap::COL_ID)) {
+            $criteria->add(PeopleTableMap::COL_ID, $this->id);
         }
-        if ($this->isColumnModified(UnemploymentTableMap::COL_UNEMPLOYMENT_ADULT)) {
-            $criteria->add(UnemploymentTableMap::COL_UNEMPLOYMENT_ADULT, $this->unemployment_adult);
+        if ($this->isColumnModified(PeopleTableMap::COL_NAME)) {
+            $criteria->add(PeopleTableMap::COL_NAME, $this->name);
         }
-        if ($this->isColumnModified(UnemploymentTableMap::COL_UNEMPLOYMENT_YOUTH)) {
-            $criteria->add(UnemploymentTableMap::COL_UNEMPLOYMENT_YOUTH, $this->unemployment_youth);
+        if ($this->isColumnModified(PeopleTableMap::COL_DATE)) {
+            $criteria->add(PeopleTableMap::COL_DATE, $this->date);
         }
-        if ($this->isColumnModified(UnemploymentTableMap::COL_REGION_ID)) {
-            $criteria->add(UnemploymentTableMap::COL_REGION_ID, $this->region_id);
+        if ($this->isColumnModified(PeopleTableMap::COL_CITY)) {
+            $criteria->add(PeopleTableMap::COL_CITY, $this->city);
         }
-        if ($this->isColumnModified(UnemploymentTableMap::COL_REGION_NAME)) {
-            $criteria->add(UnemploymentTableMap::COL_REGION_NAME, $this->region_name);
+        if ($this->isColumnModified(PeopleTableMap::COL_STREET)) {
+            $criteria->add(PeopleTableMap::COL_STREET, $this->street);
         }
-        if ($this->isColumnModified(UnemploymentTableMap::COL_YEAR)) {
-            $criteria->add(UnemploymentTableMap::COL_YEAR, $this->year);
+        if ($this->isColumnModified(PeopleTableMap::COL_FIX_TEXT)) {
+            $criteria->add(PeopleTableMap::COL_FIX_TEXT, $this->fix_text);
+        }
+        if ($this->isColumnModified(PeopleTableMap::COL_NORMAL)) {
+            $criteria->add(PeopleTableMap::COL_NORMAL, $this->normal);
+        }
+        if ($this->isColumnModified(PeopleTableMap::COL_COMPANY)) {
+            $criteria->add(PeopleTableMap::COL_COMPANY, $this->company);
         }
 
         return $criteria;
@@ -1110,8 +1217,8 @@ abstract class Unemployment implements ActiveRecordInterface
      */
     public function buildPkeyCriteria()
     {
-        $criteria = ChildUnemploymentQuery::create();
-        $criteria->add(UnemploymentTableMap::COL_ID, $this->id);
+        $criteria = ChildPeopleQuery::create();
+        $criteria->add(PeopleTableMap::COL_ID, $this->id);
 
         return $criteria;
     }
@@ -1173,21 +1280,23 @@ abstract class Unemployment implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param      object $copyObj An object of \Unemployment (or compatible) type.
+     * @param      object $copyObj An object of \People (or compatible) type.
      * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param      boolean $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws PropelException
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setUnemploymentAdult($this->getUnemploymentAdult());
-        $copyObj->setUnemploymentYouth($this->getUnemploymentYouth());
-        $copyObj->setRegionId($this->getRegionId());
-        $copyObj->setRegionName($this->getRegionName());
-        $copyObj->setYear($this->getYear());
+        $copyObj->setId($this->getId());
+        $copyObj->setName($this->getName());
+        $copyObj->setDate($this->getDate());
+        $copyObj->setCity($this->getCity());
+        $copyObj->setStreet($this->getStreet());
+        $copyObj->setFixText($this->getFixText());
+        $copyObj->setNormal($this->getNormal());
+        $copyObj->setCompany($this->getCompany());
         if ($makeNew) {
             $copyObj->setNew(true);
-            $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
         }
     }
 
@@ -1200,7 +1309,7 @@ abstract class Unemployment implements ActiveRecordInterface
      * objects.
      *
      * @param  boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \Unemployment Clone of current object.
+     * @return \People Clone of current object.
      * @throws PropelException
      */
     public function copy($deepCopy = false)
@@ -1221,11 +1330,13 @@ abstract class Unemployment implements ActiveRecordInterface
     public function clear()
     {
         $this->id = null;
-        $this->unemployment_adult = null;
-        $this->unemployment_youth = null;
-        $this->region_id = null;
-        $this->region_name = null;
-        $this->year = null;
+        $this->name = null;
+        $this->date = null;
+        $this->city = null;
+        $this->street = null;
+        $this->fix_text = null;
+        $this->normal = null;
+        $this->company = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();
@@ -1255,7 +1366,7 @@ abstract class Unemployment implements ActiveRecordInterface
      */
     public function __toString()
     {
-        return (string) $this->exportTo(UnemploymentTableMap::DEFAULT_STRING_FORMAT);
+        return (string) $this->exportTo(PeopleTableMap::DEFAULT_STRING_FORMAT);
     }
 
     /**

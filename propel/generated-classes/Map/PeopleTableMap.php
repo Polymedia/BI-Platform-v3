@@ -2,8 +2,8 @@
 
 namespace Map;
 
-use \Unemployment;
-use \UnemploymentQuery;
+use \People;
+use \PeopleQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -16,7 +16,7 @@ use Propel\Runtime\Map\TableMapTrait;
 
 
 /**
- * This class defines the structure of the 'unemployment' table.
+ * This class defines the structure of the 'people' table.
  *
  *
  *
@@ -26,7 +26,7 @@ use Propel\Runtime\Map\TableMapTrait;
  * (i.e. if it's a text column type).
  *
  */
-class UnemploymentTableMap extends TableMap
+class PeopleTableMap extends TableMap
 {
     use InstancePoolTrait;
     use TableMapTrait;
@@ -34,7 +34,7 @@ class UnemploymentTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = '.Map.UnemploymentTableMap';
+    const CLASS_NAME = '.Map.PeopleTableMap';
 
     /**
      * The default database name for this class
@@ -44,22 +44,22 @@ class UnemploymentTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'unemployment';
+    const TABLE_NAME = 'people';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\Unemployment';
+    const OM_CLASS = '\\People';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'Unemployment';
+    const CLASS_DEFAULT = 'People';
 
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 6;
+    const NUM_COLUMNS = 8;
 
     /**
      * The number of lazy-loaded columns
@@ -69,37 +69,47 @@ class UnemploymentTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 6;
+    const NUM_HYDRATE_COLUMNS = 8;
 
     /**
      * the column name for the id field
      */
-    const COL_ID = 'unemployment.id';
+    const COL_ID = 'people.id';
 
     /**
-     * the column name for the unemployment_adult field
+     * the column name for the name field
      */
-    const COL_UNEMPLOYMENT_ADULT = 'unemployment.unemployment_adult';
+    const COL_NAME = 'people.name';
 
     /**
-     * the column name for the unemployment_youth field
+     * the column name for the date field
      */
-    const COL_UNEMPLOYMENT_YOUTH = 'unemployment.unemployment_youth';
+    const COL_DATE = 'people.date';
 
     /**
-     * the column name for the region_id field
+     * the column name for the city field
      */
-    const COL_REGION_ID = 'unemployment.region_id';
+    const COL_CITY = 'people.city';
 
     /**
-     * the column name for the region_name field
+     * the column name for the street field
      */
-    const COL_REGION_NAME = 'unemployment.region_name';
+    const COL_STREET = 'people.street';
 
     /**
-     * the column name for the year field
+     * the column name for the fix_text field
      */
-    const COL_YEAR = 'unemployment.year';
+    const COL_FIX_TEXT = 'people.fix_text';
+
+    /**
+     * the column name for the normal field
+     */
+    const COL_NORMAL = 'people.normal';
+
+    /**
+     * the column name for the company field
+     */
+    const COL_COMPANY = 'people.company';
 
     /**
      * The default string format for model objects of the related table
@@ -113,11 +123,11 @@ class UnemploymentTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'UnemploymentAdult', 'UnemploymentYouth', 'RegionId', 'RegionName', 'Year', ),
-        self::TYPE_CAMELNAME     => array('id', 'unemploymentAdult', 'unemploymentYouth', 'regionId', 'regionName', 'year', ),
-        self::TYPE_COLNAME       => array(UnemploymentTableMap::COL_ID, UnemploymentTableMap::COL_UNEMPLOYMENT_ADULT, UnemploymentTableMap::COL_UNEMPLOYMENT_YOUTH, UnemploymentTableMap::COL_REGION_ID, UnemploymentTableMap::COL_REGION_NAME, UnemploymentTableMap::COL_YEAR, ),
-        self::TYPE_FIELDNAME     => array('id', 'unemployment_adult', 'unemployment_youth', 'region_id', 'region_name', 'year', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
+        self::TYPE_PHPNAME       => array('Id', 'Name', 'Date', 'City', 'Street', 'FixText', 'Normal', 'Company', ),
+        self::TYPE_CAMELNAME     => array('id', 'name', 'date', 'city', 'street', 'fixText', 'normal', 'company', ),
+        self::TYPE_COLNAME       => array(PeopleTableMap::COL_ID, PeopleTableMap::COL_NAME, PeopleTableMap::COL_DATE, PeopleTableMap::COL_CITY, PeopleTableMap::COL_STREET, PeopleTableMap::COL_FIX_TEXT, PeopleTableMap::COL_NORMAL, PeopleTableMap::COL_COMPANY, ),
+        self::TYPE_FIELDNAME     => array('id', 'name', 'date', 'city', 'street', 'fix_text', 'normal', 'company', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -127,11 +137,11 @@ class UnemploymentTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'UnemploymentAdult' => 1, 'UnemploymentYouth' => 2, 'RegionId' => 3, 'RegionName' => 4, 'Year' => 5, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'unemploymentAdult' => 1, 'unemploymentYouth' => 2, 'regionId' => 3, 'regionName' => 4, 'year' => 5, ),
-        self::TYPE_COLNAME       => array(UnemploymentTableMap::COL_ID => 0, UnemploymentTableMap::COL_UNEMPLOYMENT_ADULT => 1, UnemploymentTableMap::COL_UNEMPLOYMENT_YOUTH => 2, UnemploymentTableMap::COL_REGION_ID => 3, UnemploymentTableMap::COL_REGION_NAME => 4, UnemploymentTableMap::COL_YEAR => 5, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'unemployment_adult' => 1, 'unemployment_youth' => 2, 'region_id' => 3, 'region_name' => 4, 'year' => 5, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Name' => 1, 'Date' => 2, 'City' => 3, 'Street' => 4, 'FixText' => 5, 'Normal' => 6, 'Company' => 7, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'name' => 1, 'date' => 2, 'city' => 3, 'street' => 4, 'fixText' => 5, 'normal' => 6, 'company' => 7, ),
+        self::TYPE_COLNAME       => array(PeopleTableMap::COL_ID => 0, PeopleTableMap::COL_NAME => 1, PeopleTableMap::COL_DATE => 2, PeopleTableMap::COL_CITY => 3, PeopleTableMap::COL_STREET => 4, PeopleTableMap::COL_FIX_TEXT => 5, PeopleTableMap::COL_NORMAL => 6, PeopleTableMap::COL_COMPANY => 7, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'name' => 1, 'date' => 2, 'city' => 3, 'street' => 4, 'fix_text' => 5, 'normal' => 6, 'company' => 7, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -144,19 +154,21 @@ class UnemploymentTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('unemployment');
-        $this->setPhpName('Unemployment');
+        $this->setName('people');
+        $this->setPhpName('People');
         $this->setIdentifierQuoting(false);
-        $this->setClassName('\\Unemployment');
+        $this->setClassName('\\People');
         $this->setPackage('');
-        $this->setUseIdGenerator(true);
+        $this->setUseIdGenerator(false);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('unemployment_adult', 'UnemploymentAdult', 'DECIMAL', true, 8, null);
-        $this->addColumn('unemployment_youth', 'UnemploymentYouth', 'DECIMAL', true, 8, null);
-        $this->addColumn('region_id', 'RegionId', 'VARCHAR', true, 255, null);
-        $this->addColumn('region_name', 'RegionName', 'VARCHAR', true, 255, null);
-        $this->addColumn('year', 'Year', 'INTEGER', true, null, null);
+        $this->addColumn('name', 'Name', 'VARCHAR', false, 255, null);
+        $this->addColumn('date', 'Date', 'VARCHAR', false, 255, null);
+        $this->addColumn('city', 'City', 'VARCHAR', false, 255, null);
+        $this->addColumn('street', 'Street', 'VARCHAR', false, 255, null);
+        $this->addColumn('fix_text', 'FixText', 'CLOB', false, null, null);
+        $this->addColumn('normal', 'Normal', 'VARCHAR', false, 100, null);
+        $this->addColumn('company', 'Company', 'VARCHAR', false, 255, null);
     } // initialize()
 
     /**
@@ -223,7 +235,7 @@ class UnemploymentTableMap extends TableMap
      */
     public static function getOMClass($withPrefix = true)
     {
-        return $withPrefix ? UnemploymentTableMap::CLASS_DEFAULT : UnemploymentTableMap::OM_CLASS;
+        return $withPrefix ? PeopleTableMap::CLASS_DEFAULT : PeopleTableMap::OM_CLASS;
     }
 
     /**
@@ -237,22 +249,22 @@ class UnemploymentTableMap extends TableMap
      *
      * @throws PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
-     * @return array           (Unemployment object, last column rank)
+     * @return array           (People object, last column rank)
      */
     public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        $key = UnemploymentTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
-        if (null !== ($obj = UnemploymentTableMap::getInstanceFromPool($key))) {
+        $key = PeopleTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
+        if (null !== ($obj = PeopleTableMap::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $offset, true); // rehydrate
-            $col = $offset + UnemploymentTableMap::NUM_HYDRATE_COLUMNS;
+            $col = $offset + PeopleTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = UnemploymentTableMap::OM_CLASS;
-            /** @var Unemployment $obj */
+            $cls = PeopleTableMap::OM_CLASS;
+            /** @var People $obj */
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
-            UnemploymentTableMap::addInstanceToPool($obj, $key);
+            PeopleTableMap::addInstanceToPool($obj, $key);
         }
 
         return array($obj, $col);
@@ -275,18 +287,18 @@ class UnemploymentTableMap extends TableMap
         $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
-            $key = UnemploymentTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
-            if (null !== ($obj = UnemploymentTableMap::getInstanceFromPool($key))) {
+            $key = PeopleTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
+            if (null !== ($obj = PeopleTableMap::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
-                /** @var Unemployment $obj */
+                /** @var People $obj */
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                UnemploymentTableMap::addInstanceToPool($obj, $key);
+                PeopleTableMap::addInstanceToPool($obj, $key);
             } // if key exists
         }
 
@@ -307,19 +319,23 @@ class UnemploymentTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(UnemploymentTableMap::COL_ID);
-            $criteria->addSelectColumn(UnemploymentTableMap::COL_UNEMPLOYMENT_ADULT);
-            $criteria->addSelectColumn(UnemploymentTableMap::COL_UNEMPLOYMENT_YOUTH);
-            $criteria->addSelectColumn(UnemploymentTableMap::COL_REGION_ID);
-            $criteria->addSelectColumn(UnemploymentTableMap::COL_REGION_NAME);
-            $criteria->addSelectColumn(UnemploymentTableMap::COL_YEAR);
+            $criteria->addSelectColumn(PeopleTableMap::COL_ID);
+            $criteria->addSelectColumn(PeopleTableMap::COL_NAME);
+            $criteria->addSelectColumn(PeopleTableMap::COL_DATE);
+            $criteria->addSelectColumn(PeopleTableMap::COL_CITY);
+            $criteria->addSelectColumn(PeopleTableMap::COL_STREET);
+            $criteria->addSelectColumn(PeopleTableMap::COL_FIX_TEXT);
+            $criteria->addSelectColumn(PeopleTableMap::COL_NORMAL);
+            $criteria->addSelectColumn(PeopleTableMap::COL_COMPANY);
         } else {
             $criteria->addSelectColumn($alias . '.id');
-            $criteria->addSelectColumn($alias . '.unemployment_adult');
-            $criteria->addSelectColumn($alias . '.unemployment_youth');
-            $criteria->addSelectColumn($alias . '.region_id');
-            $criteria->addSelectColumn($alias . '.region_name');
-            $criteria->addSelectColumn($alias . '.year');
+            $criteria->addSelectColumn($alias . '.name');
+            $criteria->addSelectColumn($alias . '.date');
+            $criteria->addSelectColumn($alias . '.city');
+            $criteria->addSelectColumn($alias . '.street');
+            $criteria->addSelectColumn($alias . '.fix_text');
+            $criteria->addSelectColumn($alias . '.normal');
+            $criteria->addSelectColumn($alias . '.company');
         }
     }
 
@@ -332,7 +348,7 @@ class UnemploymentTableMap extends TableMap
      */
     public static function getTableMap()
     {
-        return Propel::getServiceContainer()->getDatabaseMap(UnemploymentTableMap::DATABASE_NAME)->getTable(UnemploymentTableMap::TABLE_NAME);
+        return Propel::getServiceContainer()->getDatabaseMap(PeopleTableMap::DATABASE_NAME)->getTable(PeopleTableMap::TABLE_NAME);
     }
 
     /**
@@ -340,16 +356,16 @@ class UnemploymentTableMap extends TableMap
      */
     public static function buildTableMap()
     {
-        $dbMap = Propel::getServiceContainer()->getDatabaseMap(UnemploymentTableMap::DATABASE_NAME);
-        if (!$dbMap->hasTable(UnemploymentTableMap::TABLE_NAME)) {
-            $dbMap->addTableObject(new UnemploymentTableMap());
+        $dbMap = Propel::getServiceContainer()->getDatabaseMap(PeopleTableMap::DATABASE_NAME);
+        if (!$dbMap->hasTable(PeopleTableMap::TABLE_NAME)) {
+            $dbMap->addTableObject(new PeopleTableMap());
         }
     }
 
     /**
-     * Performs a DELETE on the database, given a Unemployment or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a People or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or Unemployment object or primary key or array of primary keys
+     * @param mixed               $values Criteria or People object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param  ConnectionInterface $con the connection to use
      * @return int             The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -360,27 +376,27 @@ class UnemploymentTableMap extends TableMap
      public static function doDelete($values, ConnectionInterface $con = null)
      {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(UnemploymentTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(PeopleTableMap::DATABASE_NAME);
         }
 
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \Unemployment) { // it's a model object
+        } elseif ($values instanceof \People) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(UnemploymentTableMap::DATABASE_NAME);
-            $criteria->add(UnemploymentTableMap::COL_ID, (array) $values, Criteria::IN);
+            $criteria = new Criteria(PeopleTableMap::DATABASE_NAME);
+            $criteria->add(PeopleTableMap::COL_ID, (array) $values, Criteria::IN);
         }
 
-        $query = UnemploymentQuery::create()->mergeWith($criteria);
+        $query = PeopleQuery::create()->mergeWith($criteria);
 
         if ($values instanceof Criteria) {
-            UnemploymentTableMap::clearInstancePool();
+            PeopleTableMap::clearInstancePool();
         } elseif (!is_object($values)) { // it's a primary key, or an array of pks
             foreach ((array) $values as $singleval) {
-                UnemploymentTableMap::removeInstanceFromPool($singleval);
+                PeopleTableMap::removeInstanceFromPool($singleval);
             }
         }
 
@@ -388,20 +404,20 @@ class UnemploymentTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the unemployment table.
+     * Deletes all rows from the people table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(ConnectionInterface $con = null)
     {
-        return UnemploymentQuery::create()->doDeleteAll($con);
+        return PeopleQuery::create()->doDeleteAll($con);
     }
 
     /**
-     * Performs an INSERT on the database, given a Unemployment or Criteria object.
+     * Performs an INSERT on the database, given a People or Criteria object.
      *
-     * @param mixed               $criteria Criteria or Unemployment object containing data that is used to create the INSERT statement.
+     * @param mixed               $criteria Criteria or People object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
      * @return mixed           The new primary key.
      * @throws PropelException Any exceptions caught during processing will be
@@ -410,22 +426,18 @@ class UnemploymentTableMap extends TableMap
     public static function doInsert($criteria, ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(UnemploymentTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(PeopleTableMap::DATABASE_NAME);
         }
 
         if ($criteria instanceof Criteria) {
             $criteria = clone $criteria; // rename for clarity
         } else {
-            $criteria = $criteria->buildCriteria(); // build Criteria from Unemployment object
-        }
-
-        if ($criteria->containsKey(UnemploymentTableMap::COL_ID) && $criteria->keyContainsValue(UnemploymentTableMap::COL_ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.UnemploymentTableMap::COL_ID.')');
+            $criteria = $criteria->buildCriteria(); // build Criteria from People object
         }
 
 
         // Set the correct dbName
-        $query = UnemploymentQuery::create()->mergeWith($criteria);
+        $query = PeopleQuery::create()->mergeWith($criteria);
 
         // use transaction because $criteria could contain info
         // for more than one table (I guess, conceivably)
@@ -434,7 +446,7 @@ class UnemploymentTableMap extends TableMap
         });
     }
 
-} // UnemploymentTableMap
+} // PeopleTableMap
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
-UnemploymentTableMap::buildTableMap();
+PeopleTableMap::buildTableMap();
