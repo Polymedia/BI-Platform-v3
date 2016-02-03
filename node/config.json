@@ -1,0 +1,5 @@
+{
+    "port": 8080,
+    "connection": "postgres://postgres:Polymedia9@localhost:5432/bi_dev",
+    "signal": "refresh"
+}
