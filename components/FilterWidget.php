@@ -9,7 +9,6 @@
 namespace app\components;
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
 
 use app\components;
@@ -53,6 +52,6 @@ class FilterWidget extends Select2
         parent::run();
         echo '<div class="form-group"><div class="col-lg-11">';
         echo Html::submitButton('Select users', ['class' => 'btn btn-primary']);
-        echo '</div></div>';
+        echo '</div></div></form>';
     }
 }
