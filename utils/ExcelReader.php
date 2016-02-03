@@ -6,19 +6,21 @@ use Yii;
 
 class ExcelReader
 {
-    public function read($filename)
+    public $data = [];
+    public $columnCount = 0;
+    public $columns = [];
+    
+    public static function read($filename)
     {
         $path = Yii::$app->basePath . "/uploads/" . $filename;
         
         $objReader = \PHPExcel_IOFactory::createReaderForFile($path);
         //$objReader->setLoadSheetsOnly($sheets);
         $objReader->setReadDataOnly(true);
-        
+
         $objPHPExcel = $objReader->load($path);
-        $highestColumm = $objPHPExcel->setActiveSheetIndex(0)->getHighestColumn();
-        $highestRow = $objPHPExcel->setActiveSheetIndex(0)->getHighestRow();
+        $reader = new ExcelReader();
         
-        $data = [];
         foreach ($objPHPExcel->setActiveSheetIndex(0)->getRowIterator() as $row) {
             $cellIterator = $row->getCellIterator();
             $cellIterator->setIterateOnlyExistingCells(false);
@@ -30,9 +32,14 @@ class ExcelReader
                 }
             }
             
-            $data[] = $rowData;
+            $reader->data[] = $rowData;
         }
         
-        return $data;
+        $reader->columnCount = count($reader->data[0]);
+        $colrange = range(0, $reader->columnCount - 1);
+        foreach ($colrange as $column)
+            $reader->columns[] = strval($column);
+                
+        return $reader;
     }
 }

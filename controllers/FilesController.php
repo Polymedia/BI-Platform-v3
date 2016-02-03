@@ -53,22 +53,15 @@ class FilesController extends Controller
     public function actionPreview()
     {
         $name = Yii::$app->request->getQueryParam("name", "adresses.xlsx");
-        $reader = new ExcelReader();
-        $data = $reader->read($name);
+        $reader = ExcelReader::read($name);
         
         $dataProvider = new ArrayDataProvider([
-            'allModels' => $data
+            'allModels' => $reader->data
         ]);
-        
-        $size = count($data[0]);
-        $colrange = range(0, $size - 1);
-        $columns = [];
-        foreach ($colrange as $column)
-            $columns[] = strval($column);
-        
+               
         return $this->render('preview', [
             'dataProvider' => $dataProvider,
-            'columns' => $columns
+            'columns' => $reader->columns
         ]);
     }
 }
