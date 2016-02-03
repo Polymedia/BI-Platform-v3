@@ -15,20 +15,18 @@ use app\components;
 
 class FilterWidget extends Select2
 {
-    public $allValues;
-    public $selectedValues;
     public $initialText;
 
     public function init()
     {
-        $allValuesTmp = $this->allValues;
+        $allValuesTmp = $this->view->params[$this->name."_all"];
 
         foreach ($allValuesTmp as $v)
         {
             $allValuesTmp2[$v] = $v;
         }
 
-        $selectedValuesTmp = $this->selectedValues;
+        $selectedValuesTmp = $this->view->params[$this->name];
 
         if ($selectedValuesTmp)
             foreach ($selectedValuesTmp as $v)

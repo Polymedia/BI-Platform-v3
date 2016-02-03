@@ -34,6 +34,5 @@
 
 {GridView::widget(['dataProvider' => $dataProvider])}
 
-{FilterWidget::widget(['name' => 'filter_people', 'allValues' => $filter_people_all, 'selectedValues' => $filter_people,
-                        'initialText' => 'Select Names...'])}
+{FilterWidget::widget(['name' => 'filter_people', 'initialText' => 'Select Names...'])}
 {GridView::widget(['dataProvider' => $dataProvider2])}
