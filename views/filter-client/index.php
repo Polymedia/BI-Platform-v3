@@ -1,11 +1,41 @@
-<?php $this->registerJsFile('http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.3.0.js'); ?>
-
 <?php
 use app\components\FilterClient\Filter;
 use app\components\FilterClient\Columns;
 use app\components\FilterClient\Pie;
 use app\components\FilterClient\Table;
 ?>
+
+<script>
+    function onRequestVisiologyData() {
+        var bigData = [];
+        var years = [2014, 2015, 2016];
+        var groups = [["South", "North"], ["South", "North"], ["South", "North"]];
+        var categories = [
+            ["Electronics", "Mobile", "Cars", "Computers"],
+            ["Electronics", "Mobile", "Cars", "Computers", "Tabs", "Services"],
+            ["Electronics", "Computers", "Tabs"]];
+        var managers = [
+            ["Roy Smith", "Barbara Wake", "Garry Kleine", "Liz Washington"],
+            ["Roy Smith", "Barbara Wake", "Garry Kleine", "Liz Washington", "Mike Sober"],
+            ["Roy Smith", "Barbara Wake", "Sarah Hails"]
+        ];
+        for (var j = 0; j < years.length; j++) {
+            for (var i = 0; i < 20000; i++) {
+                bigData.push({
+                    id: i,
+                    year: years[j],
+                    group: groups[j][Math.floor(Math.random() * groups[j].length)],
+                    category: categories[j][Math.floor(Math.random() * categories[j].length)],
+                    manager: managers[j][Math.floor(Math.random() * managers[j].length)],
+                    amount: Math.random() * 100
+                });
+            }
+        }
+
+        return bigData;
+    }
+</script>
+
 <div>
     <?php Filter::begin(['name' => "filter_year", 'optionsCaption' => "All years"]); ?>
         // User code here
