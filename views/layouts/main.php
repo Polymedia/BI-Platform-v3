@@ -77,22 +77,64 @@ AppAsset::register($this);
 <script type="text/javascript">
 
     $(document).on('pjax:beforeReplace', function(e, content, options){
+//        $('[data-pjax-exclude]').each(function(index, el){
+//            $(el).find("*").attr('data-pjax-exclude', '1');
+//        });
+
+        window.pjax_exclude = [];
+        $('[data-pjax-exclude]').each(function(index, el){
+            console.log(getDomPath(el));
+            window.pjax_exclude[getDomPath(el)] = $.extend(true, {}, $('[data-pjax-exclude]').eq(index));
+        });
+
+
+
+        //console.log('-------');
+        //console.log(window.pjax_exclude['body div.wrap div.container div form div.form-group div.col-lg-11']);
+
         // Replace jQuery objects HTML with old one
         // And save jQuery objects with [data-pjax-exclude] for restore after PJAX query
-        window.pjax_exclude = [];
+
         content.filter('[data-pjax-exclude]').each(function(index, el){
             $(el).html($('[data-pjax-exclude]').eq(index).html());
-            window.pjax_exclude.push($.extend(true, {}, $('[data-pjax-exclude]').eq(index)));
         });
+
+
+
+
+
     });
 
     $(document).on('pjax:complete', function(){
+
+        console.log($('[data-pjax-exclude]').size());
         // Restore saved jQuery objects
         $('[data-pjax-exclude]').each(function(index, el){
-            if (window.pjax_exclude[index])
-                $(el).replaceWith(window.pjax_exclude[index]);
+            if (window.pjax_exclude[getDomPath(el)])
+                $(el).replaceWith(window.pjax_exclude[getDomPath(el)]);
         });
     });
+
+    function getDomPath(el){
+        var parents = [],
+            elm,
+            entry;
+
+        for (elm = el; elm; elm = elm.parentNode) {
+            entry = elm.tagName.toLowerCase();
+            if (entry === "html") {
+                break;
+            }
+            if (elm.className && elm.className.replace) {
+                entry += "." + elm.className.replace(/ /g, '.');
+            }
+            if (elm.id && elm.id.replace)
+                entry += "#" + elm.id.replace(/ /g, '#');
+            parents.push(entry);
+        }
+        parents.reverse();
+        return parents.join(" ");
+    }
 
 </script>
 
