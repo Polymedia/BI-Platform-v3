@@ -3,8 +3,10 @@
 {use class="yii\widgets\ActiveForm" type="block"}
 {use class="yii\helpers\Html"}
 {use class="app\components\MultipleSelect"}
+{use class="app\components\HistogramWidget"}
 {use class="miloschuman\highcharts\Highcharts"}
 {use class="miloschuman\highcharts\HighchartsAsset"}
+{use class="app\components\ChildDashboard"}
 {assign "hc" HighchartsAsset::register($this)->withScripts(['highcharts', 'modules/exporting', 'modules/drilldown', 'modules/data'])}
 
 
@@ -32,17 +34,12 @@
 
 <div id="container2" data-pjax-exclude style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
-<div id="container" data-pjax-exclude style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-
+{ChildDashboard::widget()}
+{HistogramWidget::widget(['model2' => $model2, 'title' => "Безработные"])}
 
 {GridView::widget(['dataProvider' => $dataProvider])}
 
     <script type="text/javascript">
-        var data = [ {foreach $model2 as $model}
-            {$model->getUnemploymentYouth()},
-            {/foreach}
-        ]
-
         var data2 = [ {foreach $model2 as $model}
             {$model->getUnemploymentYouth()},
             {/foreach}
@@ -53,11 +50,8 @@
                         'initialText' => 'Select Names...'])}
 
 {GridView::widget(['dataProvider' => $dataProvider2])}
-
 <script type="text/javascript">    function refreshChart() {
 
-        var chart = $('#container').highcharts();
-        chart.series[0].setData(data);
 
         var chart2 = $('#container2').highcharts();
         chart2.series[0].setData(data2);

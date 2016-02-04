@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <database name="default" defaultIdMethod="native" defaultPhpNamingMethod="underscore">
+  <table name="data_table" idMethod="native" phpName="DataTable">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" required="true"/>
+    <column name="one" phpName="One" type="INTEGER"/>
+    <column name="two" phpName="Two" type="INTEGER"/>
+    <column name="three" phpName="Three" type="INTEGER"/>
+    <column name="four" phpName="Four" type="VARCHAR" size="100"/>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
   <table name="people" idMethod="native" phpName="People">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" required="true"/>
     <column name="name" phpName="Name" type="VARCHAR" size="255"/>

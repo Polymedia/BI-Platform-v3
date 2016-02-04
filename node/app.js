@@ -1,3 +1,4 @@
+var path = require('path')
 var express = require('express')
 var http = require('http')
 var pg = require('pg')
@@ -64,19 +65,18 @@ client.on('notification', function (message) {
 })
 client.query('LISTEN ' + config.signal)
 
+// Setup static files
+app.use(express.static(path.join(__dirname, 'web')));
+
 // For testing purposes only
 if (process.argv.length > 2 && process.argv[2] === 'debug')
 {
-    var path = require('path')
     var ECT = require('ect')
     
     // Setup template renderer
     var ect = ECT({ watch: true, root: __dirname + '/views', ext : '.ect' });
     app.set('view engine', 'ect');
     app.engine('ect', ect.render);
-
-    // Setup static files
-    app.use(express.static(path.join(__dirname, 'web')));
 
     // Serve
     app.get('/', function (request, response) {

@@ -61,6 +61,7 @@ AppAssetHead::register($this);
         ]) ?>
 
         <?php Pjax::begin(['timeout' => '100000000']); ?>
+        <a id="pjax_reload" href=""></a>
         <?= $content ?>
         <?php Pjax::end(); ?>
     </div>
