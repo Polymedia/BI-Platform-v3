@@ -90,6 +90,7 @@ class BaseDashboardController extends Controller
             $params[$name] = $filter->selectedValues;
             $params[$name.self::FILTER_GET_POSSIBLE_VALUES_SUFFIX] = $filter->possibleValues;
         }
+        $this->view->params = $params;
     }
 
     protected function injectJsVars(&$params)

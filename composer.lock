@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "031e990a6ea5881ae67a3dfb454b1f24",
-    "content-hash": "ab2119917310a3bd7f41c18c0b0ff23f",
+    "hash": "0099095b161eaf2862335a1376a07921",
+    "content-hash": "ff89b962d82a7b0a91800d4a986db3a8",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -318,17 +318,111 @@
             "time": "2013-11-30 08:25:19"
         },
         {
+            "name": "kartik-v/yii2-krajee-base",
+            "version": "1.8.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kartik-v/yii2-krajee-base.git",
+                "reference": "0c274e31e4392cbafc5fe158eae81738794e02ce"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kartik-v/yii2-krajee-base/zipball/0c274e31e4392cbafc5fe158eae81738794e02ce",
+                "reference": "0c274e31e4392cbafc5fe158eae81738794e02ce",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2-bootstrap": "@dev"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "kartik\\base\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Kartik Visweswaran",
+                    "email": "kartikv2@gmail.com",
+                    "homepage": "http://www.krajee.com/"
+                }
+            ],
+            "description": "Base library and foundation components for all Yii2 Krajee extensions.",
+            "homepage": "https://github.com/kartik-v/yii2-krajee-base",
+            "keywords": [
+                "base",
+                "extension",
+                "foundation",
+                "krajee",
+                "widget",
+                "yii2"
+            ],
+            "time": "2016-01-10 12:26:29"
+        },
+        {
+            "name": "kartik-v/yii2-widget-select2",
+            "version": "v2.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kartik-v/yii2-widget-select2.git",
+                "reference": "701bf8069a85fafbac1ced54dcd00e579e60471b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kartik-v/yii2-widget-select2/zipball/701bf8069a85fafbac1ced54dcd00e579e60471b",
+                "reference": "701bf8069a85fafbac1ced54dcd00e579e60471b",
+                "shasum": ""
+            },
+            "require": {
+                "kartik-v/yii2-krajee-base": "~1.7"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "kartik\\select2\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Kartik Visweswaran",
+                    "email": "kartikv2@gmail.com",
+                    "homepage": "http://www.krajee.com/"
+                }
+            ],
+            "description": "Enhanced Yii2 wrapper for the Select2 jQuery plugin (sub repo split from yii2-widgets).",
+            "homepage": "https://github.com/kartik-v/yii2-widget-select2",
+            "keywords": [
+                "dropdown",
+                "extension",
+                "form",
+                "jquery",
+                "plugin",
+                "select2",
+                "widget",
+                "yii2"
+            ],
+            "time": "2016-01-10 16:51:42"
+        },
+        {
             "name": "miloschuman/yii2-highcharts-widget",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/miloschuman/yii2-highcharts.git",
-                "reference": "a62c1259ff97bc5ada0960ed50b9ddc00c9745b1"
+                "reference": "5d4cd1cc7b5d7ab482565035eeab8a359512aa02"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/miloschuman/yii2-highcharts/zipball/a62c1259ff97bc5ada0960ed50b9ddc00c9745b1",
-                "reference": "a62c1259ff97bc5ada0960ed50b9ddc00c9745b1",
+                "url": "https://api.github.com/repos/miloschuman/yii2-highcharts/zipball/5d4cd1cc7b5d7ab482565035eeab8a359512aa02",
+                "reference": "5d4cd1cc7b5d7ab482565035eeab8a359512aa02",
                 "shasum": ""
             },
             "require": {
@@ -360,7 +454,64 @@
                 "widget",
                 "yii2"
             ],
-            "time": "2016-01-13 16:39:49"
+            "time": "2016-01-27 18:10:23"
+        },
+        {
+            "name": "phpoffice/phpexcel",
+            "version": "1.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPOffice/PHPExcel.git",
+                "reference": "372c7cbb695a6f6f1e62649381aeaa37e7e70b32"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPOffice/PHPExcel/zipball/372c7cbb695a6f6f1e62649381aeaa37e7e70b32",
+                "reference": "372c7cbb695a6f6f1e62649381aeaa37e7e70b32",
+                "shasum": ""
+            },
+            "require": {
+                "ext-xml": "*",
+                "ext-xmlwriter": "*",
+                "php": ">=5.2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PHPExcel": "Classes/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL"
+            ],
+            "authors": [
+                {
+                    "name": "Maarten Balliauw",
+                    "homepage": "http://blog.maartenballiauw.be"
+                },
+                {
+                    "name": "Mark Baker"
+                },
+                {
+                    "name": "Franck Lefevre",
+                    "homepage": "http://blog.rootslabs.net"
+                },
+                {
+                    "name": "Erik Tilt"
+                }
+            ],
+            "description": "PHPExcel - OpenXML - Read, Create and Write Spreadsheet documents in PHP - Spreadsheet engine",
+            "homepage": "http://phpexcel.codeplex.com",
+            "keywords": [
+                "OpenXML",
+                "excel",
+                "php",
+                "spreadsheet",
+                "xls",
+                "xlsx"
+            ],
+            "time": "2015-05-01 07:00:55"
         },
         {
             "name": "propel/propel",
@@ -368,12 +519,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/propelorm/Propel2.git",
-                "reference": "2951d2241fc69f3fb925ddc3d087cba0a04bed9a"
+                "reference": "4157132edc2149d06fc46173845ca29352dc86ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/propelorm/Propel2/zipball/2951d2241fc69f3fb925ddc3d087cba0a04bed9a",
-                "reference": "2951d2241fc69f3fb925ddc3d087cba0a04bed9a",
+                "url": "https://api.github.com/repos/propelorm/Propel2/zipball/4157132edc2149d06fc46173845ca29352dc86ff",
+                "reference": "4157132edc2149d06fc46173845ca29352dc86ff",
                 "shasum": ""
             },
             "require": {
@@ -425,7 +576,7 @@
                 "orm",
                 "persistence"
             ],
-            "time": "2016-01-15 18:29:53"
+            "time": "2016-02-01 23:53:00"
         },
         {
             "name": "psr/log",
@@ -783,16 +934,16 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.0.1",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "49ff736bd5d41f45240cec77b44967d76e0c3d25"
+                "reference": "1289d16209491b584839022f29257ad859b8532d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/49ff736bd5d41f45240cec77b44967d76e0c3d25",
-                "reference": "49ff736bd5d41f45240cec77b44967d76e0c3d25",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/1289d16209491b584839022f29257ad859b8532d",
+                "reference": "1289d16209491b584839022f29257ad859b8532d",
                 "shasum": ""
             },
             "require": {
@@ -804,7 +955,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0-dev"
+                    "dev-master": "1.1-dev"
                 }
             },
             "autoload": {
@@ -838,7 +989,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2015-11-20 09:19:13"
+            "time": "2016-01-20 09:13:37"
         },
         {
             "name": "symfony/translation",

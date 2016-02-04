@@ -17,7 +17,7 @@ use Propel\Runtime\Exception\PropelException;
 /**
  * Base class that represents a query for the 'unemployment' table.
  *
- * 
+ *
  *
  * @method     ChildUnemploymentQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildUnemploymentQuery orderByUnemploymentAdult($order = Criteria::ASC) Order by the unemployment_adult column
@@ -162,7 +162,7 @@ abstract class UnemploymentQuery extends ModelCriteria
     {
         $sql = 'SELECT id, unemployment_adult, unemployment_youth, region_id, region_name, year FROM unemployment WHERE id = :p0';
         try {
-            $stmt = $con->prepare($sql);            
+            $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
             $stmt->execute();
         } catch (Exception $e) {
@@ -539,9 +539,9 @@ abstract class UnemploymentQuery extends ModelCriteria
         // for more than one table or we could emulating ON DELETE CASCADE, etc.
         return $con->transaction(function () use ($con, $criteria) {
             $affectedRows = 0; // initialize var to track total num of affected rows
-            
+
             UnemploymentTableMap::removeInstanceFromPool($criteria);
-        
+
             $affectedRows += ModelCriteria::delete($con);
             UnemploymentTableMap::clearRelatedInstancePool();
 
