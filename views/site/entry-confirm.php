@@ -46,6 +46,7 @@ use app\controllers\SaveController;
         <script>
             CKEDITOR.replace("pukanchik",
                 {
+                    enterMode : CKEDITOR.ENTER_BR
                 }
             )
         </script>
