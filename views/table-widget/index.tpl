@@ -1,4 +1,4 @@
 {use class="app\components\TableWidget"}
 
 
-{TableWidget::widget(['name' => 'widget_people', 'data' => $data])}
+{TableWidget::widget(['name' => 'widget_people'])}

@@ -22,14 +22,13 @@ class TableWidget extends InputWidget
 
     public function init()
     {
-        //echo var_dump($this->data);
         parent::init();
     }
 
     public function run()
     {
         echo '<table border="1">';
-        foreach ($this->data as $item) {
+        foreach ($this->view->params[$this->name] as $item) {
             echo '<tr>';
                 foreach($item as $value) {
                     echo '<td>';
