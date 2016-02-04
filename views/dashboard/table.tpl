@@ -2,7 +2,7 @@
 {use class="yii\helpers\Url"}
 {use class="yii\widgets\ActiveForm" type="block"}
 {use class="yii\helpers\Html"}
-{use class="app\components\FilterWidget"}
+{use class="app\components\MultipleSelect"}
 {use class="miloschuman\highcharts\Highcharts"}
 {use class="miloschuman\highcharts\HighchartsAsset"}
 {assign "hc" HighchartsAsset::register($this)->withScripts(['highcharts', 'modules/exporting', 'modules/drilldown', 'modules/data'])}
@@ -24,6 +24,8 @@
     </ul>
 </div>
 
+{MultipleSelect::widget(['name' => 'filter_people', 'allValues' => $filter_people_all, 'selectedValues' => $filter_people,
+'initialText' => 'Select Names...'])}
 
     <div id="container" data-pjax-exclude style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
@@ -40,8 +42,9 @@
         ]
     </script>
 
-{FilterWidget::widget(['name' => 'filter_people', 'allValues' => $filter_people_all, 'selectedValues' => $filter_people,
+{MultipleSelect::widget(['name' => 'filter_people', 'allValues' => $filter_people_all, 'selectedValues' => $filter_people,
                         'initialText' => 'Select Names...'])}
+
 {GridView::widget(['dataProvider' => $dataProvider2])}
 
 

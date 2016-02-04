@@ -3,6 +3,7 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
+use app\assets\AppAssetHead;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
@@ -11,6 +12,7 @@ use app\assets\AppAsset;
 use yii\widgets\Pjax;
 
 AppAsset::register($this);
+AppAssetHead::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
