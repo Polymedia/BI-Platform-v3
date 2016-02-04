@@ -23,8 +23,6 @@ class HistogramWidget extends Widget
 
     public function init()
     {
-        //var_dump("!!! ".$this->tmp1." !!! ".$this->tmp2." !!!");
-
         parent::init();
     }
 
@@ -40,13 +38,17 @@ class HistogramWidget extends Widget
 
         echo $text;
 
+        $id = $this->getId();
+
+        echo '<div id="'.$id.'" data-pjax-exclude style="min-width: 310px; height: 400px; margin: 0 auto"></div>';
+
         $text2 ='
         function refreshChart() {
-            var chart = $(\'#container\').highcharts();
+            var chart = $(\'#'.$id.'\').highcharts();
             chart.series[0].setData(data);
         }
 
-        $(\'#container\').highcharts({
+        $(\'#'.$id.'\').highcharts({
         title: {
         text: "'.$this->title.'"
         },

@@ -27,7 +27,7 @@ class TableWidget extends InputWidget
 
     public function run()
     {
-        echo '<table border="1">';
+        echo '<table class="table table-bordered">';
         foreach ($this->view->params[$this->name] as $item) {
             echo '<tr>';
                 foreach($item as $value) {
