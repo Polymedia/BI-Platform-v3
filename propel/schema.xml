@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <database name="default" defaultIdMethod="native" defaultPhpNamingMethod="underscore">
+  <table name="data_table" idMethod="native" phpName="DataTable">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" required="true"/>
+    <column name="one" phpName="One" type="INTEGER"/>
+    <column name="two" phpName="Two" type="INTEGER"/>
+    <column name="three" phpName="Three" type="INTEGER"/>
+    <column name="four" phpName="Four" type="VARCHAR" size="100"/>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
   <table name="people" idMethod="native" phpName="People">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" required="true"/>
     <column name="name" phpName="Name" type="VARCHAR" size="255"/>
@@ -23,5 +33,205 @@
     <vendor type="mysql">
       <parameter name="Engine" value="InnoDB"/>
     </vendor>
+  </table>
+  <table name="Выработка" idMethod="native" phpName="Выработка">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="Дата" phpName="Дата" type="DATE" required="true"/>
+    <column name="УчастокРабот" phpName="Участокработ" type="INTEGER" required="true"/>
+    <column name="ТипТехники" phpName="Типтехники" type="INTEGER" required="true"/>
+    <column name="План" phpName="План" type="INTEGER"/>
+    <column name="Факт" phpName="Факт" type="INTEGER"/>
+    <column name="ТипРабот" phpName="Типработ" type="INTEGER" required="true"/>
+    <column name="Выработка" phpName="Выработка" type="BOOLEAN" size="1" required="true"/>
+  </table>
+  <table name="Года" idMethod="native" phpName="Года">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+  </table>
+  <table name="ДатыОбновленийДашбордов" idMethod="native" phpName="Датыобновленийдашбордов">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="Дашборд" phpName="Дашборд" type="LONGVARCHAR" required="true"/>
+    <column name="Проект" phpName="Проект" type="INTEGER"/>
+    <column name="Дата" phpName="Дата" type="DATE" required="true"/>
+    <unique name="ДатыОбновленийД_Дашборд_Проект_key">
+      <unique-column name="Дашборд"/>
+      <unique-column name="Проект"/>
+    </unique>
+  </table>
+  <table name="ДниНедели" idMethod="native" phpName="Днинедели">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" required="true"/>
+    <column name="ДеньНедели" phpName="Деньнедели" type="LONGVARCHAR" required="true"/>
+  </table>
+  <table name="Календарь" idMethod="native" phpName="Календарь">
+    <column name="Дата" phpName="Дата" type="DATE" primaryKey="true" required="true"/>
+    <column name="Год" phpName="Год" type="SMALLINT"/>
+    <column name="Полугодие" phpName="Полугодие" type="SMALLINT"/>
+    <column name="Квартал" phpName="Квартал" type="SMALLINT"/>
+    <column name="НомерМесяца" phpName="Номермесяца" type="SMALLINT"/>
+    <column name="Месяц" phpName="Месяц" type="LONGVARCHAR"/>
+    <column name="День" phpName="День" type="SMALLINT"/>
+    <column name="НомерНедели" phpName="Номернедели" type="SMALLINT"/>
+    <column name="ДеньНедели" phpName="Деньнедели" type="SMALLINT"/>
+    <column name="ДеньВГоду" phpName="Деньвгоду" type="SMALLINT"/>
+  </table>
+  <table name="КонтролирующиеОрганы" idMethod="native" phpName="Контролирующиеорганы">
+    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
+    <column name="КонтролирующийОрган" phpName="Контролирующийорган" type="LONGVARCHAR" required="true"/>
+  </table>
+  <table name="МТР" idMethod="native" phpName="Мтр">
+    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
+    <column name="VIN" phpName="Vin" type="LONGVARCHAR" required="true"/>
+    <column name="ТипТехники" phpName="Типтехники" type="INTEGER" required="true"/>
+    <column name="Дата" phpName="Дата" type="DATE" required="true"/>
+    <column name="СостояниеТехники" phpName="Состояниетехники" type="INTEGER" required="true"/>
+    <column name="Подрядчик" phpName="Подрядчик" type="INTEGER" autoIncrement="true" required="true"/>
+    <column name="Проект" phpName="Проект" type="INTEGER"/>
+    <column name="ДатаОтчёта" phpName="Датаотчёта" type="DATE" required="true"/>
+  </table>
+  <table name="Месяца" idMethod="native" phpName="Месяца">
+    <column name="id" phpName="Id" type="INTEGER" required="true"/>
+    <column name="Месяц" phpName="Месяц" type="LONGVARCHAR" required="true"/>
+  </table>
+  <table name="Мобилизация" idMethod="native" phpName="Мобилизация">
+    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
+    <column name="ТипТехники" phpName="Типтехники" type="INTEGER" required="true"/>
+    <column name="ПланОтгрузкаКоличество" phpName="Планотгрузкаколичество" type="INTEGER"/>
+    <column name="ФактОтгрузкаКоличество" phpName="Фактотгрузкаколичество" type="INTEGER"/>
+    <column name="ПланДоставкаКоличество" phpName="Пландоставкаколичество" type="INTEGER"/>
+    <column name="ФактДоставкаКоличество" phpName="Фактдоставкаколичество" type="INTEGER"/>
+    <column name="Аренда" phpName="Аренда" type="INTEGER"/>
+    <column name="ОстатокКДоставке" phpName="Остатоккдоставке" type="INTEGER"/>
+    <column name="ПромежуточныйПунктКоличество" phpName="Промежуточныйпунктколичество" type="INTEGER"/>
+    <column name="Проект" phpName="Проект" type="INTEGER" required="true"/>
+    <column name="ДатаОтчёта" phpName="Датаотчёта" type="DATE" required="true"/>
+    <column name="УчастокРабот" phpName="Участокработ" type="INTEGER" required="true"/>
+  </table>
+  <table name="МобилизацияПоМесяцам" idMethod="native" phpName="Мобилизацияпомесяцам">
+    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
+    <column name="ТипТехники" phpName="Типтехники" type="INTEGER" required="true"/>
+    <column name="ПлаОотгрузкаКоличество" phpName="Плаоотгрузкаколичество" type="INTEGER"/>
+    <column name="ФактОтгрузкаКоличество" phpName="Фактотгрузкаколичество" type="INTEGER"/>
+    <column name="ПланДоставкаКоличество" phpName="Пландоставкаколичество" type="INTEGER"/>
+    <column name="ФактДоставкаКоличество" phpName="Фактдоставкаколичество" type="INTEGER"/>
+    <column name="Проект" phpName="Проект" type="INTEGER" required="true"/>
+    <column name="Год" phpName="Год" type="INTEGER" required="true"/>
+    <column name="Месяц" phpName="Месяц" type="INTEGER" required="true"/>
+    <column name="ДатаОтчёта" phpName="Датаотчёта" type="DATE" required="true"/>
+    <column name="УчастокРабот" phpName="Участокработ" type="INTEGER" required="true"/>
+  </table>
+  <table name="ОтображаемыеТипыТехникиМТР" idMethod="native" phpName="Отображаемыетипытехникимтр">
+    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
+    <column name="ОтображаемыйТипТехники" phpName="Отображаемыйтиптехники" type="LONGVARCHAR" required="true"/>
+  </table>
+  <table name="ПодрядчикиМТР" idMethod="native" phpName="Подрядчикимтр">
+    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
+    <column name="Подрядчик" phpName="Подрядчик" type="LONGVARCHAR" required="true"/>
+  </table>
+  <table name="ПодрядчикиПредписания" idMethod="native" phpName="Подрядчикипредписания">
+    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
+    <column name="Подрядчик" phpName="Подрядчик" type="LONGVARCHAR"/>
+  </table>
+  <table name="Предписания" idMethod="native" phpName="Предписания">
+    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
+    <column name="КонтролирующийОрган" phpName="Контролирующийорган" type="INTEGER" required="true"/>
+    <column name="Подрядчик" phpName="Подрядчик" type="INTEGER" required="true"/>
+    <column name="ДатаВыдачи" phpName="Датавыдачи" type="DATE" required="true"/>
+    <column name="ПлановаяДатаУстранения" phpName="Плановаядатаустранения" type="DATE" required="true"/>
+    <column name="ФактическаяДатаУстранения" phpName="Фактическаядатаустранения" type="DATE"/>
+    <column name="ТипЗамечания" phpName="Типзамечания" type="INTEGER" required="true"/>
+    <column name="Проект" phpName="Проект" type="INTEGER" required="true"/>
+    <column name="СтатусЗаявкиЗавершение" phpName="Статусзаявкизавершение" type="INTEGER"/>
+    <column name="СтатусЗаявкиПросрочка" phpName="Статусзаявкипросрочка" type="INTEGER"/>
+  </table>
+  <table name="ПроблемныеВопросы" idMethod="native" phpName="Проблемныевопросы">
+    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
+    <column name="Проект" phpName="Проект" type="INTEGER"/>
+    <column name="Дата" phpName="Дата" type="DATE" required="true"/>
+    <column name="Кому" phpName="Кому" type="LONGVARCHAR" required="true"/>
+    <column name="ПроблемныеВопросы" phpName="Проблемныевопросы" type="LONGVARCHAR" required="true"/>
+    <column name="МерыДляРешения" phpName="Мерыдлярешения" type="LONGVARCHAR" required="true"/>
+    <column name="Ответсвенный" phpName="Ответсвенный" type="LONGVARCHAR"/>
+    <column name="Срок" phpName="Срок" type="DATE"/>
+    <column name="Статус" phpName="Статус" type="LONGVARCHAR"/>
+  </table>
+  <table name="Программы" idMethod="native" phpName="Программы">
+    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
+    <column name="Программа" phpName="Программа" type="LONGVARCHAR" required="true"/>
+    <column name="Проект" phpName="Проект" type="INTEGER" required="true"/>
+    <column name="Объем" phpName="Объем" type="REAL" size="24" required="true"/>
+  </table>
+  <table name="Проекты" idMethod="native" phpName="Проекты">
+    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
+    <column name="КодПроекта" phpName="Кодпроекта" type="LONGVARCHAR" required="true"/>
+    <column name="Проект" phpName="Проект" type="LONGVARCHAR" required="true"/>
+    <column name="Руководитель" phpName="Руководитель" type="LONGVARCHAR" required="true"/>
+    <column name="Заказчик" phpName="Заказчик" type="LONGVARCHAR" required="true"/>
+    <column name="Подрядчики" phpName="Подрядчики" type="LONGVARCHAR" required="true"/>
+    <column name="ПериодВыполненияРабот" phpName="Периодвыполненияработ" type="LONGVARCHAR" required="true"/>
+    <column name="ДеталиПроекта" phpName="Деталипроекта" type="LONGVARCHAR" required="true"/>
+    <column name="ТипСтроительства" phpName="Типстроительства" type="LONGVARCHAR" required="true"/>
+    <column name="НазваниеПапкиПроекта" phpName="Названиепапкипроекта" type="LONGVARCHAR" required="true"/>
+    <column name="Картинка" phpName="Картинка" type="LONGVARCHAR" required="true"/>
+    <column name="КарточкаПроекта" phpName="Карточкапроекта" type="LONGVARCHAR"/>
+  </table>
+  <table name="ПроизводственныеПрограммы" idMethod="native" phpName="Производственныепрограммы">
+    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
+    <column name="ТипПрограммы" phpName="Типпрограммы" type="INTEGER" required="true"/>
+    <column name="Год" phpName="Год" type="INTEGER" required="true"/>
+    <column name="Месяц" phpName="Месяц" type="INTEGER" required="true"/>
+    <column name="План" phpName="План" type="INTEGER"/>
+    <column name="Факт" phpName="Факт" type="INTEGER"/>
+  </table>
+  <table name="СтатусСостоянияТехники" idMethod="native" phpName="Статуссостояниятехники">
+    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
+    <column name="Статус" phpName="Статус" type="LONGVARCHAR" required="true"/>
+  </table>
+  <table name="СтатусыЗаявкиЗавершение" idMethod="native" phpName="Статусызаявкизавершение">
+    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
+    <column name="СтатусЗавершения" phpName="Статусзавершения" type="LONGVARCHAR" required="true"/>
+  </table>
+  <table name="СтатусыЗаявкиПросрочка" idMethod="native" phpName="Статусызаявкипросрочка">
+    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
+    <column name="СтатусПросрочки" phpName="Статуспросрочки" type="LONGVARCHAR" required="true"/>
+  </table>
+  <table name="ТипыЗамечаний" idMethod="native" phpName="Типызамечаний">
+    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
+    <column name="ТипЗамечания" phpName="Типзамечания" type="LONGVARCHAR" required="true"/>
+  </table>
+  <table name="ТипыРабот" idMethod="native" phpName="Типыработ">
+    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
+    <column name="ТипРабот" phpName="Типработ" type="LONGVARCHAR" required="true"/>
+    <column name="ЕдиницыИзмерения" phpName="Единицыизмерения" type="LONGVARCHAR" required="true"/>
+    <column name="Отображение" phpName="Отображение" type="BOOLEAN" size="1" required="true"/>
+  </table>
+  <table name="ТипыТехникиВыработка" idMethod="native" phpName="Типытехникивыработка">
+    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
+    <column name="ТипТехники" phpName="Типтехники" type="LONGVARCHAR" required="true"/>
+  </table>
+  <table name="ТипыТехникиМТР" idMethod="native" phpName="Типытехникимтр">
+    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
+    <column name="ТипТехники" phpName="Типтехники" type="LONGVARCHAR" required="true"/>
+    <column name="ОтображаемыйТипТехники" phpName="Отображаемыйтиптехники" type="INTEGER" required="true"/>
+  </table>
+  <table name="ТипыТехникиМобилизация" idMethod="native" phpName="Типытехникимобилизация">
+    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
+    <column name="ТипТехники" phpName="Типтехники" type="LONGVARCHAR" required="true"/>
+  </table>
+  <table name="УчасткиРабот" idMethod="native" phpName="Участкиработ">
+    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
+    <column name="УчастокРабот" phpName="Участокработ" type="LONGVARCHAR" required="true"/>
+    <column name="Проект" phpName="Проект" type="INTEGER" required="true"/>
+  </table>
+  <table name="УчасткиРаботМобилизация" idMethod="native" phpName="Участкиработмобилизация">
+    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
+    <column name="УчастокРабот" phpName="Участокработ" type="LONGVARCHAR" required="true"/>
+  </table>
+  <table name="ФизическиеОбъёмы" idMethod="native" phpName="Физическиеобъёмы">
+    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
+    <column name="Дата" phpName="Дата" type="DATE" required="true"/>
+    <column name="УчастокРабот" phpName="Участокработ" type="INTEGER" required="true"/>
+    <column name="ТипРабот" phpName="Типработ" type="INTEGER" required="true"/>
+    <column name="План" phpName="План" type="REAL" size="24"/>
+    <column name="Факт" phpName="Факт" type="REAL" size="24"/>
+    <column name="ПричинаОтставания" phpName="Причинаотставания" type="LONGVARCHAR"/>
   </table>
 </database>

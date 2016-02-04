@@ -34,11 +34,14 @@ class Filter extends Component
     }
 
     /**
-     * @param $values
+     * @param array|ObjectCollection $values
      * @return Filter $this
      */
     public function setPossibleValues($values)
     {
+        if (is_object($values))
+            $values = $values->toArray();
+
         $this->_possibleValues = $values;
         return $this;
     }
