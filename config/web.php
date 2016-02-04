@@ -53,7 +53,7 @@ $config = [
             'showScriptName' => false,
             'enableStrictParsing' => false,
             'rules' => require(__DIR__ . '/routes.php'),
-        ],
+        ]
 //        'assetManager' => [
 //            'appendTimestamp' => true,
 //            'bundles' => require(__DIR__ . '/../assets/assetBundles.php'),
