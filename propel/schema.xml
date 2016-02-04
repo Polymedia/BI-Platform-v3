@@ -1,5 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <database name="default" defaultIdMethod="native" defaultPhpNamingMethod="underscore">
+  <table name="data_table" idMethod="native" phpName="DataTable">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" required="true"/>
+    <column name="one" phpName="One" type="INTEGER"/>
+    <column name="two" phpName="Two" type="INTEGER"/>
+    <column name="three" phpName="Three" type="INTEGER"/>
+    <column name="four" phpName="Four" type="VARCHAR" size="100"/>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="people" idMethod="native" phpName="People">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" required="true"/>
+    <column name="name" phpName="Name" type="VARCHAR" size="255"/>
+    <column name="date" phpName="Date" type="VARCHAR" size="255"/>
+    <column name="city" phpName="City" type="VARCHAR" size="255"/>
+    <column name="street" phpName="Street" type="VARCHAR" size="255"/>
+    <column name="fix_text" phpName="FixText" type="CLOB"/>
+    <column name="normal" phpName="Normal" type="VARCHAR" size="100"/>
+    <column name="company" phpName="Company" type="VARCHAR" size="255"/>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="unemployment" idMethod="native" phpName="Unemployment">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="unemployment_adult" phpName="UnemploymentAdult" type="DECIMAL" size="8" scale="2" required="true"/>
+    <column name="unemployment_youth" phpName="UnemploymentYouth" type="DECIMAL" size="8" scale="2" required="true"/>
+    <column name="region_id" phpName="RegionId" type="VARCHAR" size="255" required="true"/>
+    <column name="region_name" phpName="RegionName" type="VARCHAR" size="255" required="true"/>
+    <column name="year" phpName="Year" type="INTEGER" required="true"/>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
   <table name="Выработка" idMethod="native" phpName="Выработка">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="Дата" phpName="Дата" type="DATE" required="true"/>
