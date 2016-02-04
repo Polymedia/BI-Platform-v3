@@ -3,13 +3,16 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
+use app\assets\AppAssetHead;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
+use yii\widgets\Pjax;
 
 AppAsset::register($this);
+AppAssetHead::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -39,6 +42,7 @@ AppAsset::register($this);
             ['label' => 'Home', 'url' => ['/site/index']],
             ['label' => 'About', 'url' => ['/site/about']],
             ['label' => 'Contact', 'url' => ['/site/contact']],
+            ['label' => 'Files', 'url' => ['/files']],
             Yii::$app->user->isGuest ?
                 ['label' => 'Login', 'url' => ['/site/login']] :
                 [
@@ -55,7 +59,11 @@ AppAsset::register($this);
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
+
+        <?php Pjax::begin(['timeout' => '100000000', 'scrollTo' => false]); ?>
+        <a id="pjax_reload" href=""></a>
         <?= $content ?>
+        <?php Pjax::end(); ?>
     </div>
 </div>
 
@@ -68,6 +76,62 @@ AppAsset::register($this);
 </footer>
 
 <?php $this->endBody() ?>
+
+<script type="text/javascript">
+
+    $(document).on('pjax:beforeReplace', function(e, content, options){
+
+//        $('[data-pjax-exclude]').each(function(index, el){
+//            $(el).find("*").attr('data-pjax-exclude', '1');
+//        });
+
+        // Save jQuery objects with [data-pjax-exclude] for restore after PJAX query
+        window.pjax_exclude = [];
+        $('[data-pjax-exclude]').each(function(index, el){
+            //console.log(getDomPath(el));
+            window.pjax_exclude[getDomPath(el)] = $.extend(true, {}, $('[data-pjax-exclude]').eq(index));
+        });
+
+
+        // Replace jQuery objects HTML with old one
+        content.filter('[data-pjax-exclude]').each(function(index, el){
+            $(el).html($('[data-pjax-exclude]').eq(index).html());
+        });
+    });
+
+    $(document).on('pjax:complete', function(){
+
+        console.log($('[data-pjax-exclude]').size());
+        // Restore saved jQuery objects
+        $('[data-pjax-exclude]').each(function(index, el){
+            if (window.pjax_exclude[getDomPath(el)])
+                $(el).replaceWith(window.pjax_exclude[getDomPath(el)]);
+        });
+    });
+
+    function getDomPath(el){
+        var parents = [],
+            elm,
+            entry;
+
+        for (elm = el; elm; elm = elm.parentNode) {
+            entry = elm.tagName.toLowerCase();
+            if (entry === "html") {
+                break;
+            }
+            if (elm.className && elm.className.replace) {
+                entry += "." + elm.className.replace(/ /g, '.');
+            }
+            if (elm.id && elm.id.replace)
+                entry += "#" + elm.id.replace(/ /g, '#');
+            parents.push(entry);
+        }
+        parents.reverse();
+        return parents.join(" ");
+    }
+
+</script>
+
 </body>
 </html>
 <?php $this->endPage() ?>

@@ -1,0 +1,40 @@
+<% extend 'layout.ect' %>
+
+<div>
+    <a id="page" href="/" target="_blank">Create linked page</a>
+</div>
+<div>
+    <button id="button">Change page link</button>
+</div>
+
+<script>
+    var client = new Eureca.Client()
+    var server = null
+       
+    client.ready(function (remote) {
+        console.log('Connected to server')
+        server = remote
+        server.id().onReady(function (id) {
+            $('#page').attr('href', '/' + id)
+        })
+    })
+    
+    // Generic signal handler
+    client.exports.signal = function (name, data) {
+        console.log('Signal recieved:', name)
+        console.log(data)
+    }
+    
+    // Refresh handler
+    client.exports.refresh = function () {
+        console.log('Refresh recieved')
+    }
+    
+    $(document).ready(function () {
+        $('#button').click(function () {
+            link = '/?changed=' + Math.random()
+            window.history.pushState('state', null, link) 
+            server.change(link)
+        })
+    })
+</script>

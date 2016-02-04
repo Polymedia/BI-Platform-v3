@@ -21,11 +21,11 @@ use Propel\Runtime\Parser\AbstractParser;
 /**
  * Base class that represents a row from the 'unemployment' table.
  *
- * 
+ *
  *
 * @package    propel.generator..Base
 */
-abstract class Unemployment implements ActiveRecordInterface 
+abstract class Unemployment implements ActiveRecordInterface
 {
     /**
      * TableMap class name
@@ -61,42 +61,42 @@ abstract class Unemployment implements ActiveRecordInterface
 
     /**
      * The value for the id field.
-     * 
+     *
      * @var        int
      */
     protected $id;
 
     /**
      * The value for the unemployment_adult field.
-     * 
+     *
      * @var        string
      */
     protected $unemployment_adult;
 
     /**
      * The value for the unemployment_youth field.
-     * 
+     *
      * @var        string
      */
     protected $unemployment_youth;
 
     /**
      * The value for the region_id field.
-     * 
+     *
      * @var        string
      */
     protected $region_id;
 
     /**
      * The value for the region_name field.
-     * 
+     *
      * @var        string
      */
     protected $region_name;
 
     /**
      * The value for the year field.
-     * 
+     *
      * @var        int
      */
     protected $year;
@@ -326,17 +326,17 @@ abstract class Unemployment implements ActiveRecordInterface
         $cls = new \ReflectionClass($this);
         $propertyNames = [];
         $serializableProperties = array_diff($cls->getProperties(), $cls->getProperties(\ReflectionProperty::IS_STATIC));
-        
+
         foreach($serializableProperties as $property) {
             $propertyNames[] = $property->getName();
         }
-        
+
         return $propertyNames;
     }
 
     /**
      * Get the [id] column value.
-     * 
+     *
      * @return int
      */
     public function getId()
@@ -346,7 +346,7 @@ abstract class Unemployment implements ActiveRecordInterface
 
     /**
      * Get the [unemployment_adult] column value.
-     * 
+     *
      * @return string
      */
     public function getUnemploymentAdult()
@@ -356,7 +356,7 @@ abstract class Unemployment implements ActiveRecordInterface
 
     /**
      * Get the [unemployment_youth] column value.
-     * 
+     *
      * @return string
      */
     public function getUnemploymentYouth()
@@ -366,7 +366,7 @@ abstract class Unemployment implements ActiveRecordInterface
 
     /**
      * Get the [region_id] column value.
-     * 
+     *
      * @return string
      */
     public function getRegionId()
@@ -376,7 +376,7 @@ abstract class Unemployment implements ActiveRecordInterface
 
     /**
      * Get the [region_name] column value.
-     * 
+     *
      * @return string
      */
     public function getRegionName()
@@ -386,7 +386,7 @@ abstract class Unemployment implements ActiveRecordInterface
 
     /**
      * Get the [year] column value.
-     * 
+     *
      * @return int
      */
     public function getYear()
@@ -396,7 +396,7 @@ abstract class Unemployment implements ActiveRecordInterface
 
     /**
      * Set the value of [id] column.
-     * 
+     *
      * @param int $v new value
      * @return $this|\Unemployment The current object (for fluent API support)
      */
@@ -416,7 +416,7 @@ abstract class Unemployment implements ActiveRecordInterface
 
     /**
      * Set the value of [unemployment_adult] column.
-     * 
+     *
      * @param string $v new value
      * @return $this|\Unemployment The current object (for fluent API support)
      */
@@ -436,7 +436,7 @@ abstract class Unemployment implements ActiveRecordInterface
 
     /**
      * Set the value of [unemployment_youth] column.
-     * 
+     *
      * @param string $v new value
      * @return $this|\Unemployment The current object (for fluent API support)
      */
@@ -456,7 +456,7 @@ abstract class Unemployment implements ActiveRecordInterface
 
     /**
      * Set the value of [region_id] column.
-     * 
+     *
      * @param string $v new value
      * @return $this|\Unemployment The current object (for fluent API support)
      */
@@ -476,7 +476,7 @@ abstract class Unemployment implements ActiveRecordInterface
 
     /**
      * Set the value of [region_name] column.
-     * 
+     *
      * @param string $v new value
      * @return $this|\Unemployment The current object (for fluent API support)
      */
@@ -496,7 +496,7 @@ abstract class Unemployment implements ActiveRecordInterface
 
     /**
      * Set the value of [year] column.
-     * 
+     *
      * @param int $v new value
      * @return $this|\Unemployment The current object (for fluent API support)
      */
@@ -801,22 +801,22 @@ abstract class Unemployment implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case 'id':                        
+                    case 'id':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case 'unemployment_adult':                        
+                    case 'unemployment_adult':
                         $stmt->bindValue($identifier, $this->unemployment_adult, PDO::PARAM_STR);
                         break;
-                    case 'unemployment_youth':                        
+                    case 'unemployment_youth':
                         $stmt->bindValue($identifier, $this->unemployment_youth, PDO::PARAM_STR);
                         break;
-                    case 'region_id':                        
+                    case 'region_id':
                         $stmt->bindValue($identifier, $this->region_id, PDO::PARAM_STR);
                         break;
-                    case 'region_name':                        
+                    case 'region_name':
                         $stmt->bindValue($identifier, $this->region_name, PDO::PARAM_STR);
                         break;
-                    case 'year':                        
+                    case 'year':
                         $stmt->bindValue($identifier, $this->year, PDO::PARAM_INT);
                         break;
                 }
@@ -939,7 +939,7 @@ abstract class Unemployment implements ActiveRecordInterface
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
         }
-        
+
 
         return $result;
     }
@@ -1137,7 +1137,7 @@ abstract class Unemployment implements ActiveRecordInterface
 
         return spl_object_hash($this);
     }
-        
+
     /**
      * Returns the primary key for this object (row).
      * @return int

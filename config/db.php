@@ -2,8 +2,8 @@
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=flipbox.ru;dbname=nadejdpav_test',
-    'username' => 'nadejdpav_test',
-    'password' => 'QSyJfkXD',
+    'dsn' => 'pgsql:host=192.168.44.94;dbname=bi3',
+    'username' => 'postgres',
+    'password' => 'vAy7swuT',
     'charset' => 'utf8',
 ];

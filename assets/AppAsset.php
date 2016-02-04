@@ -21,11 +21,11 @@ class AppAsset extends AssetBundle
         'css/site.css',
     ];
     public $js = [
-        'http://code.highcharts.com/mapdata/countries/kz/kz-all.js',
+        //'http://code.highcharts.com/mapdata/countries/kz/kz-all.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
-        'miloschuman\highcharts\HighchartsAsset',
+        //'miloschuman\highcharts\HighchartsAsset'
     ];
 }
