@@ -60,7 +60,7 @@ AppAssetHead::register($this);
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
 
-        <?php Pjax::begin(['timeout' => '100000000']); ?>
+        <?php Pjax::begin(['timeout' => '100000000', 'scrollTo' => false]); ?>
         <a id="pjax_reload" href=""></a>
         <?= $content ?>
         <?php Pjax::end(); ?>
