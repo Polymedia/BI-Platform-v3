@@ -6,6 +6,7 @@
 {use class="app\components\HistogramWidget"}
 {use class="miloschuman\highcharts\Highcharts"}
 {use class="miloschuman\highcharts\HighchartsAsset"}
+{use class="app\components\ChildDashboard"}
 {assign "hc" HighchartsAsset::register($this)->withScripts(['highcharts', 'modules/exporting', 'modules/drilldown', 'modules/data'])}
 
 
@@ -29,7 +30,7 @@
     <div id="container" data-pjax-exclude style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
 
-
+{ChildDashboard::widget()}
 {HistogramWidget::widget(['model2' => $model2, 'title' => "Безработные"])}
 
 {GridView::widget(['dataProvider' => $dataProvider])}
