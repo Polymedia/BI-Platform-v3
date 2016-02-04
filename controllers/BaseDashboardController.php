@@ -137,6 +137,6 @@ class BaseDashboardController extends Controller
     {
         $this->injectFiltersInView($params);
         $this->injectWidgetsInView($params);
-        $this->injectJsVars($params);
+        //$this->injectJsVars($params);
     }
 }
