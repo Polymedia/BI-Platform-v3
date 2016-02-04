@@ -16,7 +16,9 @@ var Parent = {
         client.exports.signal = function (name, data) {};
 
         // Refresh handler
-        client.exports.refresh = function () {};
+        client.exports.refresh = function () {
+            $('#pjax_reload').click()
+        };
         
         (function (history) {
             var pushState = history.pushState;
