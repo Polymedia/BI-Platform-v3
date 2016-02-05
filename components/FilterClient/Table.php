@@ -54,9 +54,9 @@ class Table extends Widget
                 // Default values
                 visiology.model.'.$this->name.'.depends_on = [];
             }
-            function onUser_'.$this->name.'(widget) {
-                '.$content.'
-            }
+         </script>
+            '.$content.'
+         <script type="text/javascript">
             function onDeploy_'.$this->name.'(visiology) {
                 visiology.model.'.$this->name.'.ko_start = ko.observable(0);
                 visiology.model.'.$this->name.'.ko_limit = ko.observable(20);

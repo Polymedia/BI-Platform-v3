@@ -1,20 +1,18 @@
-<?php
-use app\components\FilterClient\Filter;
-use app\components\FilterClient\Columns;
-use app\components\FilterClient\Pie;
-use app\components\FilterClient\Table;
+{use class = "app\components\FilterClient\Filter" type = "block"}
+{use class = "app\components\FilterClient\Columns" type = "block"}
+{use class = "app\components\FilterClient\Pie" type = "block"}
+{use class = "app\components\FilterClient\Table" type = "block"}
 
-use yii\helpers\Json;
-?>
+{use class = "yii\helpers\Json"}
 
 <script>
     function onRequestVisiologyData() {
-        return <?=Json::encode($data, JSON_PRETTY_PRINT)?>;
+        return {Json::encode($data, JSON_PRETTY_PRINT)};
     }
 </script>
 
 <div>
-    <?php Filter::begin(['name' => "filter_year", 'optionsCaption' => "All years"]); ?>
+    {Filter name = "filter_year" optionsCaption = "All years"}
     <script>
         function onUser_filter_year(widget) {
             // User code here
@@ -22,13 +20,13 @@ use yii\helpers\Json;
             widget.defaults.selected = '';
         }
     </script>
-    <?php Filter::end(); ?>
+    {/Filter}
 </div>
 
 <br />
 
 <div>
-    <?php Filter::begin(['name' => "filter_category", 'optionsCaption' => "All categories"]); ?>
+    {Filter name = "filter_category" optionsCaption = "All categories"}
     <script>
         function onUser_filter_category(widget) {
             // User code here
@@ -37,9 +35,9 @@ use yii\helpers\Json;
             widget.depends_on = ['filter_year'];
         }
     </script>
-    <?php Filter::end(); ?>
+    {/Filter}
 
-    <?php Filter::begin(['name' => "filter_manager", 'optionsCaption' => "All managers"]); ?>
+    {Filter name = "filter_manager" optionsCaption = "All managers"}
     <script>
         function onUser_filter_manager(widget) {
             // User code here
@@ -48,7 +46,7 @@ use yii\helpers\Json;
             widget.depends_on = ['filter_year'];
         }
     </script>
-    <?php Filter::end(); ?>
+    {/Filter}
 </div>
 
 <br />
@@ -58,7 +56,7 @@ use yii\helpers\Json;
         <tbody>
         <tr>
             <td style="width:50%; height:400px;">
-                <?php Columns::begin(['name' => "chart"]); ?>
+                {Columns name = "chart"}
                 <script>
                     function onUser_chart(widget) {
                         // User code here
@@ -68,20 +66,20 @@ use yii\helpers\Json;
                         widget.depends_on = ['filter_category', 'filter_manager'];
                     }
                 </script>
-                <?php Columns::end(); ?>
+                {/Columns}
 
             </td>
             <td style="width:50%; height:400px;">
-                <?php Pie::begin(['name' => "pie"]); ?>
-                    <script>
-                        function onUser_pie(widget) {
-                            // User code here
-                            widget.defaults.column_for_serie = 'category';
-                            widget.defaults.measure_name = 'amount';
-                            widget.depends_on = ['filter_category', 'filter_manager'];
-                        }
-                    </script>
-                <?php Pie::end(); ?>
+                {Pie name = "pie"}
+                <script>
+                    function onUser_pie(widget) {
+                        // User code here
+                        widget.defaults.column_for_serie = 'category';
+                        widget.defaults.measure_name = 'amount';
+                        widget.depends_on = ['filter_category', 'filter_manager'];
+                    }
+                </script>
+                {/Pie}
             </td>
         </tr>
         </tbody>
@@ -89,12 +87,12 @@ use yii\helpers\Json;
 </div>
 
 <div>
-    <?php Table::begin(['name' => "table"]); ?>
+    {Table name = "table"}
     <script>
         function onUser_table(widget) {
             // User code here
             widget.depends_on = ['filter_category', 'filter_manager'];
         }
     </script>
-    <?php Table::end(); ?>
+    {/Table}
 </div>
