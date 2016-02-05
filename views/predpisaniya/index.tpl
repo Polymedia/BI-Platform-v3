@@ -1,4 +1,7 @@
 {use class="app\components\MultipleSelect"}
+{*{use class="app\components\ChildDashboard"}*}
+
+{use class="app\components\TableWidget"}
 
 Проект
 {MultipleSelect::widget(['name' => 'filter_project'])}
@@ -27,3 +30,8 @@
 
 {MultipleSelect::widget(['name' => 'filter_dateto'])}
 
+{*{ChildDashboard::widget()}*}
+
+{TableWidget::widget(['name' => 'widget_xz'])}
+
+{TableWidget::widget(['name' => 'widget_xz_1'])}
