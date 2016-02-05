@@ -92,9 +92,9 @@ class КалендарьTableMap extends TableMap
     const COL_КВАРТАЛ = 'Календарь.Квартал';
 
     /**
-     * the column name for the НомерМесяца field
+     * the column name for the Номер_месяца field
      */
-    const COL_НОМЕРМЕСЯЦА = 'Календарь.НомерМесяца';
+    const COL_НОМЕР_МЕСЯЦА = 'Календарь.Номер_месяца';
 
     /**
      * the column name for the Месяц field
@@ -107,19 +107,19 @@ class КалендарьTableMap extends TableMap
     const COL_ДЕНЬ = 'Календарь.День';
 
     /**
-     * the column name for the НомерНедели field
+     * the column name for the Номер_недели field
      */
-    const COL_НОМЕРНЕДЕЛИ = 'Календарь.НомерНедели';
+    const COL_НОМЕР_НЕДЕЛИ = 'Календарь.Номер_недели';
 
     /**
-     * the column name for the ДеньНедели field
+     * the column name for the День_недели field
      */
-    const COL_ДЕНЬНЕДЕЛИ = 'Календарь.ДеньНедели';
+    const COL_ДЕНЬ_НЕДЕЛИ = 'Календарь.День_недели';
 
     /**
-     * the column name for the ДеньВГоду field
+     * the column name for the День_в_году field
      */
-    const COL_ДЕНЬВГОДУ = 'Календарь.ДеньВГоду';
+    const COL_ДЕНЬ_В_ГОДУ = 'Календарь.День_в_году';
 
     /**
      * The default string format for model objects of the related table
@@ -133,10 +133,10 @@ class КалендарьTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Дата', 'Год', 'Полугодие', 'Квартал', 'Номермесяца', 'Месяц', 'День', 'Номернедели', 'Деньнедели', 'Деньвгоду', ),
-        self::TYPE_CAMELNAME     => array('�ата', '�од', '�олугодие', '�вартал', '�омермесяца', '�есяц', '�ень', '�омернедели', '�еньнедели', '�еньвгоду', ),
-        self::TYPE_COLNAME       => array(КалендарьTableMap::COL_ДАТА, КалендарьTableMap::COL_ГОД, КалендарьTableMap::COL_ПОЛУГОДИЕ, КалендарьTableMap::COL_КВАРТАЛ, КалендарьTableMap::COL_НОМЕРМЕСЯЦА, КалендарьTableMap::COL_МЕСЯЦ, КалендарьTableMap::COL_ДЕНЬ, КалендарьTableMap::COL_НОМЕРНЕДЕЛИ, КалендарьTableMap::COL_ДЕНЬНЕДЕЛИ, КалендарьTableMap::COL_ДЕНЬВГОДУ, ),
-        self::TYPE_FIELDNAME     => array('Дата', 'Год', 'Полугодие', 'Квартал', 'НомерМесяца', 'Месяц', 'День', 'НомерНедели', 'ДеньНедели', 'ДеньВГоду', ),
+        self::TYPE_PHPNAME       => array('дата', 'год', 'полугодие', 'квартал', 'номермесяца', 'месяц', 'день', 'номернедели', 'деньнедели', 'деньвгоду', ),
+        self::TYPE_CAMELNAME     => array('�ата', '�од', '�олугодие', '�вартал', '�омермесяца', '�есяц', '�ень', '�омернедели', '�еньнедели', '�еньвгоду', ),
+        self::TYPE_COLNAME       => array(КалендарьTableMap::COL_ДАТА, КалендарьTableMap::COL_ГОД, КалендарьTableMap::COL_ПОЛУГОДИЕ, КалендарьTableMap::COL_КВАРТАЛ, КалендарьTableMap::COL_НОМЕР_МЕСЯЦА, КалендарьTableMap::COL_МЕСЯЦ, КалендарьTableMap::COL_ДЕНЬ, КалендарьTableMap::COL_НОМЕР_НЕДЕЛИ, КалендарьTableMap::COL_ДЕНЬ_НЕДЕЛИ, КалендарьTableMap::COL_ДЕНЬ_В_ГОДУ, ),
+        self::TYPE_FIELDNAME     => array('Дата', 'Год', 'Полугодие', 'Квартал', 'Номер_месяца', 'Месяц', 'День', 'Номер_недели', 'День_недели', 'День_в_году', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
     );
 
@@ -147,10 +147,10 @@ class КалендарьTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Дата' => 0, 'Год' => 1, 'Полугодие' => 2, 'Квартал' => 3, 'Номермесяца' => 4, 'Месяц' => 5, 'День' => 6, 'Номернедели' => 7, 'Деньнедели' => 8, 'Деньвгоду' => 9, ),
-        self::TYPE_CAMELNAME     => array('�ата' => 0, '�од' => 1, '�олугодие' => 2, '�вартал' => 3, '�омермесяца' => 4, '�есяц' => 5, '�ень' => 6, '�омернедели' => 7, '�еньнедели' => 8, '�еньвгоду' => 9, ),
-        self::TYPE_COLNAME       => array(КалендарьTableMap::COL_ДАТА => 0, КалендарьTableMap::COL_ГОД => 1, КалендарьTableMap::COL_ПОЛУГОДИЕ => 2, КалендарьTableMap::COL_КВАРТАЛ => 3, КалендарьTableMap::COL_НОМЕРМЕСЯЦА => 4, КалендарьTableMap::COL_МЕСЯЦ => 5, КалендарьTableMap::COL_ДЕНЬ => 6, КалендарьTableMap::COL_НОМЕРНЕДЕЛИ => 7, КалендарьTableMap::COL_ДЕНЬНЕДЕЛИ => 8, КалендарьTableMap::COL_ДЕНЬВГОДУ => 9, ),
-        self::TYPE_FIELDNAME     => array('Дата' => 0, 'Год' => 1, 'Полугодие' => 2, 'Квартал' => 3, 'НомерМесяца' => 4, 'Месяц' => 5, 'День' => 6, 'НомерНедели' => 7, 'ДеньНедели' => 8, 'ДеньВГоду' => 9, ),
+        self::TYPE_PHPNAME       => array('дата' => 0, 'год' => 1, 'полугодие' => 2, 'квартал' => 3, 'номермесяца' => 4, 'месяц' => 5, 'день' => 6, 'номернедели' => 7, 'деньнедели' => 8, 'деньвгоду' => 9, ),
+        self::TYPE_CAMELNAME     => array('�ата' => 0, '�од' => 1, '�олугодие' => 2, '�вартал' => 3, '�омермесяца' => 4, '�есяц' => 5, '�ень' => 6, '�омернедели' => 7, '�еньнедели' => 8, '�еньвгоду' => 9, ),
+        self::TYPE_COLNAME       => array(КалендарьTableMap::COL_ДАТА => 0, КалендарьTableMap::COL_ГОД => 1, КалендарьTableMap::COL_ПОЛУГОДИЕ => 2, КалендарьTableMap::COL_КВАРТАЛ => 3, КалендарьTableMap::COL_НОМЕР_МЕСЯЦА => 4, КалендарьTableMap::COL_МЕСЯЦ => 5, КалендарьTableMap::COL_ДЕНЬ => 6, КалендарьTableMap::COL_НОМЕР_НЕДЕЛИ => 7, КалендарьTableMap::COL_ДЕНЬ_НЕДЕЛИ => 8, КалендарьTableMap::COL_ДЕНЬ_В_ГОДУ => 9, ),
+        self::TYPE_FIELDNAME     => array('Дата' => 0, 'Год' => 1, 'Полугодие' => 2, 'Квартал' => 3, 'Номер_месяца' => 4, 'Месяц' => 5, 'День' => 6, 'Номер_недели' => 7, 'День_недели' => 8, 'День_в_году' => 9, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
     );
 
@@ -171,16 +171,16 @@ class КалендарьTableMap extends TableMap
         $this->setPackage('');
         $this->setUseIdGenerator(false);
         // columns
-        $this->addPrimaryKey('Дата', 'Дата', 'DATE', true, null, null);
-        $this->addColumn('Год', 'Год', 'SMALLINT', false, null, null);
-        $this->addColumn('Полугодие', 'Полугодие', 'SMALLINT', false, null, null);
-        $this->addColumn('Квартал', 'Квартал', 'SMALLINT', false, null, null);
-        $this->addColumn('НомерМесяца', 'Номермесяца', 'SMALLINT', false, null, null);
-        $this->addColumn('Месяц', 'Месяц', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('День', 'День', 'SMALLINT', false, null, null);
-        $this->addColumn('НомерНедели', 'Номернедели', 'SMALLINT', false, null, null);
-        $this->addColumn('ДеньНедели', 'Деньнедели', 'SMALLINT', false, null, null);
-        $this->addColumn('ДеньВГоду', 'Деньвгоду', 'SMALLINT', false, null, null);
+        $this->addPrimaryKey('Дата', 'дата', 'DATE', true, null, null);
+        $this->addForeignKey('Год', 'год', 'SMALLINT', 'Года', 'id', false, null, null);
+        $this->addColumn('Полугодие', 'полугодие', 'SMALLINT', false, null, null);
+        $this->addColumn('Квартал', 'квартал', 'SMALLINT', false, null, null);
+        $this->addForeignKey('Номер_месяца', 'номермесяца', 'SMALLINT', 'Месяца', 'id', false, null, null);
+        $this->addColumn('Месяц', 'месяц', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('День', 'день', 'SMALLINT', false, null, null);
+        $this->addColumn('Номер_недели', 'номернедели', 'SMALLINT', false, null, null);
+        $this->addForeignKey('День_недели', 'деньнедели', 'SMALLINT', 'Дни_недели', 'id', false, null, null);
+        $this->addColumn('День_в_году', 'деньвгоду', 'SMALLINT', false, null, null);
     } // initialize()
 
     /**
@@ -188,6 +188,90 @@ class КалендарьTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('года', '\\года', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':Год',
+    1 => ':id',
+  ),
+), null, null, null, false);
+        $this->addRelation('днинедели', '\\днинедели', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':День_недели',
+    1 => ':id',
+  ),
+), null, null, null, false);
+        $this->addRelation('месяца', '\\месяца', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':Номер_месяца',
+    1 => ':id',
+  ),
+), null, null, null, false);
+        $this->addRelation('выработка', '\\выработка', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':Дата',
+    1 => ':Дата',
+  ),
+), null, null, 'выработкаs', false);
+        $this->addRelation('датыобновленийдашбордов', '\\датыобновленийдашбордов', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':Дата',
+    1 => ':Дата',
+  ),
+), null, null, 'датыобновленийдашбордовs', false);
+        $this->addRelation('мтр', '\\мтр', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':Дата',
+    1 => ':Дата',
+  ),
+), null, null, 'мтрs', false);
+        $this->addRelation('мобилизация', '\\мобилизация', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':Дата_отчёта',
+    1 => ':Дата',
+  ),
+), null, null, 'мобилизацияs', false);
+        $this->addRelation('мобилизацияпомесяцам', '\\мобилизацияпомесяцам', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':Дата_отчёта',
+    1 => ':Дата',
+  ),
+), null, null, 'мобилизацияпомесяцамs', false);
+        $this->addRelation('ПредписанияRelatedByдатавыдачи', '\\Предписания', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':Дата_выдачи',
+    1 => ':Дата',
+  ),
+), null, null, 'ПредписанияsRelatedByдатавыдачи', false);
+        $this->addRelation('ПредписанияRelatedByплановаядатаустранения', '\\Предписания', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':Плановая_дата_устранения',
+    1 => ':Дата',
+  ),
+), null, null, 'ПредписанияsRelatedByплановаядатаустранения', false);
+        $this->addRelation('ПредписанияRelatedByфактическаядатаустранения', '\\Предписания', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':Фактическая_дата_устранения',
+    1 => ':Дата',
+  ),
+), null, null, 'ПредписанияsRelatedByфактическаядатаустранения', false);
+        $this->addRelation('физическиеобъёмы', '\\физическиеобъёмы', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':Дата',
+    1 => ':Дата',
+  ),
+), null, null, 'физическиеобъёмыs', false);
     } // buildRelations()
 
     /**
@@ -206,11 +290,11 @@ class КалендарьTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Дата', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('дата', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Дата', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Дата', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Дата', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Дата', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Дата', TableMap::TYPE_PHPNAME, $indexType)];
+        return null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('дата', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('дата', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('дата', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('дата', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('дата', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -230,7 +314,7 @@ class КалендарьTableMap extends TableMap
         return (string) $row[
             $indexType == TableMap::TYPE_NUM
                 ? 0 + $offset
-                : self::translateFieldName('Дата', TableMap::TYPE_PHPNAME, $indexType)
+                : self::translateFieldName('дата', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
     
@@ -335,23 +419,23 @@ class КалендарьTableMap extends TableMap
             $criteria->addSelectColumn(КалендарьTableMap::COL_ГОД);
             $criteria->addSelectColumn(КалендарьTableMap::COL_ПОЛУГОДИЕ);
             $criteria->addSelectColumn(КалендарьTableMap::COL_КВАРТАЛ);
-            $criteria->addSelectColumn(КалендарьTableMap::COL_НОМЕРМЕСЯЦА);
+            $criteria->addSelectColumn(КалендарьTableMap::COL_НОМЕР_МЕСЯЦА);
             $criteria->addSelectColumn(КалендарьTableMap::COL_МЕСЯЦ);
             $criteria->addSelectColumn(КалендарьTableMap::COL_ДЕНЬ);
-            $criteria->addSelectColumn(КалендарьTableMap::COL_НОМЕРНЕДЕЛИ);
-            $criteria->addSelectColumn(КалендарьTableMap::COL_ДЕНЬНЕДЕЛИ);
-            $criteria->addSelectColumn(КалендарьTableMap::COL_ДЕНЬВГОДУ);
+            $criteria->addSelectColumn(КалендарьTableMap::COL_НОМЕР_НЕДЕЛИ);
+            $criteria->addSelectColumn(КалендарьTableMap::COL_ДЕНЬ_НЕДЕЛИ);
+            $criteria->addSelectColumn(КалендарьTableMap::COL_ДЕНЬ_В_ГОДУ);
         } else {
             $criteria->addSelectColumn($alias . '.Дата');
             $criteria->addSelectColumn($alias . '.Год');
             $criteria->addSelectColumn($alias . '.Полугодие');
             $criteria->addSelectColumn($alias . '.Квартал');
-            $criteria->addSelectColumn($alias . '.НомерМесяца');
+            $criteria->addSelectColumn($alias . '.Номер_месяца');
             $criteria->addSelectColumn($alias . '.Месяц');
             $criteria->addSelectColumn($alias . '.День');
-            $criteria->addSelectColumn($alias . '.НомерНедели');
-            $criteria->addSelectColumn($alias . '.ДеньНедели');
-            $criteria->addSelectColumn($alias . '.ДеньВГоду');
+            $criteria->addSelectColumn($alias . '.Номер_недели');
+            $criteria->addSelectColumn($alias . '.День_недели');
+            $criteria->addSelectColumn($alias . '.День_в_году');
         }
     }
 
