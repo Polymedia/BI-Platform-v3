@@ -13,6 +13,8 @@ use app\utils\ExcelReader;
 
 class FilesController extends Controller
 {
+    public $layout = 'post';
+    
     public function actionIndex()
     {      
         $model = new ExcelUploadForm();
