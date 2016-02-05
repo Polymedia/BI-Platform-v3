@@ -14,7 +14,7 @@
 {assign "hc" HighchartsAsset::register($this)->withScripts(['highcharts', 'modules/exporting', 'modules/drilldown', 'modules/data'])}
 
 
-{foreach $projects as $project}
+{foreach $projects as $key => $project}
 <div class="container fluid">
     <div class="row">
         <div class="col-md-4">
@@ -57,7 +57,7 @@
         </div>
         <div class="col-md-4">
             <p>
-                {HistogramWidget::widget(['model2' => $model2, 'title' => "Безработные"])}
+                {HistogramWidget::widget(['name' => "widget_portfolio_{$key}", 'title' => "Безработные"])}
             </p>
         </div>
         <div class="col-md-4">
