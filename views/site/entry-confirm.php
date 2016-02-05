@@ -27,7 +27,7 @@ use app\controllers\SaveController;
             selector: '#pukanchik',
             plugins: ['code'],
             forced_root_block : "",
-            extended_valid_elements: 'script[type|src]',
+            extended_valid_elements: 'script[type|src],button[id|class|type|data-toggle|aria-haspopup|aria-expanded]',
             remove_linebreaks : false
         });
     </script>
