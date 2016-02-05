@@ -6,6 +6,8 @@
 {assign "hc" HighchartsAsset::register($this)->withScripts(['highcharts', 'modules/exporting', 'modules/drilldown', 'modules/data'])}
 
 {Select::widget(['name' => 'filter_region'])}
+<br>
+{ChildDashboard::widget(['label' => 'Не нажимай меня!'])}
 
 {HistogramWidget::widget(['name' => 'widget_hist', 'title' => "Динамическая перерисовка"])}
 
