@@ -25,9 +25,16 @@ use app\controllers\SaveController;
     <script>
         tinymce.init({
             selector: '#pukanchik',
-            plugins: ['code'],
+            plugins: [
+                'advlist autolink advlist link image charmap print preview hr anchor pagebreak',
+                'searchreplace wordcount visualblocks visualchars code fullscreen',
+                'insertdatetime media nonbreaking save table contextmenu directionality',
+                'emoticons template paste textcolor colorpicker textpattern imagetools'
+            ],
             forced_root_block : "",
-            extended_valid_elements: 'script[type|src],button[id|class|type|data-toggle|aria-haspopup|aria-expanded]',
+            valid_elements : '+*[*]',
+            extended_valid_elements: 'a[href],li[*]',
+            //extended_valid_elements: '*[*]',//'script[type|src],button[id|class|type|data-toggle|aria-haspopup|aria-expanded],ul[class|aria-labelledby]',
             remove_linebreaks : false
         });
     </script>
@@ -45,8 +52,23 @@ use app\controllers\SaveController;
 
             $file = fopen($fullPath, "r");
 
+            $openTagCount = 0;
+
             while(!feof($file)) {
-	            echo htmlentities(fgets($file)) . "<br />";
+                $line = fgets($file);
+
+                $resLine = $line;
+                if (strpos($line, '<div') !== false) {
+                    $openTagCount = $openTagCount + 1;
+                }
+                if (strpos($line, '</div') !== false) {
+                    $openTagCount = $openTagCount - 1;
+                }
+
+                if ($openTagCount === 0) {
+                    $resLine = $line . "<br />";
+                }
+	            echo $resLine;
 	        }
 
             fclose($file);
