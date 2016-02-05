@@ -45,6 +45,8 @@ class PredpisaniyaController extends BaseDashboardController
         $datetoFilter = $this->getFilter('filter_dateto');
         $datetoFilter->setPossibleValues(ПредписанияQuery::create()->select('Плановая_дата_устранения')->distinct()->orderByплановаядатаустранения('DESC')->find());
 
+        //echo var_dump("1111".$projectFilter->selectedValue);
+
         $query = ПредписанияQuery::create()->useПроектыQuery()->filterByпроект($projectFilter->selectedValues)->endUse();
 
         if ($classificationFilter->selectedValues)
@@ -95,9 +97,12 @@ class PredpisaniyaController extends BaseDashboardController
             $r[$el["Подрядчики_предписания.Подрядчик"]][] = $el["Count"];
         }
 
-        $widg3 = $this->getWidget('widget_hist1');
-        $widg3->setCategories(ArrayHelper::getColumn($t_left_1->find()->toArray(), "Контролирующие_органы.Контролирующий_орган"));
-        $widg3->setSeries($r);
+        if (isset($r)) {
+
+            $widg3 = $this->getWidget('widget_hist1');
+            $widg3->setCategories(ArrayHelper::getColumn($t_left_1->find()->toArray(), "Контролирующие_органы.Контролирующий_орган"));
+            $widg3->setSeries($r);
+        }
 
 
 
@@ -113,22 +118,21 @@ class PredpisaniyaController extends BaseDashboardController
             $p[$el["статусзаявкипросрочка"]] = $el["Count"];
         }
 
-//        $prosr = $p[0];
-//        $neprosr = $p[1];
-//
-//        $norm_pie["Prosr"] = $prosr;
-//        $norm_pie["Neprosr"] = $neprosr;
+        if (isset($p)) {
+            $pie_serie["Открытые замечания"] = $p;
 
-//        echo var_dump($norm_pie);
-//        echo var_dump($p);
-
-        $pie_serie["Zayavki"] = $p;
-
-//        $widg4->setSeries($pie_serie);
-
-        $widg4->setSeries($pie_serie);
+            $widg4->setSeries($pie_serie);
 
 
+            $widg5 = $this->getWidget('widget_pie_right');
+            //$widg4->setCategories(ArrayHelper::getColumn($t_left_1->find()->toArray(), "Контролирующие_органы.Контролирующий_орган"));
+            $pie_serie_2 = $t_right->withColumn('COUNT(*)', 'Count')->select(['Count', 'статусзаявкипросрочка'])->groupByстатусзаявкипросрочка()->find()->toArray();
+            foreach ($pie_serie_2 as $el) {
+                $p[$el["статусзаявкипросрочка"]] = $el["Count"];
+            }
+            $pie_serie_2["Просроченные замечания"] = $p;
+            $widg5->setSeries($pie_serie_2);
+        }
 
 
 
