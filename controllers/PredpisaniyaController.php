@@ -99,6 +99,39 @@ class PredpisaniyaController extends BaseDashboardController
         $widg3->setCategories(ArrayHelper::getColumn($t_left_1->find()->toArray(), "Контролирующие_органы.Контролирующий_орган"));
         $widg3->setSeries($r);
 
+
+
+        //echo var_dump($t_right->find()->toArray());
+
+        //echo var_dump($t_right->withColumn('COUNT(*)', 'Count')->select(['Count', 'статусзаявкипросрочка'])->groupByстатусзаявкипросрочка()->find()->toArray());
+        //echo var_dump(ArrayHelper::getColumn($t_right->groupByстатусзаявкипросрочка()->find()->toArray(), "статусзаявкипросрочка"));
+
+        $widg4 = $this->getWidget('widget_pie_left');
+        //$widg4->setCategories(ArrayHelper::getColumn($t_left_1->find()->toArray(), "Контролирующие_органы.Контролирующий_орган"));
+        $pie_serie = $t_right->withColumn('COUNT(*)', 'Count')->select(['Count', 'статусзаявкипросрочка'])->groupByстатусзаявкипросрочка()->find()->toArray();
+        foreach ($pie_serie as $el) {
+            $p[$el["статусзаявкипросрочка"]] = $el["Count"];
+        }
+
+//        $prosr = $p[0];
+//        $neprosr = $p[1];
+//
+//        $norm_pie["Prosr"] = $prosr;
+//        $norm_pie["Neprosr"] = $neprosr;
+
+//        echo var_dump($norm_pie);
+//        echo var_dump($p);
+
+        $pie_serie["Zayavki"] = $p;
+
+//        $widg4->setSeries($pie_serie);
+
+        $widg4->setSeries($pie_serie);
+
+
+
+
+
         return $this->render('index.tpl');
     }
 }
