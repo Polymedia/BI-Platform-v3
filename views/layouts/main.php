@@ -10,6 +10,7 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 use yii\widgets\Pjax;
+use yii\helpers\Url;
 
 AppAsset::register($this);
 AppAssetHead::register($this);
@@ -62,8 +63,10 @@ AppAssetHead::register($this);
         ]) ?>
 
         <?php Pjax::begin(['timeout' => '100000000', 'scrollTo' => false]); ?>
+        <?php echo Html::beginForm(Url::canonical(),'get', ['data-pjax' => '1']); ?>
         <a id="pjax_reload" href=""></a>
         <?= $content ?>
+        <?php echo Html::endForm(); ?>
         <?php Pjax::end(); ?>
     </div>
 </div>
