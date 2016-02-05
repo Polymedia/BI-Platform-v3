@@ -70,4 +70,12 @@ class Filter extends Component
             return $this->selectedValues;
     }
 
+    public function setSelectedValues($values)
+    {
+        if (is_object($values))
+            $values = $values->toArray();
+
+        $this->_selectedValues = $values;
+        return $this;
+    }
 }

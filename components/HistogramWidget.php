@@ -59,8 +59,11 @@ class HistogramWidget extends Widget
         $text2 ='
         function refreshChart'.$id.'() {
             var chart = $(\'#'.$id.'\').highcharts();
-            //chart.series[0].setData(data_series_'.$id.');
 
+            if (chart.series.length == 1) {
+                chart.series[0].setData(data_series_'.$id.'[0].data);
+                return;
+            }
             while (chart.series.length > 0) {
                 chart.series[0].remove(false);
             }

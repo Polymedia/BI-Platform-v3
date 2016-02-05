@@ -9,9 +9,11 @@
 
 namespace app\controllers;
 
+use app\controllers\classes\Helpers;
 use Yii;
 
 
+use yii\helpers\ArrayHelper;
 use ПредписанияQuery;
 use ПроектыQuery;
 use ТипыЗамечанийQuery;
@@ -76,33 +78,26 @@ class PredpisaniyaController extends BaseDashboardController
         $t_left_2 = $t_left_2->withColumn('COUNT(*)', 'Count')->select(['Count', 'Подрядчики_предписания.Подрядчик'])->useПодрядчикиПредписанияQuery()
             ->groupByподрядчик()->endUse();
 
-        //$tableModel = DataTable::find()->all();
+        $t_left_2_2 = clone $t_left;
+        $t_left_2_2 = $t_left_2_2->withColumn('COUNT(*)', 'Count')->select(['Count', 'Подрядчики_предписания.Подрядчик', 'Контролирующие_органы.Контролирующий_орган'])
+            ->useПодрядчикиПредписанияQuery()->groupByподрядчик()->endUse()
+            ->useКонтролирующиеОрганыQuery()->groupByконтролирующийорган()->endUse();
+
+
         $widg = $this->getWidget('widget_xz');
         $widg->setData($t_left_1->find()->toArray());
 
         $widg2 = $this->getWidget('widget_xz_1');
         $widg2->setData($t_left_2->find()->toArray());
 
-        //$this->view->get
 
+        foreach ($t_left_2_2->find()->toArray() as $el) {
+            $r[$el["Подрядчики_предписания.Подрядчик"]][] = $el["Count"];
+        }
 
-        //echo var_dump($r->toString());
-//        echo var_dump(count($t_right->find()));
-//        echo var_dump(($t_right->toString()).'<br>');
-//
-//        echo var_dump(($t_left_1->find()->toArray()));
-//        echo var_dump('<br>');
-//        echo var_dump(($t_left_1->toString()));
-
-
-        echo var_dump(($t_left_2->find()->toArray()));
-        echo var_dump('<br>');
-        echo var_dump(($t_left_2->toString()));
-
-
-
-
-
+        $widg3 = $this->getWidget('widget_hist1');
+        $widg3->setCategories(ArrayHelper::getColumn($t_left_1->find()->toArray(), "Контролирующие_органы.Контролирующий_орган"));
+        $widg3->setSeries($r);
 
         return $this->render('index.tpl');
     }

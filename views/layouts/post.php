@@ -44,7 +44,7 @@ AppAssetHead::register($this);
             ['label' => 'Dynamic Widgets', 'url' => ['/']],
             //['label' => 'Create', 'url' => ['/site/contact']],
             ['label' => 'Excel Files', 'url' => ['/files']],
-            ['label' => 'Web Editor', 'url' => ['/files']],
+            ['label' => 'Web Editor', 'url' => ['/entry/entry']],
             Yii::$app->user->isGuest ?
                 ['label' => 'Login', 'url' => ['/site/login']] :
                 [
