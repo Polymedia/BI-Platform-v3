@@ -61,7 +61,7 @@ class BaseDashboardController extends Controller
 
     /**
      * @param $name
-     * @return TableWidget
+     * @return VisioWidget
      */
     public function getWidget($name)
     {
