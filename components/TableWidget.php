@@ -17,9 +17,6 @@ class TableWidget extends InputWidget
 {
     public $title;
 
-    public $data;
-
-
     public function init()
     {
         parent::init();
@@ -27,7 +24,7 @@ class TableWidget extends InputWidget
 
     public function run()
     {
-        echo '<table border="1">';
+        echo '<table class="table table-bordered">';
         foreach ($this->view->params[$this->name] as $item) {
             echo '<tr>';
                 foreach($item as $value) {

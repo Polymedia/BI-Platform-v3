@@ -30,7 +30,7 @@ AppAssetHead::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => 'My Company',
+        'brandLabel' => 'Visiology',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
@@ -39,10 +39,11 @@ AppAssetHead::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'About', 'url' => ['/site/about']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
-            ['label' => 'Files', 'url' => ['/files']],
+            ['label' => 'Demo Dashboard', 'url' => ['/demo-dashboard']],
+            ['label' => 'Dynamic Widgets', 'url' => ['/']],
+            //['label' => 'Create', 'url' => ['/site/contact']],
+            ['label' => 'Excel Files', 'url' => ['/files']],
+            ['label' => 'Web Editor', 'url' => ['/files']],
             Yii::$app->user->isGuest ?
                 ['label' => 'Login', 'url' => ['/site/login']] :
                 [
@@ -60,7 +61,7 @@ AppAssetHead::register($this);
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
 
-        <?php Pjax::begin(['timeout' => '100000000']); ?>
+        <?php Pjax::begin(['timeout' => '100000000', 'scrollTo' => false]); ?>
         <a id="pjax_reload" href=""></a>
         <?= $content ?>
         <?php Pjax::end(); ?>

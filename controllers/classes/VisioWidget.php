@@ -15,12 +15,17 @@ use app\components;
 
 /**
  * @property string|array $data Read only.
+ * @property string|array $series Read only.
+ * @property string|array $categories Read only.
  * @property string $name
  */
 
 class VisioWidget extends Component
 {
     private $_data;
+
+    private $_series;
+    private $_categories;
 
     /**
      * @param $values
@@ -38,5 +43,41 @@ class VisioWidget extends Component
     public function getData()
     {
         return $this->_data;
+    }
+
+    /**
+     * @param $values
+     * @return VisioWidget $this
+     */
+    public function setSeries($values)
+    {
+        $this->_series = $values;
+        return $this;
+    }
+
+    /**
+     * @return array|mixed
+     */
+    public function getSeries()
+    {
+        return $this->_series;
+    }
+
+    /**
+     * @param $values
+     * @return VisioWidget $this
+     */
+    public function setCategories($values)
+    {
+        $this->_categories = $values;
+        return $this;
+    }
+
+    /**
+     * @return array|mixed
+     */
+    public function getCategories()
+    {
+        return $this->_categories;
     }
 }

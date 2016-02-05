@@ -117,6 +117,8 @@ class BaseDashboardController extends Controller
     {
         foreach ($this->_widgets as $name => $data) {
             $params[$name] = $data->data;
+            $params[$name.'_series'] = $data->series;
+            $params[$name.'_categories'] = $data->categories;
         }
 
         $this->view->params = array_merge($this->view->params, $params);
