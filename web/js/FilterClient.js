@@ -130,29 +130,10 @@ visiology.defaults.highcharts.onUpdateColumn = function (filtered, widget, eleme
 visiology.defaults.highcharts.onInitPie = function (element) {
     $(element).highcharts({
         chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false,
             type: 'pie'
         },
         title: {
-            text: 'Browser market shares January, 2015 to May, 2015'
-        },
-        tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-        },
-        plotOptions: {
-            pie: {
-                allowPointSelect: true,
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: true,
-                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                    style: {
-                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                    }
-                }
-            }
+            text: ''
         },
         series: []
     });
@@ -192,8 +173,6 @@ visiology.defaults.highcharts.onUpdatePie = function (filtered, widget, element)
 
     var chart = $(element).highcharts();
 
-    chart.setTitle({text: chart_data.title});
-
     while(chart.series.length > 0) {
         chart.series[0].remove(false);
     }
@@ -218,7 +197,10 @@ visiology.run = function ()
     $("[data-visiology-name]").each(function(index, element) {
         var widget_name = $(element).attr("data-visiology-name");
         eval('onConstruct_' + widget_name + '(visiology)');
-        eval('onUser_' + widget_name + '(visiology.model.' + widget_name + ')');
+
+        if (eval("typeof onUser_" + widget_name + " === 'function'"))
+            eval('onUser_' + widget_name + '(visiology.model.' + widget_name + ')');
+
         eval('onDeploy_' + widget_name + '(visiology)');
     });
 
