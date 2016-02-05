@@ -11,7 +11,7 @@ class TemplateController extends BaseDashboardController
 {
     public function actionIndex()
     {
-        $model = UnemploymentQuery::create();
+        $model = UnemploymentQuery::create()->orderByYear();
 
         $filter = $this->getFilter('filter_region');
         $filter->setPossibleValues(UnemploymentQuery::create()->distinct()->select('region_name')->find());
