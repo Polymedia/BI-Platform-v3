@@ -31,7 +31,7 @@ class PieWidget extends Widget
         $series_hc = [];
         foreach ($series as $k => $v){
             foreach ($v as $i => $val) {
-                $v[$i] = (float)$val;
+                $v[$i] = ['name' => $i, 'y' => (float)$val];
             }
 
             $series_hc[] = [

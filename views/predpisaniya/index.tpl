@@ -1,4 +1,5 @@
 {use class="app\components\HistogramWidget"}
+{use class="app\components\PieWidget"}
 {use class="miloschuman\highcharts\Highcharts"}
 {use class="miloschuman\highcharts\HighchartsAsset"}
 {use class="app\components\ChildDashboard"}
@@ -49,3 +50,5 @@
 
 
 {HistogramWidget::widget(['name' => 'widget_hist1', 'title' => "Выдавшие"])}
+
+{PieWidget::widget(['name' => 'widget_pie_left', 'title' => "Левый круг"])}
