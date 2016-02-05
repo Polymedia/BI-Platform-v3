@@ -8,10 +8,12 @@
 
 namespace app\components;
 
+use yii\web\View;
 use yii\base\Widget;
 use yii\helpers\Html;
 
 use app\components;
+use yii\helpers\Json;
 
 class HistogramWidget extends Widget
 {
@@ -33,25 +35,41 @@ class HistogramWidget extends Widget
         $categories = $this->view->params[$this->name.'_categories'];
         $id = $this->getId();
 
+        $series_hc = [];
+        foreach ($series as $k => $v){
+            foreach ($v as $i => $val) {
+                $v[$i] = (float)$val;
+            }
 
-        $text = '<script type="text/javascript"> var data'.$id.' = [';
+            $series_hc[] = [
+                'name' => $k,
+                'type' => 'column',
+                'data' => $v,
+            ];
 
 
-        foreach ($series as $serie)
-            $text .= $serie.',';
+        }
 
-
-        $text .= ']</script>';
-
-        echo $text;
-
+        echo '<script type="text/javascript">';
+        echo "var data_series_${id} = ".Json::encode($series_hc, JSON_PRETTY_PRINT).";";
+        echo "var data_categories_${id} = ".Json::encode($categories, JSON_PRETTY_PRINT).";";
+        echo '</script>';
 
         echo '<div id="'.$id.'" data-pjax-exclude style="min-width: 310px; height: 400px; margin: 0 auto"></div>';
 
         $text2 ='
-        function refreshChart() {
+        function refreshChart'.$id.'() {
             var chart = $(\'#'.$id.'\').highcharts();
-            chart.series[0].setData(data'.$id.');
+            //chart.series[0].setData(data_series_'.$id.');
+
+            while (chart.series.length > 0) {
+                chart.series[0].remove(false);
+            }
+            chart.xAxis[0].setCategories(data_categories_'.$id.');
+            data_series_'.$id.'.forEach(function (serie) {
+                chart.addSeries(serie, false);
+            });
+            chart.redraw();
         }
 
         $(\'#'.$id.'\').highcharts({
@@ -59,14 +77,7 @@ class HistogramWidget extends Widget
         text: "'.$this->title.'"
         },
         xAxis: [{
-        categories: [';
-
-
-        foreach ($categories as $category) {
-            $text2 .= $category.',';
-        }
-
-        $text2 .= ']
+        categories: data_categories_'.$id.'
         }],
         yAxis: [{ // Primary yAxis
         labels: {
@@ -79,14 +90,10 @@ class HistogramWidget extends Widget
             tooltip: {
             shared: true
             },
-            series: [{
-            name: \'Tokyo\',
-                type: \'column\',
-                data: data'.$id.'
-            }]
+            series: data_series_'.$id.',
         });
 
-        $(document).on(\'pjax:complete\', refreshChart);';
+        $(document).on(\'pjax:complete\', refreshChart'.$id.');';
         $this->view->registerJs($text2);
 
         parent::run();
