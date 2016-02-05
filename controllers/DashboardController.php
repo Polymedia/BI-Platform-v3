@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\controllers\classes\Helpers;
 use UnemploymentQuery;
 use PeopleQuery;
 use Yii;
@@ -10,6 +11,7 @@ use yii\data\ActiveDataProvider;
 use app\models\UnemploymentAR;
 use app\models\PeopleAR;
 use models;
+use yii\helpers\ArrayHelper;
 
 class DashboardController extends BaseDashboardController
 {
@@ -67,8 +69,8 @@ class DashboardController extends BaseDashboardController
             $model2->filterByRegionName($regionFilter->selectedValue);
         }
 
-
-        $model2 = $model2->find();
+        $model2 = $model2->withColumn('SUM(unemployment_youth)')->groupByRegionName() // Group by не работает
+            ->orderByRegionName()->orderByYear()->find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $model,
@@ -83,14 +85,14 @@ class DashboardController extends BaseDashboardController
         ]);
 
 
-
-        //var_dump($model2->toArray());
         $w = $this->getWidget('widget_hist');
+        $w->setCategories($model2->getColumnValues('RegionName'));
+        $w->setSeries(Helpers::toKeyValueArray($model2, 'Year', 'UnemploymentYouth'));
 
-        $w->setData($model2->toArray(), $model2->getColumnValues(''));
-        //$w->setCategories(UnemploymentQuery::create()->distinct()->select('region_name')->find());
-
-
+        $w = $this->getWidget('widget_hist2');
+        $w->setCategories($model2->getColumnValues('RegionName'));
+        $w->setSeries(Helpers::toKeyValueArray($model2, 'Year', 'UnemploymentYouth'));
+        $w->setOneSerie();
 
 
         $peopleModel = PeopleAR::find();
