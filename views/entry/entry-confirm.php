@@ -43,7 +43,7 @@ use yii\helpers\Html;
 <p>You have entered the following information:</p>
 <label>File</label>
 
-<form action="http://localhost:8080/index.php/save/save" method = post>
+<form action="/save/save" method = post>
         <textarea id = "pukanchik" name="text">
 
             <?php
