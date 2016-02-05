@@ -30,8 +30,22 @@ class HistogramWidget extends Widget
 
     public function run()
     {
-        $series = $this->view->params[$this->name.'_series'];
-        $categories = $this->view->params[$this->name.'_categories'];
+        if (isset($this->view->params[$this->name . '_series'])) {
+            $series = $this->view->params[$this->name . '_series'];
+        } else {
+            //echo var_dump("RDEFDGFD");
+            return;
+        }
+
+        if (isset($this->view->params[$this->name . '_categories'])) {
+            $categories = $this->view->params[$this->name . '_categories'];
+        } else {
+            //echo var_dump("dcgdgdf");
+            return;
+        }
+
+        //echo var_dump($series);
+
         $id = $this->getId();
 
         $series_hc = [];

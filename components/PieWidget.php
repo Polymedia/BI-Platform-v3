@@ -24,8 +24,15 @@ class PieWidget extends Widget
 
     public function run()
     {
-        $series = $this->view->params[$this->name.'_series'];
-        $categories = $this->view->params[$this->name.'_categories'];
+        if (isset($this->view->params[$this->name . '_series'])) {
+            $series = $this->view->params[$this->name . '_series'];
+        } else
+            return;
+        if (isset($this->view->params[$this->name.'_categories'])) {
+            $categories = $this->view->params[$this->name.'_categories'];
+        } else
+            return;
+
         $id = $this->getId();
 
         $series_hc = [];
