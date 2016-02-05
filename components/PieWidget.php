@@ -24,18 +24,20 @@ class PieWidget extends Widget
 
     public function run()
     {
+        $series = [];
+        $categories = [];
         if (isset($this->view->params[$this->name . '_series'])) {
             $series = $this->view->params[$this->name . '_series'];
-        } else
-            return;
+        }
         if (isset($this->view->params[$this->name.'_categories'])) {
-            $categories = $this->view->params[$this->name.'_categories'];
-        } else
-            return;
+           $categories = $this->view->params[$this->name.'_categories'];
+        }
 
         $id = $this->getId();
 
         $series_hc = [];
+        
+        //if (count($series)) {
         foreach ($series as $k => $v){
             foreach ($v as $i => $val) {
                 $v[$i] = ['name' => $i, 'y' => (float)$val];
@@ -49,6 +51,7 @@ class PieWidget extends Widget
 
 
         }
+        //}
 
         echo '<script type="text/javascript">';
         echo "var data_series_${id} = ".Json::encode($series_hc, JSON_PRETTY_PRINT).";";
