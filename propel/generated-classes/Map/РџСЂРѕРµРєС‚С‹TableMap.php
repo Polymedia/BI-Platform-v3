@@ -9,7 +9,6 @@ use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\DataFetcher\DataFetcherInterface;
-use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\RelationMap;
 use Propel\Runtime\Map\TableMap;
@@ -78,9 +77,9 @@ class ПроектыTableMap extends TableMap
     const COL_ID = 'Проекты.id';
 
     /**
-     * the column name for the КодПроекта field
+     * the column name for the Код_проекта field
      */
-    const COL_КОДПРОЕКТА = 'Проекты.КодПроекта';
+    const COL_КОД_ПРОЕКТА = 'Проекты.Код_проекта';
 
     /**
      * the column name for the Проект field
@@ -103,24 +102,24 @@ class ПроектыTableMap extends TableMap
     const COL_ПОДРЯДЧИКИ = 'Проекты.Подрядчики';
 
     /**
-     * the column name for the ПериодВыполненияРабот field
+     * the column name for the Период_выполнения_работ field
      */
-    const COL_ПЕРИОДВЫПОЛНЕНИЯРАБОТ = 'Проекты.ПериодВыполненияРабот';
+    const COL_ПЕРИОД_ВЫПОЛНЕНИЯ_РАБОТ = 'Проекты.Период_выполнения_работ';
 
     /**
-     * the column name for the ДеталиПроекта field
+     * the column name for the Детали_проекта field
      */
-    const COL_ДЕТАЛИПРОЕКТА = 'Проекты.ДеталиПроекта';
+    const COL_ДЕТАЛИ_ПРОЕКТА = 'Проекты.Детали_проекта';
 
     /**
-     * the column name for the ТипСтроительства field
+     * the column name for the Тип_строительства field
      */
-    const COL_ТИПСТРОИТЕЛЬСТВА = 'Проекты.ТипСтроительства';
+    const COL_ТИП_СТРОИТЕЛЬСТВА = 'Проекты.Тип_строительства';
 
     /**
-     * the column name for the НазваниеПапкиПроекта field
+     * the column name for the Название_папки_проекта field
      */
-    const COL_НАЗВАНИЕПАПКИПРОЕКТА = 'Проекты.НазваниеПапкиПроекта';
+    const COL_НАЗВАНИЕ_ПАПКИ_ПРОЕКТА = 'Проекты.Название_папки_проекта';
 
     /**
      * the column name for the Картинка field
@@ -128,9 +127,9 @@ class ПроектыTableMap extends TableMap
     const COL_КАРТИНКА = 'Проекты.Картинка';
 
     /**
-     * the column name for the КарточкаПроекта field
+     * the column name for the Карточка_проекта field
      */
-    const COL_КАРТОЧКАПРОЕКТА = 'Проекты.КарточкаПроекта';
+    const COL_КАРТОЧКА_ПРОЕКТА = 'Проекты.Карточка_проекта';
 
     /**
      * The default string format for model objects of the related table
@@ -144,10 +143,10 @@ class ПроектыTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Кодпроекта', 'Проект', 'Руководитель', 'Заказчик', 'Подрядчики', 'Периодвыполненияработ', 'Деталипроекта', 'Типстроительства', 'Названиепапкипроекта', 'Картинка', 'Карточкапроекта', ),
-        self::TYPE_CAMELNAME     => array('id', '�одпроекта', '�роект', '�уководитель', '�аказчик', '�одрядчики', '�ериодвыполненияработ', '�еталипроекта', '�ипстроительства', '�азваниепапкипроекта', '�артинка', '�арточкапроекта', ),
-        self::TYPE_COLNAME       => array(ПроектыTableMap::COL_ID, ПроектыTableMap::COL_КОДПРОЕКТА, ПроектыTableMap::COL_ПРОЕКТ, ПроектыTableMap::COL_РУКОВОДИТЕЛЬ, ПроектыTableMap::COL_ЗАКАЗЧИК, ПроектыTableMap::COL_ПОДРЯДЧИКИ, ПроектыTableMap::COL_ПЕРИОДВЫПОЛНЕНИЯРАБОТ, ПроектыTableMap::COL_ДЕТАЛИПРОЕКТА, ПроектыTableMap::COL_ТИПСТРОИТЕЛЬСТВА, ПроектыTableMap::COL_НАЗВАНИЕПАПКИПРОЕКТА, ПроектыTableMap::COL_КАРТИНКА, ПроектыTableMap::COL_КАРТОЧКАПРОЕКТА, ),
-        self::TYPE_FIELDNAME     => array('id', 'КодПроекта', 'Проект', 'Руководитель', 'Заказчик', 'Подрядчики', 'ПериодВыполненияРабот', 'ДеталиПроекта', 'ТипСтроительства', 'НазваниеПапкиПроекта', 'Картинка', 'КарточкаПроекта', ),
+        self::TYPE_PHPNAME       => array('Id', 'кодпроекта', 'проект', 'руководитель', 'заказчик', 'подрядчики', 'периодвыполненияработ', 'деталипроекта', 'типстроительства', 'названиепапкипроекта', 'картинка', 'карточкапроекта', ),
+        self::TYPE_CAMELNAME     => array('id', '�одпроекта', '�роект', '�уководитель', '�аказчик', '�одрядчики', '�ериодвыполненияработ', '�еталипроекта', '�ипстроительства', '�азваниепапкипроекта', '�артинка', '�арточкапроекта', ),
+        self::TYPE_COLNAME       => array(ПроектыTableMap::COL_ID, ПроектыTableMap::COL_КОД_ПРОЕКТА, ПроектыTableMap::COL_ПРОЕКТ, ПроектыTableMap::COL_РУКОВОДИТЕЛЬ, ПроектыTableMap::COL_ЗАКАЗЧИК, ПроектыTableMap::COL_ПОДРЯДЧИКИ, ПроектыTableMap::COL_ПЕРИОД_ВЫПОЛНЕНИЯ_РАБОТ, ПроектыTableMap::COL_ДЕТАЛИ_ПРОЕКТА, ПроектыTableMap::COL_ТИП_СТРОИТЕЛЬСТВА, ПроектыTableMap::COL_НАЗВАНИЕ_ПАПКИ_ПРОЕКТА, ПроектыTableMap::COL_КАРТИНКА, ПроектыTableMap::COL_КАРТОЧКА_ПРОЕКТА, ),
+        self::TYPE_FIELDNAME     => array('id', 'Код_проекта', 'Проект', 'Руководитель', 'Заказчик', 'Подрядчики', 'Период_выполнения_работ', 'Детали_проекта', 'Тип_строительства', 'Название_папки_проекта', 'Картинка', 'Карточка_проекта', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
     );
 
@@ -158,10 +157,10 @@ class ПроектыTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Кодпроекта' => 1, 'Проект' => 2, 'Руководитель' => 3, 'Заказчик' => 4, 'Подрядчики' => 5, 'Периодвыполненияработ' => 6, 'Деталипроекта' => 7, 'Типстроительства' => 8, 'Названиепапкипроекта' => 9, 'Картинка' => 10, 'Карточкапроекта' => 11, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, '�одпроекта' => 1, '�роект' => 2, '�уководитель' => 3, '�аказчик' => 4, '�одрядчики' => 5, '�ериодвыполненияработ' => 6, '�еталипроекта' => 7, '�ипстроительства' => 8, '�азваниепапкипроекта' => 9, '�артинка' => 10, '�арточкапроекта' => 11, ),
-        self::TYPE_COLNAME       => array(ПроектыTableMap::COL_ID => 0, ПроектыTableMap::COL_КОДПРОЕКТА => 1, ПроектыTableMap::COL_ПРОЕКТ => 2, ПроектыTableMap::COL_РУКОВОДИТЕЛЬ => 3, ПроектыTableMap::COL_ЗАКАЗЧИК => 4, ПроектыTableMap::COL_ПОДРЯДЧИКИ => 5, ПроектыTableMap::COL_ПЕРИОДВЫПОЛНЕНИЯРАБОТ => 6, ПроектыTableMap::COL_ДЕТАЛИПРОЕКТА => 7, ПроектыTableMap::COL_ТИПСТРОИТЕЛЬСТВА => 8, ПроектыTableMap::COL_НАЗВАНИЕПАПКИПРОЕКТА => 9, ПроектыTableMap::COL_КАРТИНКА => 10, ПроектыTableMap::COL_КАРТОЧКАПРОЕКТА => 11, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'КодПроекта' => 1, 'Проект' => 2, 'Руководитель' => 3, 'Заказчик' => 4, 'Подрядчики' => 5, 'ПериодВыполненияРабот' => 6, 'ДеталиПроекта' => 7, 'ТипСтроительства' => 8, 'НазваниеПапкиПроекта' => 9, 'Картинка' => 10, 'КарточкаПроекта' => 11, ),
+        self::TYPE_PHPNAME       => array('Id' => 0, 'кодпроекта' => 1, 'проект' => 2, 'руководитель' => 3, 'заказчик' => 4, 'подрядчики' => 5, 'периодвыполненияработ' => 6, 'деталипроекта' => 7, 'типстроительства' => 8, 'названиепапкипроекта' => 9, 'картинка' => 10, 'карточкапроекта' => 11, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, '�одпроекта' => 1, '�роект' => 2, '�уководитель' => 3, '�аказчик' => 4, '�одрядчики' => 5, '�ериодвыполненияработ' => 6, '�еталипроекта' => 7, '�ипстроительства' => 8, '�азваниепапкипроекта' => 9, '�артинка' => 10, '�арточкапроекта' => 11, ),
+        self::TYPE_COLNAME       => array(ПроектыTableMap::COL_ID => 0, ПроектыTableMap::COL_КОД_ПРОЕКТА => 1, ПроектыTableMap::COL_ПРОЕКТ => 2, ПроектыTableMap::COL_РУКОВОДИТЕЛЬ => 3, ПроектыTableMap::COL_ЗАКАЗЧИК => 4, ПроектыTableMap::COL_ПОДРЯДЧИКИ => 5, ПроектыTableMap::COL_ПЕРИОД_ВЫПОЛНЕНИЯ_РАБОТ => 6, ПроектыTableMap::COL_ДЕТАЛИ_ПРОЕКТА => 7, ПроектыTableMap::COL_ТИП_СТРОИТЕЛЬСТВА => 8, ПроектыTableMap::COL_НАЗВАНИЕ_ПАПКИ_ПРОЕКТА => 9, ПроектыTableMap::COL_КАРТИНКА => 10, ПроектыTableMap::COL_КАРТОЧКА_ПРОЕКТА => 11, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'Код_проекта' => 1, 'Проект' => 2, 'Руководитель' => 3, 'Заказчик' => 4, 'Подрядчики' => 5, 'Период_выполнения_работ' => 6, 'Детали_проекта' => 7, 'Тип_строительства' => 8, 'Название_папки_проекта' => 9, 'Картинка' => 10, 'Карточка_проекта' => 11, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
     );
 
@@ -182,18 +181,18 @@ class ПроектыTableMap extends TableMap
         $this->setPackage('');
         $this->setUseIdGenerator(true);
         // columns
-        $this->addColumn('id', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('КодПроекта', 'Кодпроекта', 'LONGVARCHAR', true, null, null);
-        $this->addColumn('Проект', 'Проект', 'LONGVARCHAR', true, null, null);
-        $this->addColumn('Руководитель', 'Руководитель', 'LONGVARCHAR', true, null, null);
-        $this->addColumn('Заказчик', 'Заказчик', 'LONGVARCHAR', true, null, null);
-        $this->addColumn('Подрядчики', 'Подрядчики', 'LONGVARCHAR', true, null, null);
-        $this->addColumn('ПериодВыполненияРабот', 'Периодвыполненияработ', 'LONGVARCHAR', true, null, null);
-        $this->addColumn('ДеталиПроекта', 'Деталипроекта', 'LONGVARCHAR', true, null, null);
-        $this->addColumn('ТипСтроительства', 'Типстроительства', 'LONGVARCHAR', true, null, null);
-        $this->addColumn('НазваниеПапкиПроекта', 'Названиепапкипроекта', 'LONGVARCHAR', true, null, null);
-        $this->addColumn('Картинка', 'Картинка', 'LONGVARCHAR', true, null, null);
-        $this->addColumn('КарточкаПроекта', 'Карточкапроекта', 'LONGVARCHAR', false, null, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addColumn('Код_проекта', 'кодпроекта', 'LONGVARCHAR', true, null, null);
+        $this->addColumn('Проект', 'проект', 'LONGVARCHAR', true, null, null);
+        $this->addColumn('Руководитель', 'руководитель', 'LONGVARCHAR', true, null, null);
+        $this->addColumn('Заказчик', 'заказчик', 'LONGVARCHAR', true, null, null);
+        $this->addColumn('Подрядчики', 'подрядчики', 'LONGVARCHAR', true, null, null);
+        $this->addColumn('Период_выполнения_работ', 'периодвыполненияработ', 'LONGVARCHAR', true, null, null);
+        $this->addColumn('Детали_проекта', 'деталипроекта', 'LONGVARCHAR', true, null, null);
+        $this->addColumn('Тип_строительства', 'типстроительства', 'LONGVARCHAR', true, null, null);
+        $this->addColumn('Название_папки_проекта', 'названиепапкипроекта', 'LONGVARCHAR', true, null, null);
+        $this->addColumn('Картинка', 'картинка', 'LONGVARCHAR', true, null, null);
+        $this->addColumn('Карточка_проекта', 'карточкапроекта', 'LONGVARCHAR', false, null, null);
     } // initialize()
 
     /**
@@ -201,6 +200,62 @@ class ПроектыTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('датыобновленийдашбордов', '\\датыобновленийдашбордов', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':Проект',
+    1 => ':id',
+  ),
+), null, null, 'датыобновленийдашбордовs', false);
+        $this->addRelation('мтр', '\\мтр', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':Проект',
+    1 => ':id',
+  ),
+), null, null, 'мтрs', false);
+        $this->addRelation('мобилизация', '\\мобилизация', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':Проект',
+    1 => ':id',
+  ),
+), null, null, 'мобилизацияs', false);
+        $this->addRelation('мобилизацияпомесяцам', '\\мобилизацияпомесяцам', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':Проект',
+    1 => ':id',
+  ),
+), null, null, 'мобилизацияпомесяцамs', false);
+        $this->addRelation('Предписания', '\\Предписания', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':Проект',
+    1 => ':id',
+  ),
+), null, null, 'Предписанияs', false);
+        $this->addRelation('проблемныевопросы', '\\проблемныевопросы', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':Проект',
+    1 => ':id',
+  ),
+), null, null, 'проблемныевопросыs', false);
+        $this->addRelation('программы', '\\программы', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':Проект',
+    1 => ':id',
+  ),
+), null, null, 'программыs', false);
+        $this->addRelation('участкиработ', '\\участкиработ', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':Проект',
+    1 => ':id',
+  ),
+), null, null, 'участкиработs', false);
     } // buildRelations()
 
     /**
@@ -218,7 +273,12 @@ class ПроектыTableMap extends TableMap
      */
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        return null;
+        // If the PK cannot be derived from the row, return NULL.
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+            return null;
+        }
+
+        return null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -235,7 +295,11 @@ class ПроектыTableMap extends TableMap
      */
     public static function getPrimaryKeyFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        return '';
+        return (int) $row[
+            $indexType == TableMap::TYPE_NUM
+                ? 0 + $offset
+                : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
+        ];
     }
     
     /**
@@ -336,30 +400,30 @@ class ПроектыTableMap extends TableMap
     {
         if (null === $alias) {
             $criteria->addSelectColumn(ПроектыTableMap::COL_ID);
-            $criteria->addSelectColumn(ПроектыTableMap::COL_КОДПРОЕКТА);
+            $criteria->addSelectColumn(ПроектыTableMap::COL_КОД_ПРОЕКТА);
             $criteria->addSelectColumn(ПроектыTableMap::COL_ПРОЕКТ);
             $criteria->addSelectColumn(ПроектыTableMap::COL_РУКОВОДИТЕЛЬ);
             $criteria->addSelectColumn(ПроектыTableMap::COL_ЗАКАЗЧИК);
             $criteria->addSelectColumn(ПроектыTableMap::COL_ПОДРЯДЧИКИ);
-            $criteria->addSelectColumn(ПроектыTableMap::COL_ПЕРИОДВЫПОЛНЕНИЯРАБОТ);
-            $criteria->addSelectColumn(ПроектыTableMap::COL_ДЕТАЛИПРОЕКТА);
-            $criteria->addSelectColumn(ПроектыTableMap::COL_ТИПСТРОИТЕЛЬСТВА);
-            $criteria->addSelectColumn(ПроектыTableMap::COL_НАЗВАНИЕПАПКИПРОЕКТА);
+            $criteria->addSelectColumn(ПроектыTableMap::COL_ПЕРИОД_ВЫПОЛНЕНИЯ_РАБОТ);
+            $criteria->addSelectColumn(ПроектыTableMap::COL_ДЕТАЛИ_ПРОЕКТА);
+            $criteria->addSelectColumn(ПроектыTableMap::COL_ТИП_СТРОИТЕЛЬСТВА);
+            $criteria->addSelectColumn(ПроектыTableMap::COL_НАЗВАНИЕ_ПАПКИ_ПРОЕКТА);
             $criteria->addSelectColumn(ПроектыTableMap::COL_КАРТИНКА);
-            $criteria->addSelectColumn(ПроектыTableMap::COL_КАРТОЧКАПРОЕКТА);
+            $criteria->addSelectColumn(ПроектыTableMap::COL_КАРТОЧКА_ПРОЕКТА);
         } else {
             $criteria->addSelectColumn($alias . '.id');
-            $criteria->addSelectColumn($alias . '.КодПроекта');
+            $criteria->addSelectColumn($alias . '.Код_проекта');
             $criteria->addSelectColumn($alias . '.Проект');
             $criteria->addSelectColumn($alias . '.Руководитель');
             $criteria->addSelectColumn($alias . '.Заказчик');
             $criteria->addSelectColumn($alias . '.Подрядчики');
-            $criteria->addSelectColumn($alias . '.ПериодВыполненияРабот');
-            $criteria->addSelectColumn($alias . '.ДеталиПроекта');
-            $criteria->addSelectColumn($alias . '.ТипСтроительства');
-            $criteria->addSelectColumn($alias . '.НазваниеПапкиПроекта');
+            $criteria->addSelectColumn($alias . '.Период_выполнения_работ');
+            $criteria->addSelectColumn($alias . '.Детали_проекта');
+            $criteria->addSelectColumn($alias . '.Тип_строительства');
+            $criteria->addSelectColumn($alias . '.Название_папки_проекта');
             $criteria->addSelectColumn($alias . '.Картинка');
-            $criteria->addSelectColumn($alias . '.КарточкаПроекта');
+            $criteria->addSelectColumn($alias . '.Карточка_проекта');
         }
     }
 
@@ -407,10 +471,11 @@ class ПроектыTableMap extends TableMap
             // rename for clarity
             $criteria = $values;
         } elseif ($values instanceof \Проекты) { // it's a model object
-            // create criteria based on pk value
-            $criteria = $values->buildCriteria();
+            // create criteria based on pk values
+            $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            throw new LogicException('The Проекты object has no primary key');
+            $criteria = new Criteria(ПроектыTableMap::DATABASE_NAME);
+            $criteria->add(ПроектыTableMap::COL_ID, (array) $values, Criteria::IN);
         }
 
         $query = ПроектыQuery::create()->mergeWith($criteria);
@@ -456,6 +521,10 @@ class ПроектыTableMap extends TableMap
             $criteria = clone $criteria; // rename for clarity
         } else {
             $criteria = $criteria->buildCriteria(); // build Criteria from Проекты object
+        }
+
+        if ($criteria->containsKey(ПроектыTableMap::COL_ID) && $criteria->keyContainsValue(ПроектыTableMap::COL_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.ПроектыTableMap::COL_ID.')');
         }
 
 

@@ -2,7 +2,21 @@
 
 namespace Base;
 
+use \Календарь as ChildКалендарь;
+use \КалендарьQuery as ChildКалендарьQuery;
+use \КонтролирующиеОрганы as ChildКонтролирующиеОрганы;
+use \КонтролирующиеОрганыQuery as ChildКонтролирующиеОрганыQuery;
+use \ПодрядчикиПредписания as ChildПодрядчикиПредписания;
+use \ПодрядчикиПредписанияQuery as ChildПодрядчикиПредписанияQuery;
 use \ПредписанияQuery as ChildПредписанияQuery;
+use \Проекты as ChildПроекты;
+use \ПроектыQuery as ChildПроектыQuery;
+use \СтатусыЗаявкиЗавершение as ChildСтатусыЗаявкиЗавершение;
+use \СтатусыЗаявкиЗавершениеQuery as ChildСтатусыЗаявкиЗавершениеQuery;
+use \СтатусыЗаявкиПросрочка as ChildСтатусыЗаявкиПросрочка;
+use \СтатусыЗаявкиПросрочкаQuery as ChildСтатусыЗаявкиПросрочкаQuery;
+use \ТипыЗамечаний as ChildТипыЗамечаний;
+use \ТипыЗамечанийQuery as ChildТипыЗамечанийQuery;
 use \DateTime;
 use \Exception;
 use \PDO;
@@ -69,11 +83,11 @@ abstract class Предписания implements ActiveRecordInterface
     protected $id;
 
     /**
-     * The value for the контролирующийорган field.
+     * The value for the контролирующий_орган field.
      * 
      * @var        int
      */
-    protected $контролирующийорган;
+    protected $контролирующий_орган;
 
     /**
      * The value for the подрядчик field.
@@ -83,32 +97,32 @@ abstract class Предписания implements ActiveRecordInterface
     protected $подрядчик;
 
     /**
-     * The value for the датавыдачи field.
+     * The value for the дата_выдачи field.
      * 
      * @var        \DateTime
      */
-    protected $датавыдачи;
+    protected $дата_выдачи;
 
     /**
-     * The value for the плановаядатаустранения field.
+     * The value for the плановая_дата_устранения field.
      * 
      * @var        \DateTime
      */
-    protected $плановаядатаустранения;
+    protected $плановая_дата_устранения;
 
     /**
-     * The value for the фактическаядатаустранения field.
+     * The value for the фактическая_дата_устранения field.
      * 
      * @var        \DateTime
      */
-    protected $фактическаядатаустранения;
+    protected $фактическая_дата_устранения;
 
     /**
-     * The value for the типзамечания field.
+     * The value for the тип_замечания field.
      * 
      * @var        int
      */
-    protected $типзамечания;
+    protected $тип_замечания;
 
     /**
      * The value for the проект field.
@@ -118,18 +132,63 @@ abstract class Предписания implements ActiveRecordInterface
     protected $проект;
 
     /**
-     * The value for the статусзаявкизавершение field.
+     * The value for the статус_заявки_завершение field.
      * 
      * @var        int
      */
-    protected $статусзаявкизавершение;
+    protected $статус_заявки_завершение;
 
     /**
-     * The value for the статусзаявкипросрочка field.
+     * The value for the статус_заявки_просрочка field.
      * 
      * @var        int
      */
-    protected $статусзаявкипросрочка;
+    protected $статус_заявки_просрочка;
+
+    /**
+     * @var        ChildКалендарь
+     */
+    protected $aКалендарьRelatedByдатавыдачи;
+
+    /**
+     * @var        ChildКонтролирующиеОрганы
+     */
+    protected $aКонтролирующиеОрганы;
+
+    /**
+     * @var        ChildКалендарь
+     */
+    protected $aКалендарьRelatedByплановаядатаустранения;
+
+    /**
+     * @var        ChildПодрядчикиПредписания
+     */
+    protected $aПодрядчикиПредписания;
+
+    /**
+     * @var        ChildПроекты
+     */
+    protected $aПроекты;
+
+    /**
+     * @var        ChildСтатусыЗаявкиЗавершение
+     */
+    protected $aСтатусыЗаявкиЗавершение;
+
+    /**
+     * @var        ChildСтатусыЗаявкиПросрочка
+     */
+    protected $aСтатусыЗаявкиПросрочка;
+
+    /**
+     * @var        ChildТипыЗамечаний
+     */
+    protected $aТипыЗамечаний;
+
+    /**
+     * @var        ChildКалендарь
+     */
+    protected $aКалендарьRelatedByфактическаядатаустранения;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -375,13 +434,13 @@ abstract class Предписания implements ActiveRecordInterface
     }
 
     /**
-     * Get the [контролирующийорган] column value.
+     * Get the [контролирующий_орган] column value.
      * 
      * @return int
      */
-    public function getКонтролирующийорган()
+    public function getконтролирующийорган()
     {
-        return $this->контролирующийорган;
+        return $this->контролирующий_орган;
     }
 
     /**
@@ -389,13 +448,13 @@ abstract class Предписания implements ActiveRecordInterface
      * 
      * @return int
      */
-    public function getПодрядчик()
+    public function getподрядчик()
     {
         return $this->подрядчик;
     }
 
     /**
-     * Get the [optionally formatted] temporal [датавыдачи] column value.
+     * Get the [optionally formatted] temporal [дата_выдачи] column value.
      * 
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
@@ -405,17 +464,17 @@ abstract class Предписания implements ActiveRecordInterface
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function getДатавыдачи($format = NULL)
+    public function getдатавыдачи($format = NULL)
     {
         if ($format === null) {
-            return $this->датавыдачи;
+            return $this->дата_выдачи;
         } else {
-            return $this->датавыдачи instanceof \DateTime ? $this->датавыдачи->format($format) : null;
+            return $this->дата_выдачи instanceof \DateTime ? $this->дата_выдачи->format($format) : null;
         }
     }
 
     /**
-     * Get the [optionally formatted] temporal [плановаядатаустранения] column value.
+     * Get the [optionally formatted] temporal [плановая_дата_устранения] column value.
      * 
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
@@ -425,17 +484,17 @@ abstract class Предписания implements ActiveRecordInterface
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function getПлановаядатаустранения($format = NULL)
+    public function getплановаядатаустранения($format = NULL)
     {
         if ($format === null) {
-            return $this->плановаядатаустранения;
+            return $this->плановая_дата_устранения;
         } else {
-            return $this->плановаядатаустранения instanceof \DateTime ? $this->плановаядатаустранения->format($format) : null;
+            return $this->плановая_дата_устранения instanceof \DateTime ? $this->плановая_дата_устранения->format($format) : null;
         }
     }
 
     /**
-     * Get the [optionally formatted] temporal [фактическаядатаустранения] column value.
+     * Get the [optionally formatted] temporal [фактическая_дата_устранения] column value.
      * 
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
@@ -445,23 +504,23 @@ abstract class Предписания implements ActiveRecordInterface
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function getФактическаядатаустранения($format = NULL)
+    public function getфактическаядатаустранения($format = NULL)
     {
         if ($format === null) {
-            return $this->фактическаядатаустранения;
+            return $this->фактическая_дата_устранения;
         } else {
-            return $this->фактическаядатаустранения instanceof \DateTime ? $this->фактическаядатаустранения->format($format) : null;
+            return $this->фактическая_дата_устранения instanceof \DateTime ? $this->фактическая_дата_устранения->format($format) : null;
         }
     }
 
     /**
-     * Get the [типзамечания] column value.
+     * Get the [тип_замечания] column value.
      * 
      * @return int
      */
-    public function getТипзамечания()
+    public function getтипзамечания()
     {
-        return $this->типзамечания;
+        return $this->тип_замечания;
     }
 
     /**
@@ -469,29 +528,29 @@ abstract class Предписания implements ActiveRecordInterface
      * 
      * @return int
      */
-    public function getПроект()
+    public function getпроект()
     {
         return $this->проект;
     }
 
     /**
-     * Get the [статусзаявкизавершение] column value.
+     * Get the [статус_заявки_завершение] column value.
      * 
      * @return int
      */
-    public function getСтатусзаявкизавершение()
+    public function getстатусзаявкизавершение()
     {
-        return $this->статусзаявкизавершение;
+        return $this->статус_заявки_завершение;
     }
 
     /**
-     * Get the [статусзаявкипросрочка] column value.
+     * Get the [статус_заявки_просрочка] column value.
      * 
      * @return int
      */
-    public function getСтатусзаявкипросрочка()
+    public function getстатусзаявкипросрочка()
     {
-        return $this->статусзаявкипросрочка;
+        return $this->статус_заявки_просрочка;
     }
 
     /**
@@ -515,24 +574,28 @@ abstract class Предписания implements ActiveRecordInterface
     } // setId()
 
     /**
-     * Set the value of [контролирующийорган] column.
+     * Set the value of [контролирующий_орган] column.
      * 
      * @param int $v new value
      * @return $this|\Предписания The current object (for fluent API support)
      */
-    public function setКонтролирующийорган($v)
+    public function setконтролирующийорган($v)
     {
         if ($v !== null) {
             $v = (int) $v;
         }
 
-        if ($this->контролирующийорган !== $v) {
-            $this->контролирующийорган = $v;
-            $this->modifiedColumns[ПредписанияTableMap::COL_КОНТРОЛИРУЮЩИЙОРГАН] = true;
+        if ($this->контролирующий_орган !== $v) {
+            $this->контролирующий_орган = $v;
+            $this->modifiedColumns[ПредписанияTableMap::COL_КОНТРОЛИРУЮЩИЙ_ОРГАН] = true;
+        }
+
+        if ($this->aКонтролирующиеОрганы !== null && $this->aКонтролирующиеОрганы->getId() !== $v) {
+            $this->aКонтролирующиеОрганы = null;
         }
 
         return $this;
-    } // setКонтролирующийорган()
+    } // setконтролирующийорган()
 
     /**
      * Set the value of [подрядчик] column.
@@ -540,7 +603,7 @@ abstract class Предписания implements ActiveRecordInterface
      * @param int $v new value
      * @return $this|\Предписания The current object (for fluent API support)
      */
-    public function setПодрядчик($v)
+    public function setподрядчик($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -551,88 +614,108 @@ abstract class Предписания implements ActiveRecordInterface
             $this->modifiedColumns[ПредписанияTableMap::COL_ПОДРЯДЧИК] = true;
         }
 
+        if ($this->aПодрядчикиПредписания !== null && $this->aПодрядчикиПредписания->getId() !== $v) {
+            $this->aПодрядчикиПредписания = null;
+        }
+
         return $this;
-    } // setПодрядчик()
+    } // setподрядчик()
 
     /**
-     * Sets the value of [датавыдачи] column to a normalized version of the date/time value specified.
+     * Sets the value of [дата_выдачи] column to a normalized version of the date/time value specified.
      * 
      * @param  mixed $v string, integer (timestamp), or \DateTime value.
      *               Empty strings are treated as NULL.
      * @return $this|\Предписания The current object (for fluent API support)
      */
-    public function setДатавыдачи($v)
+    public function setдатавыдачи($v)
     {
         $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->датавыдачи !== null || $dt !== null) {
-            if ($this->датавыдачи === null || $dt === null || $dt->format("Y-m-d") !== $this->датавыдачи->format("Y-m-d")) {
-                $this->датавыдачи = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[ПредписанияTableMap::COL_ДАТАВЫДАЧИ] = true;
+        if ($this->дата_выдачи !== null || $dt !== null) {
+            if ($this->дата_выдачи === null || $dt === null || $dt->format("Y-m-d") !== $this->дата_выдачи->format("Y-m-d")) {
+                $this->дата_выдачи = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[ПредписанияTableMap::COL_ДАТА_ВЫДАЧИ] = true;
             }
         } // if either are not null
 
+        if ($this->aКалендарьRelatedByдатавыдачи !== null && $this->aКалендарьRelatedByдатавыдачи->getдата() !== $v) {
+            $this->aКалендарьRelatedByдатавыдачи = null;
+        }
+
         return $this;
-    } // setДатавыдачи()
+    } // setдатавыдачи()
 
     /**
-     * Sets the value of [плановаядатаустранения] column to a normalized version of the date/time value specified.
+     * Sets the value of [плановая_дата_устранения] column to a normalized version of the date/time value specified.
      * 
      * @param  mixed $v string, integer (timestamp), or \DateTime value.
      *               Empty strings are treated as NULL.
      * @return $this|\Предписания The current object (for fluent API support)
      */
-    public function setПлановаядатаустранения($v)
+    public function setплановаядатаустранения($v)
     {
         $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->плановаядатаустранения !== null || $dt !== null) {
-            if ($this->плановаядатаустранения === null || $dt === null || $dt->format("Y-m-d") !== $this->плановаядатаустранения->format("Y-m-d")) {
-                $this->плановаядатаустранения = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[ПредписанияTableMap::COL_ПЛАНОВАЯДАТАУСТРАНЕНИЯ] = true;
+        if ($this->плановая_дата_устранения !== null || $dt !== null) {
+            if ($this->плановая_дата_устранения === null || $dt === null || $dt->format("Y-m-d") !== $this->плановая_дата_устранения->format("Y-m-d")) {
+                $this->плановая_дата_устранения = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[ПредписанияTableMap::COL_ПЛАНОВАЯ_ДАТА_УСТРАНЕНИЯ] = true;
             }
         } // if either are not null
 
+        if ($this->aКалендарьRelatedByплановаядатаустранения !== null && $this->aКалендарьRelatedByплановаядатаустранения->getдата() !== $v) {
+            $this->aКалендарьRelatedByплановаядатаустранения = null;
+        }
+
         return $this;
-    } // setПлановаядатаустранения()
+    } // setплановаядатаустранения()
 
     /**
-     * Sets the value of [фактическаядатаустранения] column to a normalized version of the date/time value specified.
+     * Sets the value of [фактическая_дата_устранения] column to a normalized version of the date/time value specified.
      * 
      * @param  mixed $v string, integer (timestamp), or \DateTime value.
      *               Empty strings are treated as NULL.
      * @return $this|\Предписания The current object (for fluent API support)
      */
-    public function setФактическаядатаустранения($v)
+    public function setфактическаядатаустранения($v)
     {
         $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->фактическаядатаустранения !== null || $dt !== null) {
-            if ($this->фактическаядатаустранения === null || $dt === null || $dt->format("Y-m-d") !== $this->фактическаядатаустранения->format("Y-m-d")) {
-                $this->фактическаядатаустранения = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[ПредписанияTableMap::COL_ФАКТИЧЕСКАЯДАТАУСТРАНЕНИЯ] = true;
+        if ($this->фактическая_дата_устранения !== null || $dt !== null) {
+            if ($this->фактическая_дата_устранения === null || $dt === null || $dt->format("Y-m-d") !== $this->фактическая_дата_устранения->format("Y-m-d")) {
+                $this->фактическая_дата_устранения = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[ПредписанияTableMap::COL_ФАКТИЧЕСКАЯ_ДАТА_УСТРАНЕНИЯ] = true;
             }
         } // if either are not null
 
+        if ($this->aКалендарьRelatedByфактическаядатаустранения !== null && $this->aКалендарьRelatedByфактическаядатаустранения->getдата() !== $v) {
+            $this->aКалендарьRelatedByфактическаядатаустранения = null;
+        }
+
         return $this;
-    } // setФактическаядатаустранения()
+    } // setфактическаядатаустранения()
 
     /**
-     * Set the value of [типзамечания] column.
+     * Set the value of [тип_замечания] column.
      * 
      * @param int $v new value
      * @return $this|\Предписания The current object (for fluent API support)
      */
-    public function setТипзамечания($v)
+    public function setтипзамечания($v)
     {
         if ($v !== null) {
             $v = (int) $v;
         }
 
-        if ($this->типзамечания !== $v) {
-            $this->типзамечания = $v;
-            $this->modifiedColumns[ПредписанияTableMap::COL_ТИПЗАМЕЧАНИЯ] = true;
+        if ($this->тип_замечания !== $v) {
+            $this->тип_замечания = $v;
+            $this->modifiedColumns[ПредписанияTableMap::COL_ТИП_ЗАМЕЧАНИЯ] = true;
+        }
+
+        if ($this->aТипыЗамечаний !== null && $this->aТипыЗамечаний->getId() !== $v) {
+            $this->aТипыЗамечаний = null;
         }
 
         return $this;
-    } // setТипзамечания()
+    } // setтипзамечания()
 
     /**
      * Set the value of [проект] column.
@@ -640,7 +723,7 @@ abstract class Предписания implements ActiveRecordInterface
      * @param int $v new value
      * @return $this|\Предписания The current object (for fluent API support)
      */
-    public function setПроект($v)
+    public function setпроект($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -651,48 +734,60 @@ abstract class Предписания implements ActiveRecordInterface
             $this->modifiedColumns[ПредписанияTableMap::COL_ПРОЕКТ] = true;
         }
 
+        if ($this->aПроекты !== null && $this->aПроекты->getId() !== $v) {
+            $this->aПроекты = null;
+        }
+
         return $this;
-    } // setПроект()
+    } // setпроект()
 
     /**
-     * Set the value of [статусзаявкизавершение] column.
+     * Set the value of [статус_заявки_завершение] column.
      * 
      * @param int $v new value
      * @return $this|\Предписания The current object (for fluent API support)
      */
-    public function setСтатусзаявкизавершение($v)
+    public function setстатусзаявкизавершение($v)
     {
         if ($v !== null) {
             $v = (int) $v;
         }
 
-        if ($this->статусзаявкизавершение !== $v) {
-            $this->статусзаявкизавершение = $v;
-            $this->modifiedColumns[ПредписанияTableMap::COL_СТАТУСЗАЯВКИЗАВЕРШЕНИЕ] = true;
+        if ($this->статус_заявки_завершение !== $v) {
+            $this->статус_заявки_завершение = $v;
+            $this->modifiedColumns[ПредписанияTableMap::COL_СТАТУС_ЗАЯВКИ_ЗАВЕРШЕНИЕ] = true;
+        }
+
+        if ($this->aСтатусыЗаявкиЗавершение !== null && $this->aСтатусыЗаявкиЗавершение->getId() !== $v) {
+            $this->aСтатусыЗаявкиЗавершение = null;
         }
 
         return $this;
-    } // setСтатусзаявкизавершение()
+    } // setстатусзаявкизавершение()
 
     /**
-     * Set the value of [статусзаявкипросрочка] column.
+     * Set the value of [статус_заявки_просрочка] column.
      * 
      * @param int $v new value
      * @return $this|\Предписания The current object (for fluent API support)
      */
-    public function setСтатусзаявкипросрочка($v)
+    public function setстатусзаявкипросрочка($v)
     {
         if ($v !== null) {
             $v = (int) $v;
         }
 
-        if ($this->статусзаявкипросрочка !== $v) {
-            $this->статусзаявкипросрочка = $v;
-            $this->modifiedColumns[ПредписанияTableMap::COL_СТАТУСЗАЯВКИПРОСРОЧКА] = true;
+        if ($this->статус_заявки_просрочка !== $v) {
+            $this->статус_заявки_просрочка = $v;
+            $this->modifiedColumns[ПредписанияTableMap::COL_СТАТУС_ЗАЯВКИ_ПРОСРОЧКА] = true;
+        }
+
+        if ($this->aСтатусыЗаявкиПросрочка !== null && $this->aСтатусыЗаявкиПросрочка->getId() !== $v) {
+            $this->aСтатусыЗаявкиПросрочка = null;
         }
 
         return $this;
-    } // setСтатусзаявкипросрочка()
+    } // setстатусзаявкипросрочка()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -733,41 +828,41 @@ abstract class Предписания implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : ПредписанияTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : ПредписанияTableMap::translateFieldName('Контролирующийорган', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->контролирующийорган = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : ПредписанияTableMap::translateFieldName('контролирующийорган', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->контролирующий_орган = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : ПредписанияTableMap::translateFieldName('Подрядчик', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : ПредписанияTableMap::translateFieldName('подрядчик', TableMap::TYPE_PHPNAME, $indexType)];
             $this->подрядчик = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : ПредписанияTableMap::translateFieldName('Датавыдачи', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : ПредписанияTableMap::translateFieldName('датавыдачи', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00') {
                 $col = null;
             }
-            $this->датавыдачи = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+            $this->дата_выдачи = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : ПредписанияTableMap::translateFieldName('Плановаядатаустранения', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : ПредписанияTableMap::translateFieldName('плановаядатаустранения', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00') {
                 $col = null;
             }
-            $this->плановаядатаустранения = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+            $this->плановая_дата_устранения = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : ПредписанияTableMap::translateFieldName('Фактическаядатаустранения', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : ПредписанияTableMap::translateFieldName('фактическаядатаустранения', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00') {
                 $col = null;
             }
-            $this->фактическаядатаустранения = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+            $this->фактическая_дата_устранения = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : ПредписанияTableMap::translateFieldName('Типзамечания', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->типзамечания = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : ПредписанияTableMap::translateFieldName('типзамечания', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->тип_замечания = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : ПредписанияTableMap::translateFieldName('Проект', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : ПредписанияTableMap::translateFieldName('проект', TableMap::TYPE_PHPNAME, $indexType)];
             $this->проект = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : ПредписанияTableMap::translateFieldName('Статусзаявкизавершение', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->статусзаявкизавершение = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : ПредписанияTableMap::translateFieldName('статусзаявкизавершение', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->статус_заявки_завершение = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : ПредписанияTableMap::translateFieldName('Статусзаявкипросрочка', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->статусзаявкипросрочка = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : ПредписанияTableMap::translateFieldName('статусзаявкипросрочка', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->статус_заявки_просрочка = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -798,6 +893,33 @@ abstract class Предписания implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
+        if ($this->aКонтролирующиеОрганы !== null && $this->контролирующий_орган !== $this->aКонтролирующиеОрганы->getId()) {
+            $this->aКонтролирующиеОрганы = null;
+        }
+        if ($this->aПодрядчикиПредписания !== null && $this->подрядчик !== $this->aПодрядчикиПредписания->getId()) {
+            $this->aПодрядчикиПредписания = null;
+        }
+        if ($this->aКалендарьRelatedByдатавыдачи !== null && $this->дата_выдачи !== $this->aКалендарьRelatedByдатавыдачи->getдата()) {
+            $this->aКалендарьRelatedByдатавыдачи = null;
+        }
+        if ($this->aКалендарьRelatedByплановаядатаустранения !== null && $this->плановая_дата_устранения !== $this->aКалендарьRelatedByплановаядатаустранения->getдата()) {
+            $this->aКалендарьRelatedByплановаядатаустранения = null;
+        }
+        if ($this->aКалендарьRelatedByфактическаядатаустранения !== null && $this->фактическая_дата_устранения !== $this->aКалендарьRelatedByфактическаядатаустранения->getдата()) {
+            $this->aКалендарьRelatedByфактическаядатаустранения = null;
+        }
+        if ($this->aТипыЗамечаний !== null && $this->тип_замечания !== $this->aТипыЗамечаний->getId()) {
+            $this->aТипыЗамечаний = null;
+        }
+        if ($this->aПроекты !== null && $this->проект !== $this->aПроекты->getId()) {
+            $this->aПроекты = null;
+        }
+        if ($this->aСтатусыЗаявкиЗавершение !== null && $this->статус_заявки_завершение !== $this->aСтатусыЗаявкиЗавершение->getId()) {
+            $this->aСтатусыЗаявкиЗавершение = null;
+        }
+        if ($this->aСтатусыЗаявкиПросрочка !== null && $this->статус_заявки_просрочка !== $this->aСтатусыЗаявкиПросрочка->getId()) {
+            $this->aСтатусыЗаявкиПросрочка = null;
+        }
     } // ensureConsistency
 
     /**
@@ -837,6 +959,15 @@ abstract class Предписания implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->aКалендарьRelatedByдатавыдачи = null;
+            $this->aКонтролирующиеОрганы = null;
+            $this->aКалендарьRelatedByплановаядатаустранения = null;
+            $this->aПодрядчикиПредписания = null;
+            $this->aПроекты = null;
+            $this->aСтатусыЗаявкиЗавершение = null;
+            $this->aСтатусыЗаявкиПросрочка = null;
+            $this->aТипыЗамечаний = null;
+            $this->aКалендарьRelatedByфактическаядатаустранения = null;
         } // if (deep)
     }
 
@@ -936,6 +1067,74 @@ abstract class Предписания implements ActiveRecordInterface
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
 
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aКалендарьRelatedByдатавыдачи !== null) {
+                if ($this->aКалендарьRelatedByдатавыдачи->isModified() || $this->aКалендарьRelatedByдатавыдачи->isNew()) {
+                    $affectedRows += $this->aКалендарьRelatedByдатавыдачи->save($con);
+                }
+                $this->setКалендарьRelatedByдатавыдачи($this->aКалендарьRelatedByдатавыдачи);
+            }
+
+            if ($this->aКонтролирующиеОрганы !== null) {
+                if ($this->aКонтролирующиеОрганы->isModified() || $this->aКонтролирующиеОрганы->isNew()) {
+                    $affectedRows += $this->aКонтролирующиеОрганы->save($con);
+                }
+                $this->setКонтролирующиеОрганы($this->aКонтролирующиеОрганы);
+            }
+
+            if ($this->aКалендарьRelatedByплановаядатаустранения !== null) {
+                if ($this->aКалендарьRelatedByплановаядатаустранения->isModified() || $this->aКалендарьRelatedByплановаядатаустранения->isNew()) {
+                    $affectedRows += $this->aКалендарьRelatedByплановаядатаустранения->save($con);
+                }
+                $this->setКалендарьRelatedByплановаядатаустранения($this->aКалендарьRelatedByплановаядатаустранения);
+            }
+
+            if ($this->aПодрядчикиПредписания !== null) {
+                if ($this->aПодрядчикиПредписания->isModified() || $this->aПодрядчикиПредписания->isNew()) {
+                    $affectedRows += $this->aПодрядчикиПредписания->save($con);
+                }
+                $this->setПодрядчикиПредписания($this->aПодрядчикиПредписания);
+            }
+
+            if ($this->aПроекты !== null) {
+                if ($this->aПроекты->isModified() || $this->aПроекты->isNew()) {
+                    $affectedRows += $this->aПроекты->save($con);
+                }
+                $this->setПроекты($this->aПроекты);
+            }
+
+            if ($this->aСтатусыЗаявкиЗавершение !== null) {
+                if ($this->aСтатусыЗаявкиЗавершение->isModified() || $this->aСтатусыЗаявкиЗавершение->isNew()) {
+                    $affectedRows += $this->aСтатусыЗаявкиЗавершение->save($con);
+                }
+                $this->setСтатусыЗаявкиЗавершение($this->aСтатусыЗаявкиЗавершение);
+            }
+
+            if ($this->aСтатусыЗаявкиПросрочка !== null) {
+                if ($this->aСтатусыЗаявкиПросрочка->isModified() || $this->aСтатусыЗаявкиПросрочка->isNew()) {
+                    $affectedRows += $this->aСтатусыЗаявкиПросрочка->save($con);
+                }
+                $this->setСтатусыЗаявкиПросрочка($this->aСтатусыЗаявкиПросрочка);
+            }
+
+            if ($this->aТипыЗамечаний !== null) {
+                if ($this->aТипыЗамечаний->isModified() || $this->aТипыЗамечаний->isNew()) {
+                    $affectedRows += $this->aТипыЗамечаний->save($con);
+                }
+                $this->setТипыЗамечаний($this->aТипыЗамечаний);
+            }
+
+            if ($this->aКалендарьRelatedByфактическаядатаустранения !== null) {
+                if ($this->aКалендарьRelatedByфактическаядатаустранения->isModified() || $this->aКалендарьRelatedByфактическаядатаустранения->isNew()) {
+                    $affectedRows += $this->aКалендарьRelatedByфактическаядатаустранения->save($con);
+                }
+                $this->setКалендарьRelatedByфактическаядатаустранения($this->aКалендарьRelatedByфактическаядатаустранения);
+            }
+
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -967,37 +1166,41 @@ abstract class Предписания implements ActiveRecordInterface
         $modifiedColumns = array();
         $index = 0;
 
+        $this->modifiedColumns[ПредписанияTableMap::COL_ID] = true;
+        if (null !== $this->id) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . ПредписанияTableMap::COL_ID . ')');
+        }
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(ПредписанияTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
-        if ($this->isColumnModified(ПредписанияTableMap::COL_КОНТРОЛИРУЮЩИЙОРГАН)) {
-            $modifiedColumns[':p' . $index++]  = 'КонтролирующийОрган';
+        if ($this->isColumnModified(ПредписанияTableMap::COL_КОНТРОЛИРУЮЩИЙ_ОРГАН)) {
+            $modifiedColumns[':p' . $index++]  = 'Контролирующий_орган';
         }
         if ($this->isColumnModified(ПредписанияTableMap::COL_ПОДРЯДЧИК)) {
             $modifiedColumns[':p' . $index++]  = 'Подрядчик';
         }
-        if ($this->isColumnModified(ПредписанияTableMap::COL_ДАТАВЫДАЧИ)) {
-            $modifiedColumns[':p' . $index++]  = 'ДатаВыдачи';
+        if ($this->isColumnModified(ПредписанияTableMap::COL_ДАТА_ВЫДАЧИ)) {
+            $modifiedColumns[':p' . $index++]  = 'Дата_выдачи';
         }
-        if ($this->isColumnModified(ПредписанияTableMap::COL_ПЛАНОВАЯДАТАУСТРАНЕНИЯ)) {
-            $modifiedColumns[':p' . $index++]  = 'ПлановаяДатаУстранения';
+        if ($this->isColumnModified(ПредписанияTableMap::COL_ПЛАНОВАЯ_ДАТА_УСТРАНЕНИЯ)) {
+            $modifiedColumns[':p' . $index++]  = 'Плановая_дата_устранения';
         }
-        if ($this->isColumnModified(ПредписанияTableMap::COL_ФАКТИЧЕСКАЯДАТАУСТРАНЕНИЯ)) {
-            $modifiedColumns[':p' . $index++]  = 'ФактическаяДатаУстранения';
+        if ($this->isColumnModified(ПредписанияTableMap::COL_ФАКТИЧЕСКАЯ_ДАТА_УСТРАНЕНИЯ)) {
+            $modifiedColumns[':p' . $index++]  = 'Фактическая_дата_устранения';
         }
-        if ($this->isColumnModified(ПредписанияTableMap::COL_ТИПЗАМЕЧАНИЯ)) {
-            $modifiedColumns[':p' . $index++]  = 'ТипЗамечания';
+        if ($this->isColumnModified(ПредписанияTableMap::COL_ТИП_ЗАМЕЧАНИЯ)) {
+            $modifiedColumns[':p' . $index++]  = 'Тип_замечания';
         }
         if ($this->isColumnModified(ПредписанияTableMap::COL_ПРОЕКТ)) {
             $modifiedColumns[':p' . $index++]  = 'Проект';
         }
-        if ($this->isColumnModified(ПредписанияTableMap::COL_СТАТУСЗАЯВКИЗАВЕРШЕНИЕ)) {
-            $modifiedColumns[':p' . $index++]  = 'СтатусЗаявкиЗавершение';
+        if ($this->isColumnModified(ПредписанияTableMap::COL_СТАТУС_ЗАЯВКИ_ЗАВЕРШЕНИЕ)) {
+            $modifiedColumns[':p' . $index++]  = 'Статус_заявки_завершение';
         }
-        if ($this->isColumnModified(ПредписанияTableMap::COL_СТАТУСЗАЯВКИПРОСРОЧКА)) {
-            $modifiedColumns[':p' . $index++]  = 'СтатусЗаявкиПросрочка';
+        if ($this->isColumnModified(ПредписанияTableMap::COL_СТАТУС_ЗАЯВКИ_ПРОСРОЧКА)) {
+            $modifiedColumns[':p' . $index++]  = 'Статус_заявки_просрочка';
         }
 
         $sql = sprintf(
@@ -1013,32 +1216,32 @@ abstract class Предписания implements ActiveRecordInterface
                     case 'id':                        
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case 'КонтролирующийОрган':                        
-                        $stmt->bindValue($identifier, $this->контролирующийорган, PDO::PARAM_INT);
+                    case 'Контролирующий_орган':                        
+                        $stmt->bindValue($identifier, $this->контролирующий_орган, PDO::PARAM_INT);
                         break;
                     case 'Подрядчик':                        
                         $stmt->bindValue($identifier, $this->подрядчик, PDO::PARAM_INT);
                         break;
-                    case 'ДатаВыдачи':                        
-                        $stmt->bindValue($identifier, $this->датавыдачи ? $this->датавыдачи->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
+                    case 'Дата_выдачи':                        
+                        $stmt->bindValue($identifier, $this->дата_выдачи ? $this->дата_выдачи->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
-                    case 'ПлановаяДатаУстранения':                        
-                        $stmt->bindValue($identifier, $this->плановаядатаустранения ? $this->плановаядатаустранения->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
+                    case 'Плановая_дата_устранения':                        
+                        $stmt->bindValue($identifier, $this->плановая_дата_устранения ? $this->плановая_дата_устранения->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
-                    case 'ФактическаяДатаУстранения':                        
-                        $stmt->bindValue($identifier, $this->фактическаядатаустранения ? $this->фактическаядатаустранения->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
+                    case 'Фактическая_дата_устранения':                        
+                        $stmt->bindValue($identifier, $this->фактическая_дата_устранения ? $this->фактическая_дата_устранения->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
-                    case 'ТипЗамечания':                        
-                        $stmt->bindValue($identifier, $this->типзамечания, PDO::PARAM_INT);
+                    case 'Тип_замечания':                        
+                        $stmt->bindValue($identifier, $this->тип_замечания, PDO::PARAM_INT);
                         break;
                     case 'Проект':                        
                         $stmt->bindValue($identifier, $this->проект, PDO::PARAM_INT);
                         break;
-                    case 'СтатусЗаявкиЗавершение':                        
-                        $stmt->bindValue($identifier, $this->статусзаявкизавершение, PDO::PARAM_INT);
+                    case 'Статус_заявки_завершение':                        
+                        $stmt->bindValue($identifier, $this->статус_заявки_завершение, PDO::PARAM_INT);
                         break;
-                    case 'СтатусЗаявкиПросрочка':                        
-                        $stmt->bindValue($identifier, $this->статусзаявкипросрочка, PDO::PARAM_INT);
+                    case 'Статус_заявки_просрочка':                        
+                        $stmt->bindValue($identifier, $this->статус_заявки_просрочка, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -1053,6 +1256,7 @@ abstract class Предписания implements ActiveRecordInterface
         } catch (Exception $e) {
             throw new PropelException('Unable to get autoincrement id.', 0, $e);
         }
+        $this->setId($pk);
 
         $this->setNew(false);
     }
@@ -1105,31 +1309,31 @@ abstract class Предписания implements ActiveRecordInterface
                 return $this->getId();
                 break;
             case 1:
-                return $this->getКонтролирующийорган();
+                return $this->getконтролирующийорган();
                 break;
             case 2:
-                return $this->getПодрядчик();
+                return $this->getподрядчик();
                 break;
             case 3:
-                return $this->getДатавыдачи();
+                return $this->getдатавыдачи();
                 break;
             case 4:
-                return $this->getПлановаядатаустранения();
+                return $this->getплановаядатаустранения();
                 break;
             case 5:
-                return $this->getФактическаядатаустранения();
+                return $this->getфактическаядатаустранения();
                 break;
             case 6:
-                return $this->getТипзамечания();
+                return $this->getтипзамечания();
                 break;
             case 7:
-                return $this->getПроект();
+                return $this->getпроект();
                 break;
             case 8:
-                return $this->getСтатусзаявкизавершение();
+                return $this->getстатусзаявкизавершение();
                 break;
             case 9:
-                return $this->getСтатусзаявкипросрочка();
+                return $this->getстатусзаявкипросрочка();
                 break;
             default:
                 return null;
@@ -1148,10 +1352,11 @@ abstract class Предписания implements ActiveRecordInterface
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
      * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
-    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
+    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
 
         if (isset($alreadyDumpedObjects['Предписания'][$this->hashCode()])) {
@@ -1161,15 +1366,15 @@ abstract class Предписания implements ActiveRecordInterface
         $keys = ПредписанияTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getКонтролирующийорган(),
-            $keys[2] => $this->getПодрядчик(),
-            $keys[3] => $this->getДатавыдачи(),
-            $keys[4] => $this->getПлановаядатаустранения(),
-            $keys[5] => $this->getФактическаядатаустранения(),
-            $keys[6] => $this->getТипзамечания(),
-            $keys[7] => $this->getПроект(),
-            $keys[8] => $this->getСтатусзаявкизавершение(),
-            $keys[9] => $this->getСтатусзаявкипросрочка(),
+            $keys[1] => $this->getконтролирующийорган(),
+            $keys[2] => $this->getподрядчик(),
+            $keys[3] => $this->getдатавыдачи(),
+            $keys[4] => $this->getплановаядатаустранения(),
+            $keys[5] => $this->getфактическаядатаустранения(),
+            $keys[6] => $this->getтипзамечания(),
+            $keys[7] => $this->getпроект(),
+            $keys[8] => $this->getстатусзаявкизавершение(),
+            $keys[9] => $this->getстатусзаявкипросрочка(),
         );
         if ($result[$keys[3]] instanceof \DateTime) {
             $result[$keys[3]] = $result[$keys[3]]->format('c');
@@ -1188,6 +1393,143 @@ abstract class Предписания implements ActiveRecordInterface
             $result[$key] = $virtualColumn;
         }
         
+        if ($includeForeignObjects) {
+            if (null !== $this->aКалендарьRelatedByдатавыдачи) {
+                
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = '�алендарь';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'Календарь';
+                        break;
+                    default:
+                        $key = 'Календарь';
+                }
+        
+                $result[$key] = $this->aКалендарьRelatedByдатавыдачи->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aКонтролирующиеОрганы) {
+                
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = '�онтролирующиеОрганы';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'Контролирующие_органы';
+                        break;
+                    default:
+                        $key = 'КонтролирующиеОрганы';
+                }
+        
+                $result[$key] = $this->aКонтролирующиеОрганы->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aКалендарьRelatedByплановаядатаустранения) {
+                
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = '�алендарь';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'Календарь';
+                        break;
+                    default:
+                        $key = 'Календарь';
+                }
+        
+                $result[$key] = $this->aКалендарьRelatedByплановаядатаустранения->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aПодрядчикиПредписания) {
+                
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = '�одрядчикиПредписания';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'Подрядчики_предписания';
+                        break;
+                    default:
+                        $key = 'ПодрядчикиПредписания';
+                }
+        
+                $result[$key] = $this->aПодрядчикиПредписания->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aПроекты) {
+                
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = '�роекты';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'Проекты';
+                        break;
+                    default:
+                        $key = 'Проекты';
+                }
+        
+                $result[$key] = $this->aПроекты->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aСтатусыЗаявкиЗавершение) {
+                
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = '�татусыЗаявкиЗавершение';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'Статусы_заявки_завершение';
+                        break;
+                    default:
+                        $key = 'СтатусыЗаявкиЗавершение';
+                }
+        
+                $result[$key] = $this->aСтатусыЗаявкиЗавершение->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aСтатусыЗаявкиПросрочка) {
+                
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = '�татусыЗаявкиПросрочка';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'Статусы_заявки_просрочка';
+                        break;
+                    default:
+                        $key = 'СтатусыЗаявкиПросрочка';
+                }
+        
+                $result[$key] = $this->aСтатусыЗаявкиПросрочка->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aТипыЗамечаний) {
+                
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = '�ипыЗамечаний';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'Типы_замечаний';
+                        break;
+                    default:
+                        $key = 'ТипыЗамечаний';
+                }
+        
+                $result[$key] = $this->aТипыЗамечаний->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aКалендарьRelatedByфактическаядатаустранения) {
+                
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = '�алендарь';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'Календарь';
+                        break;
+                    default:
+                        $key = 'Календарь';
+                }
+        
+                $result[$key] = $this->aКалендарьRelatedByфактическаядатаустранения->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+        }
 
         return $result;
     }
@@ -1225,31 +1567,31 @@ abstract class Предписания implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setКонтролирующийорган($value);
+                $this->setконтролирующийорган($value);
                 break;
             case 2:
-                $this->setПодрядчик($value);
+                $this->setподрядчик($value);
                 break;
             case 3:
-                $this->setДатавыдачи($value);
+                $this->setдатавыдачи($value);
                 break;
             case 4:
-                $this->setПлановаядатаустранения($value);
+                $this->setплановаядатаустранения($value);
                 break;
             case 5:
-                $this->setФактическаядатаустранения($value);
+                $this->setфактическаядатаустранения($value);
                 break;
             case 6:
-                $this->setТипзамечания($value);
+                $this->setтипзамечания($value);
                 break;
             case 7:
-                $this->setПроект($value);
+                $this->setпроект($value);
                 break;
             case 8:
-                $this->setСтатусзаявкизавершение($value);
+                $this->setстатусзаявкизавершение($value);
                 break;
             case 9:
-                $this->setСтатусзаявкипросрочка($value);
+                $this->setстатусзаявкипросрочка($value);
                 break;
         } // switch()
 
@@ -1281,31 +1623,31 @@ abstract class Предписания implements ActiveRecordInterface
             $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setКонтролирующийорган($arr[$keys[1]]);
+            $this->setконтролирующийорган($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setПодрядчик($arr[$keys[2]]);
+            $this->setподрядчик($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setДатавыдачи($arr[$keys[3]]);
+            $this->setдатавыдачи($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setПлановаядатаустранения($arr[$keys[4]]);
+            $this->setплановаядатаустранения($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setФактическаядатаустранения($arr[$keys[5]]);
+            $this->setфактическаядатаустранения($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setТипзамечания($arr[$keys[6]]);
+            $this->setтипзамечания($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setПроект($arr[$keys[7]]);
+            $this->setпроект($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setСтатусзаявкизавершение($arr[$keys[8]]);
+            $this->setстатусзаявкизавершение($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
-            $this->setСтатусзаявкипросрочка($arr[$keys[9]]);
+            $this->setстатусзаявкипросрочка($arr[$keys[9]]);
         }
     }
 
@@ -1351,32 +1693,32 @@ abstract class Предписания implements ActiveRecordInterface
         if ($this->isColumnModified(ПредписанияTableMap::COL_ID)) {
             $criteria->add(ПредписанияTableMap::COL_ID, $this->id);
         }
-        if ($this->isColumnModified(ПредписанияTableMap::COL_КОНТРОЛИРУЮЩИЙОРГАН)) {
-            $criteria->add(ПредписанияTableMap::COL_КОНТРОЛИРУЮЩИЙОРГАН, $this->контролирующийорган);
+        if ($this->isColumnModified(ПредписанияTableMap::COL_КОНТРОЛИРУЮЩИЙ_ОРГАН)) {
+            $criteria->add(ПредписанияTableMap::COL_КОНТРОЛИРУЮЩИЙ_ОРГАН, $this->контролирующий_орган);
         }
         if ($this->isColumnModified(ПредписанияTableMap::COL_ПОДРЯДЧИК)) {
             $criteria->add(ПредписанияTableMap::COL_ПОДРЯДЧИК, $this->подрядчик);
         }
-        if ($this->isColumnModified(ПредписанияTableMap::COL_ДАТАВЫДАЧИ)) {
-            $criteria->add(ПредписанияTableMap::COL_ДАТАВЫДАЧИ, $this->датавыдачи);
+        if ($this->isColumnModified(ПредписанияTableMap::COL_ДАТА_ВЫДАЧИ)) {
+            $criteria->add(ПредписанияTableMap::COL_ДАТА_ВЫДАЧИ, $this->дата_выдачи);
         }
-        if ($this->isColumnModified(ПредписанияTableMap::COL_ПЛАНОВАЯДАТАУСТРАНЕНИЯ)) {
-            $criteria->add(ПредписанияTableMap::COL_ПЛАНОВАЯДАТАУСТРАНЕНИЯ, $this->плановаядатаустранения);
+        if ($this->isColumnModified(ПредписанияTableMap::COL_ПЛАНОВАЯ_ДАТА_УСТРАНЕНИЯ)) {
+            $criteria->add(ПредписанияTableMap::COL_ПЛАНОВАЯ_ДАТА_УСТРАНЕНИЯ, $this->плановая_дата_устранения);
         }
-        if ($this->isColumnModified(ПредписанияTableMap::COL_ФАКТИЧЕСКАЯДАТАУСТРАНЕНИЯ)) {
-            $criteria->add(ПредписанияTableMap::COL_ФАКТИЧЕСКАЯДАТАУСТРАНЕНИЯ, $this->фактическаядатаустранения);
+        if ($this->isColumnModified(ПредписанияTableMap::COL_ФАКТИЧЕСКАЯ_ДАТА_УСТРАНЕНИЯ)) {
+            $criteria->add(ПредписанияTableMap::COL_ФАКТИЧЕСКАЯ_ДАТА_УСТРАНЕНИЯ, $this->фактическая_дата_устранения);
         }
-        if ($this->isColumnModified(ПредписанияTableMap::COL_ТИПЗАМЕЧАНИЯ)) {
-            $criteria->add(ПредписанияTableMap::COL_ТИПЗАМЕЧАНИЯ, $this->типзамечания);
+        if ($this->isColumnModified(ПредписанияTableMap::COL_ТИП_ЗАМЕЧАНИЯ)) {
+            $criteria->add(ПредписанияTableMap::COL_ТИП_ЗАМЕЧАНИЯ, $this->тип_замечания);
         }
         if ($this->isColumnModified(ПредписанияTableMap::COL_ПРОЕКТ)) {
             $criteria->add(ПредписанияTableMap::COL_ПРОЕКТ, $this->проект);
         }
-        if ($this->isColumnModified(ПредписанияTableMap::COL_СТАТУСЗАЯВКИЗАВЕРШЕНИЕ)) {
-            $criteria->add(ПредписанияTableMap::COL_СТАТУСЗАЯВКИЗАВЕРШЕНИЕ, $this->статусзаявкизавершение);
+        if ($this->isColumnModified(ПредписанияTableMap::COL_СТАТУС_ЗАЯВКИ_ЗАВЕРШЕНИЕ)) {
+            $criteria->add(ПредписанияTableMap::COL_СТАТУС_ЗАЯВКИ_ЗАВЕРШЕНИЕ, $this->статус_заявки_завершение);
         }
-        if ($this->isColumnModified(ПредписанияTableMap::COL_СТАТУСЗАЯВКИПРОСРОЧКА)) {
-            $criteria->add(ПредписанияTableMap::COL_СТАТУСЗАЯВКИПРОСРОЧКА, $this->статусзаявкипросрочка);
+        if ($this->isColumnModified(ПредписанияTableMap::COL_СТАТУС_ЗАЯВКИ_ПРОСРОЧКА)) {
+            $criteria->add(ПредписанияTableMap::COL_СТАТУС_ЗАЯВКИ_ПРОСРОЧКА, $this->статус_заявки_просрочка);
         }
 
         return $criteria;
@@ -1394,7 +1736,8 @@ abstract class Предписания implements ActiveRecordInterface
      */
     public function buildPkeyCriteria()
     {
-        throw new LogicException('The Предписания object has no primary key');
+        $criteria = ChildПредписанияQuery::create();
+        $criteria->add(ПредписанияTableMap::COL_ID, $this->id);
 
         return $criteria;
     }
@@ -1407,7 +1750,7 @@ abstract class Предписания implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = false;
+        $validPk = null !== $this->getId();
 
         $validPrimaryKeyFKs = 0;
         $primaryKeyFKs = [];
@@ -1422,27 +1765,23 @@ abstract class Предписания implements ActiveRecordInterface
     }
         
     /**
-     * Returns NULL since this table doesn't have a primary key.
-     * This method exists only for BC and is deprecated!
-     * @return null
+     * Returns the primary key for this object (row).
+     * @return int
      */
     public function getPrimaryKey()
     {
-        return null;
+        return $this->getId();
     }
 
     /**
-     * Dummy primary key setter.
+     * Generic method to set the primary key (id column).
      *
-     * This function only exists to preserve backwards compatibility.  It is no longer
-     * needed or required by the Persistent interface.  It will be removed in next BC-breaking
-     * release of Propel.
-     *
-     * @deprecated
+     * @param       int $key Primary key.
+     * @return void
      */
-    public function setPrimaryKey($pk)
+    public function setPrimaryKey($key)
     {
-        // do nothing, because this object doesn't have any primary keys
+        $this->setId($key);
     }
 
     /**
@@ -1451,7 +1790,7 @@ abstract class Предписания implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull()
     {
-        return ;
+        return null === $this->getId();
     }
 
     /**
@@ -1467,15 +1806,15 @@ abstract class Предписания implements ActiveRecordInterface
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setКонтролирующийорган($this->getКонтролирующийорган());
-        $copyObj->setПодрядчик($this->getПодрядчик());
-        $copyObj->setДатавыдачи($this->getДатавыдачи());
-        $copyObj->setПлановаядатаустранения($this->getПлановаядатаустранения());
-        $copyObj->setФактическаядатаустранения($this->getФактическаядатаустранения());
-        $copyObj->setТипзамечания($this->getТипзамечания());
-        $copyObj->setПроект($this->getПроект());
-        $copyObj->setСтатусзаявкизавершение($this->getСтатусзаявкизавершение());
-        $copyObj->setСтатусзаявкипросрочка($this->getСтатусзаявкипросрочка());
+        $copyObj->setконтролирующийорган($this->getконтролирующийорган());
+        $copyObj->setподрядчик($this->getподрядчик());
+        $copyObj->setдатавыдачи($this->getдатавыдачи());
+        $copyObj->setплановаядатаустранения($this->getплановаядатаустранения());
+        $copyObj->setфактическаядатаустранения($this->getфактическаядатаустранения());
+        $copyObj->setтипзамечания($this->getтипзамечания());
+        $copyObj->setпроект($this->getпроект());
+        $copyObj->setстатусзаявкизавершение($this->getстатусзаявкизавершение());
+        $copyObj->setстатусзаявкипросрочка($this->getстатусзаявкипросрочка());
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1505,22 +1844,508 @@ abstract class Предписания implements ActiveRecordInterface
     }
 
     /**
+     * Declares an association between this object and a ChildКалендарь object.
+     *
+     * @param  ChildКалендарь $v
+     * @return $this|\Предписания The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setКалендарьRelatedByдатавыдачи(ChildКалендарь $v = null)
+    {
+        if ($v === null) {
+            $this->setдатавыдачи(NULL);
+        } else {
+            $this->setдатавыдачи($v->getдата());
+        }
+
+        $this->aКалендарьRelatedByдатавыдачи = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildКалендарь object, it will not be re-added.
+        if ($v !== null) {
+            $v->addПредписанияRelatedByдатавыдачи($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildКалендарь object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildКалендарь The associated ChildКалендарь object.
+     * @throws PropelException
+     */
+    public function getКалендарьRelatedByдатавыдачи(ConnectionInterface $con = null)
+    {
+        if ($this->aКалендарьRelatedByдатавыдачи === null && (($this->дата_выдачи !== "" && $this->дата_выдачи !== null))) {
+            $this->aКалендарьRelatedByдатавыдачи = ChildКалендарьQuery::create()->findPk($this->дата_выдачи, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aКалендарьRelatedByдатавыдачи->addПредписанияsRelatedByдатавыдачи($this);
+             */
+        }
+
+        return $this->aКалендарьRelatedByдатавыдачи;
+    }
+
+    /**
+     * Declares an association between this object and a ChildКонтролирующиеОрганы object.
+     *
+     * @param  ChildКонтролирующиеОрганы $v
+     * @return $this|\Предписания The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setКонтролирующиеОрганы(ChildКонтролирующиеОрганы $v = null)
+    {
+        if ($v === null) {
+            $this->setконтролирующийорган(NULL);
+        } else {
+            $this->setконтролирующийорган($v->getId());
+        }
+
+        $this->aКонтролирующиеОрганы = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildКонтролирующиеОрганы object, it will not be re-added.
+        if ($v !== null) {
+            $v->addПредписания($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildКонтролирующиеОрганы object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildКонтролирующиеОрганы The associated ChildКонтролирующиеОрганы object.
+     * @throws PropelException
+     */
+    public function getКонтролирующиеОрганы(ConnectionInterface $con = null)
+    {
+        if ($this->aКонтролирующиеОрганы === null && ($this->контролирующий_орган !== null)) {
+            $this->aКонтролирующиеОрганы = ChildКонтролирующиеОрганыQuery::create()->findPk($this->контролирующий_орган, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aКонтролирующиеОрганы->addПредписанияs($this);
+             */
+        }
+
+        return $this->aКонтролирующиеОрганы;
+    }
+
+    /**
+     * Declares an association between this object and a ChildКалендарь object.
+     *
+     * @param  ChildКалендарь $v
+     * @return $this|\Предписания The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setКалендарьRelatedByплановаядатаустранения(ChildКалендарь $v = null)
+    {
+        if ($v === null) {
+            $this->setплановаядатаустранения(NULL);
+        } else {
+            $this->setплановаядатаустранения($v->getдата());
+        }
+
+        $this->aКалендарьRelatedByплановаядатаустранения = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildКалендарь object, it will not be re-added.
+        if ($v !== null) {
+            $v->addПредписанияRelatedByплановаядатаустранения($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildКалендарь object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildКалендарь The associated ChildКалендарь object.
+     * @throws PropelException
+     */
+    public function getКалендарьRelatedByплановаядатаустранения(ConnectionInterface $con = null)
+    {
+        if ($this->aКалендарьRelatedByплановаядатаустранения === null && (($this->плановая_дата_устранения !== "" && $this->плановая_дата_устранения !== null))) {
+            $this->aКалендарьRelatedByплановаядатаустранения = ChildКалендарьQuery::create()->findPk($this->плановая_дата_устранения, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aКалендарьRelatedByплановаядатаустранения->addПредписанияsRelatedByплановаядатаустранения($this);
+             */
+        }
+
+        return $this->aКалендарьRelatedByплановаядатаустранения;
+    }
+
+    /**
+     * Declares an association between this object and a ChildПодрядчикиПредписания object.
+     *
+     * @param  ChildПодрядчикиПредписания $v
+     * @return $this|\Предписания The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setПодрядчикиПредписания(ChildПодрядчикиПредписания $v = null)
+    {
+        if ($v === null) {
+            $this->setподрядчик(NULL);
+        } else {
+            $this->setподрядчик($v->getId());
+        }
+
+        $this->aПодрядчикиПредписания = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildПодрядчикиПредписания object, it will not be re-added.
+        if ($v !== null) {
+            $v->addПредписания($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildПодрядчикиПредписания object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildПодрядчикиПредписания The associated ChildПодрядчикиПредписания object.
+     * @throws PropelException
+     */
+    public function getПодрядчикиПредписания(ConnectionInterface $con = null)
+    {
+        if ($this->aПодрядчикиПредписания === null && ($this->подрядчик !== null)) {
+            $this->aПодрядчикиПредписания = ChildПодрядчикиПредписанияQuery::create()->findPk($this->подрядчик, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aПодрядчикиПредписания->addПредписанияs($this);
+             */
+        }
+
+        return $this->aПодрядчикиПредписания;
+    }
+
+    /**
+     * Declares an association between this object and a ChildПроекты object.
+     *
+     * @param  ChildПроекты $v
+     * @return $this|\Предписания The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setПроекты(ChildПроекты $v = null)
+    {
+        if ($v === null) {
+            $this->setпроект(NULL);
+        } else {
+            $this->setпроект($v->getId());
+        }
+
+        $this->aПроекты = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildПроекты object, it will not be re-added.
+        if ($v !== null) {
+            $v->addПредписания($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildПроекты object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildПроекты The associated ChildПроекты object.
+     * @throws PropelException
+     */
+    public function getПроекты(ConnectionInterface $con = null)
+    {
+        if ($this->aПроекты === null && ($this->проект !== null)) {
+            $this->aПроекты = ChildПроектыQuery::create()->findPk($this->проект, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aПроекты->addПредписанияs($this);
+             */
+        }
+
+        return $this->aПроекты;
+    }
+
+    /**
+     * Declares an association between this object and a ChildСтатусыЗаявкиЗавершение object.
+     *
+     * @param  ChildСтатусыЗаявкиЗавершение $v
+     * @return $this|\Предписания The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setСтатусыЗаявкиЗавершение(ChildСтатусыЗаявкиЗавершение $v = null)
+    {
+        if ($v === null) {
+            $this->setстатусзаявкизавершение(NULL);
+        } else {
+            $this->setстатусзаявкизавершение($v->getId());
+        }
+
+        $this->aСтатусыЗаявкиЗавершение = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildСтатусыЗаявкиЗавершение object, it will not be re-added.
+        if ($v !== null) {
+            $v->addПредписания($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildСтатусыЗаявкиЗавершение object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildСтатусыЗаявкиЗавершение The associated ChildСтатусыЗаявкиЗавершение object.
+     * @throws PropelException
+     */
+    public function getСтатусыЗаявкиЗавершение(ConnectionInterface $con = null)
+    {
+        if ($this->aСтатусыЗаявкиЗавершение === null && ($this->статус_заявки_завершение !== null)) {
+            $this->aСтатусыЗаявкиЗавершение = ChildСтатусыЗаявкиЗавершениеQuery::create()->findPk($this->статус_заявки_завершение, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aСтатусыЗаявкиЗавершение->addПредписанияs($this);
+             */
+        }
+
+        return $this->aСтатусыЗаявкиЗавершение;
+    }
+
+    /**
+     * Declares an association between this object and a ChildСтатусыЗаявкиПросрочка object.
+     *
+     * @param  ChildСтатусыЗаявкиПросрочка $v
+     * @return $this|\Предписания The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setСтатусыЗаявкиПросрочка(ChildСтатусыЗаявкиПросрочка $v = null)
+    {
+        if ($v === null) {
+            $this->setстатусзаявкипросрочка(NULL);
+        } else {
+            $this->setстатусзаявкипросрочка($v->getId());
+        }
+
+        $this->aСтатусыЗаявкиПросрочка = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildСтатусыЗаявкиПросрочка object, it will not be re-added.
+        if ($v !== null) {
+            $v->addПредписания($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildСтатусыЗаявкиПросрочка object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildСтатусыЗаявкиПросрочка The associated ChildСтатусыЗаявкиПросрочка object.
+     * @throws PropelException
+     */
+    public function getСтатусыЗаявкиПросрочка(ConnectionInterface $con = null)
+    {
+        if ($this->aСтатусыЗаявкиПросрочка === null && ($this->статус_заявки_просрочка !== null)) {
+            $this->aСтатусыЗаявкиПросрочка = ChildСтатусыЗаявкиПросрочкаQuery::create()->findPk($this->статус_заявки_просрочка, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aСтатусыЗаявкиПросрочка->addПредписанияs($this);
+             */
+        }
+
+        return $this->aСтатусыЗаявкиПросрочка;
+    }
+
+    /**
+     * Declares an association between this object and a ChildТипыЗамечаний object.
+     *
+     * @param  ChildТипыЗамечаний $v
+     * @return $this|\Предписания The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setТипыЗамечаний(ChildТипыЗамечаний $v = null)
+    {
+        if ($v === null) {
+            $this->setтипзамечания(NULL);
+        } else {
+            $this->setтипзамечания($v->getId());
+        }
+
+        $this->aТипыЗамечаний = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildТипыЗамечаний object, it will not be re-added.
+        if ($v !== null) {
+            $v->addПредписания($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildТипыЗамечаний object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildТипыЗамечаний The associated ChildТипыЗамечаний object.
+     * @throws PropelException
+     */
+    public function getТипыЗамечаний(ConnectionInterface $con = null)
+    {
+        if ($this->aТипыЗамечаний === null && ($this->тип_замечания !== null)) {
+            $this->aТипыЗамечаний = ChildТипыЗамечанийQuery::create()->findPk($this->тип_замечания, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aТипыЗамечаний->addПредписанияs($this);
+             */
+        }
+
+        return $this->aТипыЗамечаний;
+    }
+
+    /**
+     * Declares an association between this object and a ChildКалендарь object.
+     *
+     * @param  ChildКалендарь $v
+     * @return $this|\Предписания The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setКалендарьRelatedByфактическаядатаустранения(ChildКалендарь $v = null)
+    {
+        if ($v === null) {
+            $this->setфактическаядатаустранения(NULL);
+        } else {
+            $this->setфактическаядатаустранения($v->getдата());
+        }
+
+        $this->aКалендарьRelatedByфактическаядатаустранения = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildКалендарь object, it will not be re-added.
+        if ($v !== null) {
+            $v->addПредписанияRelatedByфактическаядатаустранения($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildКалендарь object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildКалендарь The associated ChildКалендарь object.
+     * @throws PropelException
+     */
+    public function getКалендарьRelatedByфактическаядатаустранения(ConnectionInterface $con = null)
+    {
+        if ($this->aКалендарьRelatedByфактическаядатаустранения === null && (($this->фактическая_дата_устранения !== "" && $this->фактическая_дата_устранения !== null))) {
+            $this->aКалендарьRelatedByфактическаядатаустранения = ChildКалендарьQuery::create()->findPk($this->фактическая_дата_устранения, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aКалендарьRelatedByфактическаядатаустранения->addПредписанияsRelatedByфактическаядатаустранения($this);
+             */
+        }
+
+        return $this->aКалендарьRelatedByфактическаядатаустранения;
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
      */
     public function clear()
     {
+        if (null !== $this->aКалендарьRelatedByдатавыдачи) {
+            $this->aКалендарьRelatedByдатавыдачи->removeПредписанияRelatedByдатавыдачи($this);
+        }
+        if (null !== $this->aКонтролирующиеОрганы) {
+            $this->aКонтролирующиеОрганы->removeПредписания($this);
+        }
+        if (null !== $this->aКалендарьRelatedByплановаядатаустранения) {
+            $this->aКалендарьRelatedByплановаядатаустранения->removeПредписанияRelatedByплановаядатаустранения($this);
+        }
+        if (null !== $this->aПодрядчикиПредписания) {
+            $this->aПодрядчикиПредписания->removeПредписания($this);
+        }
+        if (null !== $this->aПроекты) {
+            $this->aПроекты->removeПредписания($this);
+        }
+        if (null !== $this->aСтатусыЗаявкиЗавершение) {
+            $this->aСтатусыЗаявкиЗавершение->removeПредписания($this);
+        }
+        if (null !== $this->aСтатусыЗаявкиПросрочка) {
+            $this->aСтатусыЗаявкиПросрочка->removeПредписания($this);
+        }
+        if (null !== $this->aТипыЗамечаний) {
+            $this->aТипыЗамечаний->removeПредписания($this);
+        }
+        if (null !== $this->aКалендарьRelatedByфактическаядатаустранения) {
+            $this->aКалендарьRelatedByфактическаядатаустранения->removeПредписанияRelatedByфактическаядатаустранения($this);
+        }
         $this->id = null;
-        $this->контролирующийорган = null;
+        $this->контролирующий_орган = null;
         $this->подрядчик = null;
-        $this->датавыдачи = null;
-        $this->плановаядатаустранения = null;
-        $this->фактическаядатаустранения = null;
-        $this->типзамечания = null;
+        $this->дата_выдачи = null;
+        $this->плановая_дата_устранения = null;
+        $this->фактическая_дата_устранения = null;
+        $this->тип_замечания = null;
         $this->проект = null;
-        $this->статусзаявкизавершение = null;
-        $this->статусзаявкипросрочка = null;
+        $this->статус_заявки_завершение = null;
+        $this->статус_заявки_просрочка = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();
@@ -1541,6 +2366,15 @@ abstract class Предписания implements ActiveRecordInterface
         if ($deep) {
         } // if ($deep)
 
+        $this->aКалендарьRelatedByдатавыдачи = null;
+        $this->aКонтролирующиеОрганы = null;
+        $this->aКалендарьRelatedByплановаядатаустранения = null;
+        $this->aПодрядчикиПредписания = null;
+        $this->aПроекты = null;
+        $this->aСтатусыЗаявкиЗавершение = null;
+        $this->aСтатусыЗаявкиПросрочка = null;
+        $this->aТипыЗамечаний = null;
+        $this->aКалендарьRelatedByфактическаядатаустранения = null;
     }
 
     /**
