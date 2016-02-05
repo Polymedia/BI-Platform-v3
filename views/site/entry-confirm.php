@@ -21,6 +21,16 @@ use app\controllers\SaveController;
 
     <body>
     <script src="http://localhost:8080/ckeditor/ckeditor.js")></script>
+    <script src='https://cdn.tinymce.com/4/tinymce.min.js'></script>
+    <script>
+        tinymce.init({
+            selector: '#pukanchik',
+            plugins: ['code'],
+            forced_root_block : "",
+            extended_valid_elements: 'script[type|src]',
+            remove_linebreaks : false
+        });
+    </script>
 
     <p>You have entered the following information:</p>
     <label>File</label>
@@ -43,13 +53,13 @@ use app\controllers\SaveController;
             ?>
         </textarea>
 
-        <script>
-            CKEDITOR.replace("pukanchik",
-                {
-                    enterMode : CKEDITOR.ENTER_BR
-                }
-            )
-        </script>
+<!--        <script>-->
+<!--            CKEDITOR.replace("pukanchik",-->
+<!--                {-->
+<!--                    enterMode : CKEDITOR.ENTER_BR-->
+<!--                }-->
+<!--            )-->
+<!--        </script>-->
 
         <input name="fileName" type="hidden" value="<?= $fullPath; ?>" />
 <!--        <input name="getDataTest" type="hidden" value= />-->
