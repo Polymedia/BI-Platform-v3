@@ -92,7 +92,6 @@ class DashboardController extends BaseDashboardController
         $w = $this->getWidget('widget_hist2');
         $w->setCategories($model2->getColumnValues('RegionName'));
         $w->setSeries(Helpers::toKeyValueArray($model2, 'Year', 'UnemploymentYouth'));
-        $w->setOneSerie();
 
 
         $peopleModel = PeopleAR::find();
