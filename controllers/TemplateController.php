@@ -18,7 +18,7 @@ class TemplateController extends BaseDashboardController
         if (!$filter->isSelected())
             $filter->setSelectedValues($filter->getPossibleValues()[0]);
 
-        
+
         $model = $model->filterByRegionName($filter->selectedValue)->find();
 
 
