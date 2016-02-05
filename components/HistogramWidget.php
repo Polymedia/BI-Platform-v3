@@ -17,11 +17,10 @@ use yii\helpers\Json;
 
 class HistogramWidget extends Widget
 {
-    public $title;
+    public $title = "Title";
+    public $subtitle = "";
 
     public $name;
-
-    public $model2;
 
 
     public function init()
@@ -74,7 +73,10 @@ class HistogramWidget extends Widget
 
         $(\'#'.$id.'\').highcharts({
         title: {
-        text: "'.$this->title.'"
+            text: "'.$this->title.'"
+        },
+        subtitle: {
+            text: "'.$this->subtitle.'"
         },
         xAxis: [{
         categories: data_categories_'.$id.'
