@@ -45,9 +45,9 @@ class Filter extends Widget
                     visiology.model.'.$this->name.'.onRequestFilterValues = visiology.defaults.filterGetValues;
                     visiology.model.'.$this->name.'.onRequestFilteredData = visiology.defaults.filterGetData;
                 }
-                function onUser_'.$this->name.'(widget) {
-                    '.$content.'
-                }
+            </script>
+                '.$content.'
+            <script type="text/javascript">
                 function onDeploy_'.$this->name.'(visiology) {
                     visiology.model.'.$this->name.'.ko_values = ko.computed(function() {
                         return visiology.model.'.$this->name.'.onRequestFilterValues(visiology.data, visiology.model, visiology.model.'.$this->name.');

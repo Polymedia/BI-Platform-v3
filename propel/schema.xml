@@ -1,237 +1,431 @@
 <?xml version="1.0" encoding="utf-8"?>
 <database name="default" defaultIdMethod="native" defaultPhpNamingMethod="underscore">
-  <table name="data_table" idMethod="native" phpName="DataTable">
-    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" required="true"/>
-    <column name="one" phpName="One" type="INTEGER"/>
-    <column name="two" phpName="Two" type="INTEGER"/>
-    <column name="three" phpName="Three" type="INTEGER"/>
-    <column name="four" phpName="Four" type="VARCHAR" size="100"/>
-    <vendor type="mysql">
-      <parameter name="Engine" value="MyISAM"/>
-    </vendor>
-  </table>
-  <table name="people" idMethod="native" phpName="People">
-    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" required="true"/>
-    <column name="name" phpName="Name" type="VARCHAR" size="255"/>
-    <column name="date" phpName="Date" type="VARCHAR" size="255"/>
-    <column name="city" phpName="City" type="VARCHAR" size="255"/>
-    <column name="street" phpName="Street" type="VARCHAR" size="255"/>
-    <column name="fix_text" phpName="FixText" type="CLOB"/>
-    <column name="normal" phpName="Normal" type="VARCHAR" size="100"/>
-    <column name="company" phpName="Company" type="VARCHAR" size="255"/>
-    <vendor type="mysql">
-      <parameter name="Engine" value="MyISAM"/>
-    </vendor>
-  </table>
-  <table name="unemployment" idMethod="native" phpName="Unemployment">
+  <table name="Выработка" idMethod="native" phpName="выработка">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="unemployment_adult" phpName="UnemploymentAdult" type="DECIMAL" size="8" scale="2" required="true"/>
-    <column name="unemployment_youth" phpName="UnemploymentYouth" type="DECIMAL" size="8" scale="2" required="true"/>
-    <column name="region_id" phpName="RegionId" type="VARCHAR" size="255" required="true"/>
-    <column name="region_name" phpName="RegionName" type="VARCHAR" size="255" required="true"/>
-    <column name="year" phpName="Year" type="INTEGER" required="true"/>
-    <vendor type="mysql">
-      <parameter name="Engine" value="InnoDB"/>
-    </vendor>
+    <column name="Дата" phpName="дата" type="DATE" required="true"/>
+    <column name="Участок_работ" phpName="участокработ" type="INTEGER" required="true"/>
+    <column name="Тип_техники" phpName="типтехники" type="INTEGER" required="true"/>
+    <column name="План" phpName="план" type="INTEGER"/>
+    <column name="Факт" phpName="факт" type="INTEGER"/>
+    <column name="Тип_работ" phpName="типработ" type="INTEGER" required="true"/>
+    <column name="Выработка" phpName="выработка" type="BOOLEAN" size="1" required="true"/>
+    <foreign-key foreignTable="Календарь" name="Выработка_Дата_fkey">
+      <reference local="Дата" foreign="Дата"/>
+    </foreign-key>
+    <foreign-key foreignTable="Типы_работ" name="Выработка_Тип_работ_fkey">
+      <reference local="Тип_работ" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="Типы_техники_выработка" name="Выработка_Тип_техники_fkey">
+      <reference local="Тип_техники" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="Участки_работ" name="Выработка_Участок_работ_fkey">
+      <reference local="Участок_работ" foreign="id"/>
+    </foreign-key>
   </table>
-  <table name="Выработка" idMethod="native" phpName="Выработка">
-    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="Дата" phpName="Дата" type="DATE" required="true"/>
-    <column name="УчастокРабот" phpName="Участокработ" type="INTEGER" required="true"/>
-    <column name="ТипТехники" phpName="Типтехники" type="INTEGER" required="true"/>
-    <column name="План" phpName="План" type="INTEGER"/>
-    <column name="Факт" phpName="Факт" type="INTEGER"/>
-    <column name="ТипРабот" phpName="Типработ" type="INTEGER" required="true"/>
-    <column name="Выработка" phpName="Выработка" type="BOOLEAN" size="1" required="true"/>
-  </table>
-  <table name="Года" idMethod="native" phpName="Года">
+  <table name="Года" idMethod="native" phpName="года">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
   </table>
-  <table name="ДатыОбновленийДашбордов" idMethod="native" phpName="Датыобновленийдашбордов">
+  <table name="Даты_обновлений_дашбордов" idMethod="native" phpName="датыобновленийдашбордов">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="Дашборд" phpName="Дашборд" type="LONGVARCHAR" required="true"/>
-    <column name="Проект" phpName="Проект" type="INTEGER"/>
-    <column name="Дата" phpName="Дата" type="DATE" required="true"/>
-    <unique name="ДатыОбновленийД_Дашборд_Проект_key">
+    <column name="Дашборд" phpName="дашборд" type="LONGVARCHAR" required="true"/>
+    <column name="Проект" phpName="проект" type="INTEGER"/>
+    <column name="Дата" phpName="дата" type="DATE" required="true"/>
+    <foreign-key foreignTable="Проекты" name="Даты_обновлений_дашборд_Проект_fkey">
+      <reference local="Проект" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="Календарь" name="Даты_обновлений_дашбордов_Дата_fkey">
+      <reference local="Дата" foreign="Дата"/>
+    </foreign-key>
+    <unique name="Даты_обновлений__Дашборд_Проект_key">
       <unique-column name="Дашборд"/>
       <unique-column name="Проект"/>
     </unique>
   </table>
-  <table name="ДниНедели" idMethod="native" phpName="Днинедели">
+  <table name="Дни_недели" idMethod="native" phpName="днинедели">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" required="true"/>
-    <column name="ДеньНедели" phpName="Деньнедели" type="LONGVARCHAR" required="true"/>
+    <column name="День_недели" phpName="деньнедели" type="LONGVARCHAR" required="true"/>
   </table>
   <table name="Календарь" idMethod="native" phpName="Календарь">
-    <column name="Дата" phpName="Дата" type="DATE" primaryKey="true" required="true"/>
-    <column name="Год" phpName="Год" type="SMALLINT"/>
-    <column name="Полугодие" phpName="Полугодие" type="SMALLINT"/>
-    <column name="Квартал" phpName="Квартал" type="SMALLINT"/>
-    <column name="НомерМесяца" phpName="Номермесяца" type="SMALLINT"/>
-    <column name="Месяц" phpName="Месяц" type="LONGVARCHAR"/>
-    <column name="День" phpName="День" type="SMALLINT"/>
-    <column name="НомерНедели" phpName="Номернедели" type="SMALLINT"/>
-    <column name="ДеньНедели" phpName="Деньнедели" type="SMALLINT"/>
-    <column name="ДеньВГоду" phpName="Деньвгоду" type="SMALLINT"/>
+    <column name="Дата" phpName="дата" type="DATE" primaryKey="true" required="true"/>
+    <column name="Год" phpName="год" type="SMALLINT"/>
+    <column name="Полугодие" phpName="полугодие" type="SMALLINT"/>
+    <column name="Квартал" phpName="квартал" type="SMALLINT"/>
+    <column name="Номер_месяца" phpName="номермесяца" type="SMALLINT"/>
+    <column name="Месяц" phpName="месяц" type="LONGVARCHAR"/>
+    <column name="День" phpName="день" type="SMALLINT"/>
+    <column name="Номер_недели" phpName="номернедели" type="SMALLINT"/>
+    <column name="День_недели" phpName="деньнедели" type="SMALLINT"/>
+    <column name="День_в_году" phpName="деньвгоду" type="SMALLINT"/>
+    <foreign-key foreignTable="Года" name="Календарь_Год_fkey">
+      <reference local="Год" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="Дни_недели" name="Календарь_День_недели_fkey">
+      <reference local="День_недели" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="Месяца" name="Календарь_Номер_месяца_fkey">
+      <reference local="Номер_месяца" foreign="id"/>
+    </foreign-key>
   </table>
-  <table name="КонтролирующиеОрганы" idMethod="native" phpName="Контролирующиеорганы">
-    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
-    <column name="КонтролирующийОрган" phpName="Контролирующийорган" type="LONGVARCHAR" required="true"/>
+  <table name="Контролирующие_органы" idMethod="native" phpName="КонтролирующиеОрганы">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="Контролирующий_орган" phpName="контролирующийорган" type="LONGVARCHAR" required="true"/>
+    <unique name="Контролирующие__Контролирующий__idx">
+      <unique-column name="Контролирующий_орган"/>
+    </unique>
+    <unique name="Контролирующие__Контролирующий__key">
+      <unique-column name="Контролирующий_орган"/>
+    </unique>
   </table>
-  <table name="МТР" idMethod="native" phpName="Мтр">
-    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
+  <table name="МТР" idMethod="native" phpName="мтр">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="VIN" phpName="Vin" type="LONGVARCHAR" required="true"/>
-    <column name="ТипТехники" phpName="Типтехники" type="INTEGER" required="true"/>
-    <column name="Дата" phpName="Дата" type="DATE" required="true"/>
-    <column name="СостояниеТехники" phpName="Состояниетехники" type="INTEGER" required="true"/>
-    <column name="Подрядчик" phpName="Подрядчик" type="INTEGER" autoIncrement="true" required="true"/>
-    <column name="Проект" phpName="Проект" type="INTEGER"/>
-    <column name="ДатаОтчёта" phpName="Датаотчёта" type="DATE" required="true"/>
+    <column name="Тип_техники" phpName="типтехники" type="INTEGER" required="true"/>
+    <column name="Дата" phpName="дата" type="DATE" required="true"/>
+    <column name="Состояние_техники" phpName="состояниетехники" type="INTEGER" required="true"/>
+    <column name="Подрядчик" phpName="подрядчик" type="INTEGER" autoIncrement="true" required="true"/>
+    <column name="Проект" phpName="проект" type="INTEGER"/>
+    <column name="Дата_отчёта" phpName="датаотчёта" type="DATE" required="true"/>
+    <foreign-key foreignTable="Календарь" name="МТР_Дата_fkey">
+      <reference local="Дата" foreign="Дата"/>
+    </foreign-key>
+    <foreign-key foreignTable="Подрядчики_МТР" name="МТР_Подрядчик_fkey">
+      <reference local="Подрядчик" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="Проекты" name="МТР_Проект_fkey">
+      <reference local="Проект" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="Статус_состояния_техники" name="МТР_Состояние_техники_fkey">
+      <reference local="Состояние_техники" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="Типы_техники_МТР" name="МТР_Тип_техники_fkey">
+      <reference local="Тип_техники" foreign="id"/>
+    </foreign-key>
+    <unique name="МТР_VIN_Дата_key">
+      <unique-column name="VIN"/>
+      <unique-column name="Дата"/>
+    </unique>
   </table>
-  <table name="Месяца" idMethod="native" phpName="Месяца">
-    <column name="id" phpName="Id" type="INTEGER" required="true"/>
-    <column name="Месяц" phpName="Месяц" type="LONGVARCHAR" required="true"/>
+  <table name="Месяца" idMethod="native" phpName="месяца">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" required="true"/>
+    <column name="Месяц" phpName="месяц" type="LONGVARCHAR" required="true"/>
   </table>
-  <table name="Мобилизация" idMethod="native" phpName="Мобилизация">
-    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
-    <column name="ТипТехники" phpName="Типтехники" type="INTEGER" required="true"/>
-    <column name="ПланОтгрузкаКоличество" phpName="Планотгрузкаколичество" type="INTEGER"/>
-    <column name="ФактОтгрузкаКоличество" phpName="Фактотгрузкаколичество" type="INTEGER"/>
-    <column name="ПланДоставкаКоличество" phpName="Пландоставкаколичество" type="INTEGER"/>
-    <column name="ФактДоставкаКоличество" phpName="Фактдоставкаколичество" type="INTEGER"/>
-    <column name="Аренда" phpName="Аренда" type="INTEGER"/>
-    <column name="ОстатокКДоставке" phpName="Остатоккдоставке" type="INTEGER"/>
-    <column name="ПромежуточныйПунктКоличество" phpName="Промежуточныйпунктколичество" type="INTEGER"/>
-    <column name="Проект" phpName="Проект" type="INTEGER" required="true"/>
-    <column name="ДатаОтчёта" phpName="Датаотчёта" type="DATE" required="true"/>
-    <column name="УчастокРабот" phpName="Участокработ" type="INTEGER" required="true"/>
+  <table name="Мобилизация" idMethod="native" phpName="мобилизация">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="Тип_техники" phpName="типтехники" type="INTEGER" required="true"/>
+    <column name="План_отгрузка_количество" phpName="планотгрузкаколичество" type="INTEGER"/>
+    <column name="Факт_отгрузка_количество" phpName="фактотгрузкаколичество" type="INTEGER"/>
+    <column name="План_доставка_количество" phpName="пландоставкаколичество" type="INTEGER"/>
+    <column name="Факт_доставка_количество" phpName="фактдоставкаколичество" type="INTEGER"/>
+    <column name="Аренда" phpName="аренда" type="INTEGER"/>
+    <column name="Остаток_к_доставке" phpName="остатоккдоставке" type="INTEGER"/>
+    <column name="Промежуточный_пункт_количество" phpName="промежуточныйпунктколичество" type="INTEGER"/>
+    <column name="Проект" phpName="проект" type="INTEGER" required="true"/>
+    <column name="Дата_отчёта" phpName="датаотчёта" type="DATE" required="true"/>
+    <column name="Участок_работ" phpName="участокработ" type="INTEGER" required="true"/>
+    <foreign-key foreignTable="Календарь" name="Мобилизация_Дата_отчёта_fkey">
+      <reference local="Дата_отчёта" foreign="Дата"/>
+    </foreign-key>
+    <foreign-key foreignTable="Проекты" name="Мобилизация_Проект_fkey">
+      <reference local="Проект" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="Типы_техники_мобилизация" name="Мобилизация_Тип_техники_fkey">
+      <reference local="Тип_техники" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="Участки_работ_мобилизация" name="Мобилизация_Участок_работ_fkey">
+      <reference local="Участок_работ" foreign="id"/>
+    </foreign-key>
+    <unique name="Мобилизация_Тип_техники_Проект__key">
+      <unique-column name="Тип_техники"/>
+      <unique-column name="Проект"/>
+      <unique-column name="Дата_отчёта"/>
+    </unique>
   </table>
-  <table name="МобилизацияПоМесяцам" idMethod="native" phpName="Мобилизацияпомесяцам">
-    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
-    <column name="ТипТехники" phpName="Типтехники" type="INTEGER" required="true"/>
-    <column name="ПлаОотгрузкаКоличество" phpName="Плаоотгрузкаколичество" type="INTEGER"/>
-    <column name="ФактОтгрузкаКоличество" phpName="Фактотгрузкаколичество" type="INTEGER"/>
-    <column name="ПланДоставкаКоличество" phpName="Пландоставкаколичество" type="INTEGER"/>
-    <column name="ФактДоставкаКоличество" phpName="Фактдоставкаколичество" type="INTEGER"/>
-    <column name="Проект" phpName="Проект" type="INTEGER" required="true"/>
-    <column name="Год" phpName="Год" type="INTEGER" required="true"/>
-    <column name="Месяц" phpName="Месяц" type="INTEGER" required="true"/>
-    <column name="ДатаОтчёта" phpName="Датаотчёта" type="DATE" required="true"/>
-    <column name="УчастокРабот" phpName="Участокработ" type="INTEGER" required="true"/>
+  <table name="Мобилизация_по_месяцам" idMethod="native" phpName="мобилизацияпомесяцам">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="Тип_техники" phpName="типтехники" type="INTEGER" required="true"/>
+    <column name="План_отгрузка_количество" phpName="планотгрузкаколичество" type="INTEGER"/>
+    <column name="Факт_отгрузка_количество" phpName="фактотгрузкаколичество" type="INTEGER"/>
+    <column name="План_доставка_количество" phpName="пландоставкаколичество" type="INTEGER"/>
+    <column name="Факт_доставка_количество" phpName="фактдоставкаколичество" type="INTEGER"/>
+    <column name="Проект" phpName="проект" type="INTEGER" required="true"/>
+    <column name="Год" phpName="год" type="INTEGER" required="true"/>
+    <column name="Месяц" phpName="месяц" type="INTEGER" required="true"/>
+    <column name="Дата_отчёта" phpName="датаотчёта" type="DATE" required="true"/>
+    <column name="Участок_работ" phpName="участокработ" type="INTEGER" required="true"/>
+    <foreign-key foreignTable="Участки_работ_мобилизация" name="Мобилизация_по_ме_Участок_работ_fkey">
+      <reference local="Участок_работ" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="Календарь" name="Мобилизация_по_меся_Дата_отчёта_fkey">
+      <reference local="Дата_отчёта" foreign="Дата"/>
+    </foreign-key>
+    <foreign-key foreignTable="Типы_техники_мобилизация" name="Мобилизация_по_меся_Тип_техники_fkey">
+      <reference local="Тип_техники" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="Года" name="Мобилизация_по_месяцам_Год_fkey">
+      <reference local="Год" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="Месяца" name="Мобилизация_по_месяцам_Месяц_fkey">
+      <reference local="Месяц" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="Проекты" name="Мобилизация_по_месяцам_Проект_fkey">
+      <reference local="Проект" foreign="id"/>
+    </foreign-key>
+    <unique name="Мобилизация_по__Тип_техники_Про_key">
+      <unique-column name="Тип_техники"/>
+      <unique-column name="Проект"/>
+      <unique-column name="Год"/>
+      <unique-column name="Месяц"/>
+      <unique-column name="Дата_отчёта"/>
+    </unique>
   </table>
-  <table name="ОтображаемыеТипыТехникиМТР" idMethod="native" phpName="Отображаемыетипытехникимтр">
-    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
-    <column name="ОтображаемыйТипТехники" phpName="Отображаемыйтиптехники" type="LONGVARCHAR" required="true"/>
+  <table name="Отображаемые_типы_техники_МТР" idMethod="native" phpName="отображаемыетипытехникимтр">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="Отображаемый_тип_техники" phpName="отображаемыйтиптехники" type="LONGVARCHAR" required="true"/>
+    <unique name="Отображаемые_ти_Отображаемый_ти_key">
+      <unique-column name="Отображаемый_тип_техники"/>
+    </unique>
   </table>
-  <table name="ПодрядчикиМТР" idMethod="native" phpName="Подрядчикимтр">
-    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
-    <column name="Подрядчик" phpName="Подрядчик" type="LONGVARCHAR" required="true"/>
+  <table name="Подрядчики_МТР" idMethod="native" phpName="подрядчикимтр">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="Подрядчик" phpName="подрядчик" type="LONGVARCHAR" required="true"/>
+    <unique name="Подрядчики_МТР_Подрядчик_idx">
+      <unique-column name="Подрядчик"/>
+    </unique>
+    <unique name="Подрядчики_МТР_Подрядчик_key">
+      <unique-column name="Подрядчик"/>
+    </unique>
   </table>
-  <table name="ПодрядчикиПредписания" idMethod="native" phpName="Подрядчикипредписания">
-    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
-    <column name="Подрядчик" phpName="Подрядчик" type="LONGVARCHAR"/>
+  <table name="Подрядчики_предписания" idMethod="native" phpName="ПодрядчикиПредписания">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="Подрядчик" phpName="подрядчик" type="LONGVARCHAR"/>
+    <unique name="Подрядчики_предписан_Подрядчик_key">
+      <unique-column name="Подрядчик"/>
+    </unique>
   </table>
   <table name="Предписания" idMethod="native" phpName="Предписания">
-    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
-    <column name="КонтролирующийОрган" phpName="Контролирующийорган" type="INTEGER" required="true"/>
-    <column name="Подрядчик" phpName="Подрядчик" type="INTEGER" required="true"/>
-    <column name="ДатаВыдачи" phpName="Датавыдачи" type="DATE" required="true"/>
-    <column name="ПлановаяДатаУстранения" phpName="Плановаядатаустранения" type="DATE" required="true"/>
-    <column name="ФактическаяДатаУстранения" phpName="Фактическаядатаустранения" type="DATE"/>
-    <column name="ТипЗамечания" phpName="Типзамечания" type="INTEGER" required="true"/>
-    <column name="Проект" phpName="Проект" type="INTEGER" required="true"/>
-    <column name="СтатусЗаявкиЗавершение" phpName="Статусзаявкизавершение" type="INTEGER"/>
-    <column name="СтатусЗаявкиПросрочка" phpName="Статусзаявкипросрочка" type="INTEGER"/>
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="Контролирующий_орган" phpName="контролирующийорган" type="INTEGER" required="true"/>
+    <column name="Подрядчик" phpName="подрядчик" type="INTEGER" required="true"/>
+    <column name="Дата_выдачи" phpName="датавыдачи" type="DATE" required="true"/>
+    <column name="Плановая_дата_устранения" phpName="плановаядатаустранения" type="DATE" required="true"/>
+    <column name="Фактическая_дата_устранения" phpName="фактическаядатаустранения" type="DATE"/>
+    <column name="Тип_замечания" phpName="типзамечания" type="INTEGER" required="true"/>
+    <column name="Проект" phpName="проект" type="INTEGER" required="true"/>
+    <column name="Статус_заявки_завершение" phpName="статусзаявкизавершение" type="INTEGER"/>
+    <column name="Статус_заявки_просрочка" phpName="статусзаявкипросрочка" type="INTEGER"/>
+    <foreign-key foreignTable="Календарь" name="Предписания_Дата_выдачи_fkey">
+      <reference local="Дата_выдачи" foreign="Дата"/>
+    </foreign-key>
+    <foreign-key foreignTable="Контролирующие_органы" name="Предписания_Контролирующий_орг_fkey">
+      <reference local="Контролирующий_орган" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="Календарь" name="Предписания_Плановая_дата_устр_fkey">
+      <reference local="Плановая_дата_устранения" foreign="Дата"/>
+    </foreign-key>
+    <foreign-key foreignTable="Подрядчики_предписания" name="Предписания_Подрядчик_fkey">
+      <reference local="Подрядчик" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="Проекты" name="Предписания_Проект_fkey">
+      <reference local="Проект" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="Статусы_заявки_завершение" name="Предписания_Статус_заявки_заве_fkey">
+      <reference local="Статус_заявки_завершение" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="Статусы_заявки_просрочка" name="Предписания_Статус_заявки_прос_fkey">
+      <reference local="Статус_заявки_просрочка" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="Типы_замечаний" name="Предписания_Тип_замечания_fkey">
+      <reference local="Тип_замечания" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="Календарь" name="Предписания_Фактическая_дата_у_fkey">
+      <reference local="Фактическая_дата_устранения" foreign="Дата"/>
+    </foreign-key>
   </table>
-  <table name="ПроблемныеВопросы" idMethod="native" phpName="Проблемныевопросы">
-    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
-    <column name="Проект" phpName="Проект" type="INTEGER"/>
-    <column name="Дата" phpName="Дата" type="DATE" required="true"/>
-    <column name="Кому" phpName="Кому" type="LONGVARCHAR" required="true"/>
-    <column name="ПроблемныеВопросы" phpName="Проблемныевопросы" type="LONGVARCHAR" required="true"/>
-    <column name="МерыДляРешения" phpName="Мерыдлярешения" type="LONGVARCHAR" required="true"/>
-    <column name="Ответсвенный" phpName="Ответсвенный" type="LONGVARCHAR"/>
-    <column name="Срок" phpName="Срок" type="DATE"/>
-    <column name="Статус" phpName="Статус" type="LONGVARCHAR"/>
+  <table name="Проблемные_вопросы" idMethod="native" phpName="проблемныевопросы">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="Проект" phpName="проект" type="INTEGER"/>
+    <column name="Дата" phpName="дата" type="DATE" required="true"/>
+    <column name="Кому" phpName="кому" type="LONGVARCHAR" required="true"/>
+    <column name="Проблемные_вопросы" phpName="проблемныевопросы" type="LONGVARCHAR" required="true"/>
+    <column name="Меры_для_решения" phpName="мерыдлярешения" type="LONGVARCHAR" required="true"/>
+    <column name="Ответсвенный" phpName="ответсвенный" type="LONGVARCHAR"/>
+    <column name="Срок" phpName="срок" type="DATE"/>
+    <column name="Статус" phpName="статус" type="LONGVARCHAR"/>
+    <foreign-key foreignTable="Проекты" name="Проблемные_вопросы_Проект_fkey">
+      <reference local="Проект" foreign="id"/>
+    </foreign-key>
   </table>
-  <table name="Программы" idMethod="native" phpName="Программы">
-    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
-    <column name="Программа" phpName="Программа" type="LONGVARCHAR" required="true"/>
-    <column name="Проект" phpName="Проект" type="INTEGER" required="true"/>
-    <column name="Объем" phpName="Объем" type="REAL" size="24" required="true"/>
+  <table name="Программы" idMethod="native" phpName="программы">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="Программа" phpName="программа" type="LONGVARCHAR" required="true"/>
+    <column name="Проект" phpName="проект" type="INTEGER" required="true"/>
+    <column name="Объем" phpName="объем" type="REAL" size="24" required="true"/>
+    <foreign-key foreignTable="Проекты" name="Программы_Проект_fkey">
+      <reference local="Проект" foreign="id"/>
+    </foreign-key>
+    <unique name="Программы_Программа_Проект_key">
+      <unique-column name="Программа"/>
+      <unique-column name="Проект"/>
+    </unique>
   </table>
   <table name="Проекты" idMethod="native" phpName="Проекты">
-    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
-    <column name="КодПроекта" phpName="Кодпроекта" type="LONGVARCHAR" required="true"/>
-    <column name="Проект" phpName="Проект" type="LONGVARCHAR" required="true"/>
-    <column name="Руководитель" phpName="Руководитель" type="LONGVARCHAR" required="true"/>
-    <column name="Заказчик" phpName="Заказчик" type="LONGVARCHAR" required="true"/>
-    <column name="Подрядчики" phpName="Подрядчики" type="LONGVARCHAR" required="true"/>
-    <column name="ПериодВыполненияРабот" phpName="Периодвыполненияработ" type="LONGVARCHAR" required="true"/>
-    <column name="ДеталиПроекта" phpName="Деталипроекта" type="LONGVARCHAR" required="true"/>
-    <column name="ТипСтроительства" phpName="Типстроительства" type="LONGVARCHAR" required="true"/>
-    <column name="НазваниеПапкиПроекта" phpName="Названиепапкипроекта" type="LONGVARCHAR" required="true"/>
-    <column name="Картинка" phpName="Картинка" type="LONGVARCHAR" required="true"/>
-    <column name="КарточкаПроекта" phpName="Карточкапроекта" type="LONGVARCHAR"/>
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="Код_проекта" phpName="кодпроекта" type="LONGVARCHAR" required="true"/>
+    <column name="Проект" phpName="проект" type="LONGVARCHAR" required="true"/>
+    <column name="Руководитель" phpName="руководитель" type="LONGVARCHAR" required="true"/>
+    <column name="Заказчик" phpName="заказчик" type="LONGVARCHAR" required="true"/>
+    <column name="Подрядчики" phpName="подрядчики" type="LONGVARCHAR" required="true"/>
+    <column name="Период_выполнения_работ" phpName="периодвыполненияработ" type="LONGVARCHAR" required="true"/>
+    <column name="Детали_проекта" phpName="деталипроекта" type="LONGVARCHAR" required="true"/>
+    <column name="Тип_строительства" phpName="типстроительства" type="LONGVARCHAR" required="true"/>
+    <column name="Название_папки_проекта" phpName="названиепапкипроекта" type="LONGVARCHAR" required="true"/>
+    <column name="Картинка" phpName="картинка" type="LONGVARCHAR" required="true"/>
+    <column name="Карточка_проекта" phpName="карточкапроекта" type="LONGVARCHAR"/>
+    <unique name="Проекты_Код_проекта_idx">
+      <unique-column name="Код_проекта"/>
+    </unique>
+    <unique name="Проекты_Проект_key">
+      <unique-column name="Проект"/>
+    </unique>
   </table>
-  <table name="ПроизводственныеПрограммы" idMethod="native" phpName="Производственныепрограммы">
-    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
-    <column name="ТипПрограммы" phpName="Типпрограммы" type="INTEGER" required="true"/>
-    <column name="Год" phpName="Год" type="INTEGER" required="true"/>
-    <column name="Месяц" phpName="Месяц" type="INTEGER" required="true"/>
-    <column name="План" phpName="План" type="INTEGER"/>
-    <column name="Факт" phpName="Факт" type="INTEGER"/>
+  <table name="Производственные_программы" idMethod="native" phpName="производственныепрограммы">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="Тип_программы" phpName="типпрограммы" type="INTEGER" required="true"/>
+    <column name="Год" phpName="год" type="INTEGER" required="true"/>
+    <column name="Месяц" phpName="месяц" type="INTEGER" required="true"/>
+    <column name="План" phpName="план" type="INTEGER"/>
+    <column name="Факт" phpName="факт" type="INTEGER"/>
+    <foreign-key foreignTable="Программы" name="Производственные_Тип_программы_fkey">
+      <reference local="Тип_программы" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="Месяца" name="Производственные_програм_Месяц_fkey">
+      <reference local="Месяц" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="Года" name="Производственные_программы_Год_fkey">
+      <reference local="Год" foreign="id"/>
+    </foreign-key>
+    <unique name="Производственн_Год_Месяц_Тип_пр_key">
+      <unique-column name="Год"/>
+      <unique-column name="Месяц"/>
+      <unique-column name="Тип_программы"/>
+    </unique>
   </table>
-  <table name="СтатусСостоянияТехники" idMethod="native" phpName="Статуссостояниятехники">
-    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
-    <column name="Статус" phpName="Статус" type="LONGVARCHAR" required="true"/>
+  <table name="Статус_состояния_техники" idMethod="native" phpName="статуссостояниятехники">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="Статус" phpName="статус" type="LONGVARCHAR" required="true"/>
+    <unique name="Статус_состояния_техники_Статус_key">
+      <unique-column name="Статус"/>
+    </unique>
   </table>
-  <table name="СтатусыЗаявкиЗавершение" idMethod="native" phpName="Статусызаявкизавершение">
-    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
-    <column name="СтатусЗавершения" phpName="Статусзавершения" type="LONGVARCHAR" required="true"/>
+  <table name="Статусы_заявки_завершение" idMethod="native" phpName="СтатусыЗаявкиЗавершение">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="Статус_завершения" phpName="статусзавершения" type="LONGVARCHAR" required="true"/>
   </table>
-  <table name="СтатусыЗаявкиПросрочка" idMethod="native" phpName="Статусызаявкипросрочка">
-    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
-    <column name="СтатусПросрочки" phpName="Статуспросрочки" type="LONGVARCHAR" required="true"/>
+  <table name="Статусы_заявки_просрочка" idMethod="native" phpName="СтатусыЗаявкиПросрочка">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="Статус_просрочки" phpName="статуспросрочки" type="LONGVARCHAR" required="true"/>
   </table>
-  <table name="ТипыЗамечаний" idMethod="native" phpName="Типызамечаний">
-    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
-    <column name="ТипЗамечания" phpName="Типзамечания" type="LONGVARCHAR" required="true"/>
+  <table name="Типы_замечаний" idMethod="native" phpName="ТипыЗамечаний">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="Тип_замечания" phpName="типзамечания" type="LONGVARCHAR" required="true"/>
+    <unique name="Типы_замечаний_Тип_замечания_key">
+      <unique-column name="Тип_замечания"/>
+    </unique>
   </table>
-  <table name="ТипыРабот" idMethod="native" phpName="Типыработ">
-    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
-    <column name="ТипРабот" phpName="Типработ" type="LONGVARCHAR" required="true"/>
-    <column name="ЕдиницыИзмерения" phpName="Единицыизмерения" type="LONGVARCHAR" required="true"/>
-    <column name="Отображение" phpName="Отображение" type="BOOLEAN" size="1" required="true"/>
+  <table name="Типы_работ" idMethod="native" phpName="типыработ">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="Тип_работ" phpName="типработ" type="LONGVARCHAR" required="true"/>
+    <column name="Единицы_измерения" phpName="единицыизмерения" type="LONGVARCHAR" required="true"/>
+    <column name="Отображение" phpName="отображение" type="BOOLEAN" size="1" required="true"/>
+    <unique name="Типы_работ_Тип_работ_Отображени_idx">
+      <unique-column name="Тип_работ"/>
+      <unique-column name="Отображение"/>
+    </unique>
+    <unique name="Типы_работ_Тип_работ_Отображени_key">
+      <unique-column name="Тип_работ"/>
+      <unique-column name="Отображение"/>
+    </unique>
   </table>
-  <table name="ТипыТехникиВыработка" idMethod="native" phpName="Типытехникивыработка">
-    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
-    <column name="ТипТехники" phpName="Типтехники" type="LONGVARCHAR" required="true"/>
+  <table name="Типы_техники_МТР" idMethod="native" phpName="типытехникимтр">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="Тип_техники" phpName="типтехники" type="LONGVARCHAR" required="true"/>
+    <column name="Отображаемый_тип_техники" phpName="отображаемыйтиптехники" type="INTEGER" required="true"/>
+    <foreign-key foreignTable="Отображаемые_типы_техники_МТР" name="Типы_техники_МТ_Отображаемый_т_fkey">
+      <reference local="Отображаемый_тип_техники" foreign="id"/>
+    </foreign-key>
+    <unique name="Типы_техники_МТ_Тип_техники_Ото_idx">
+      <unique-column name="Тип_техники"/>
+      <unique-column name="Отображаемый_тип_техники"/>
+    </unique>
+    <unique name="Типы_техники_МТ_Тип_техники_Ото_key">
+      <unique-column name="Тип_техники"/>
+      <unique-column name="Отображаемый_тип_техники"/>
+    </unique>
   </table>
-  <table name="ТипыТехникиМТР" idMethod="native" phpName="Типытехникимтр">
-    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
-    <column name="ТипТехники" phpName="Типтехники" type="LONGVARCHAR" required="true"/>
-    <column name="ОтображаемыйТипТехники" phpName="Отображаемыйтиптехники" type="INTEGER" required="true"/>
+  <table name="Типы_техники_выработка" idMethod="native" phpName="типытехникивыработка">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="Тип_техники" phpName="типтехники" type="LONGVARCHAR" required="true"/>
+    <unique name="Типы_техники_вырабо_Тип_техники_idx">
+      <unique-column name="Тип_техники"/>
+    </unique>
+    <unique name="Типы_техники_вырабо_Тип_техники_key">
+      <unique-column name="Тип_техники"/>
+    </unique>
   </table>
-  <table name="ТипыТехникиМобилизация" idMethod="native" phpName="Типытехникимобилизация">
-    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
-    <column name="ТипТехники" phpName="Типтехники" type="LONGVARCHAR" required="true"/>
+  <table name="Типы_техники_мобилизация" idMethod="native" phpName="типытехникимобилизация">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="Тип_техники" phpName="типтехники" type="LONGVARCHAR" required="true"/>
+    <unique name="Типы_техники_мобили_Тип_техники_idx">
+      <unique-column name="Тип_техники"/>
+    </unique>
+    <unique name="Типы_техники_мобили_Тип_техники_key">
+      <unique-column name="Тип_техники"/>
+    </unique>
   </table>
-  <table name="УчасткиРабот" idMethod="native" phpName="Участкиработ">
-    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
-    <column name="УчастокРабот" phpName="Участокработ" type="LONGVARCHAR" required="true"/>
-    <column name="Проект" phpName="Проект" type="INTEGER" required="true"/>
+  <table name="Участки_работ" idMethod="native" phpName="участкиработ">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="Участок_работ" phpName="участокработ" type="LONGVARCHAR" required="true"/>
+    <column name="Проект" phpName="проект" type="INTEGER" required="true"/>
+    <foreign-key foreignTable="Проекты" name="Участки_работ_Проект_fkey">
+      <reference local="Проект" foreign="id"/>
+    </foreign-key>
+    <index name="Участки_работ_Участок_работ_idx">
+      <index-column name="Участок_работ"/>
+    </index>
+    <unique name="Участки_работ_Участок_работ_Про_key">
+      <unique-column name="Участок_работ"/>
+      <unique-column name="Проект"/>
+    </unique>
   </table>
-  <table name="УчасткиРаботМобилизация" idMethod="native" phpName="Участкиработмобилизация">
-    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
-    <column name="УчастокРабот" phpName="Участокработ" type="LONGVARCHAR" required="true"/>
+  <table name="Участки_работ_мобилизация" idMethod="native" phpName="участкиработмобилизация">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="Участок_работ" phpName="участокработ" type="LONGVARCHAR" required="true"/>
+    <unique name="Участки_работ_моб_Участок_работ_idx">
+      <unique-column name="Участок_работ"/>
+    </unique>
+    <unique name="Участки_работ_моб_Участок_работ_key">
+      <unique-column name="Участок_работ"/>
+    </unique>
   </table>
-  <table name="ФизическиеОбъёмы" idMethod="native" phpName="Физическиеобъёмы">
-    <column name="id" phpName="Id" type="INTEGER" autoIncrement="true" required="true"/>
-    <column name="Дата" phpName="Дата" type="DATE" required="true"/>
-    <column name="УчастокРабот" phpName="Участокработ" type="INTEGER" required="true"/>
-    <column name="ТипРабот" phpName="Типработ" type="INTEGER" required="true"/>
-    <column name="План" phpName="План" type="REAL" size="24"/>
-    <column name="Факт" phpName="Факт" type="REAL" size="24"/>
-    <column name="ПричинаОтставания" phpName="Причинаотставания" type="LONGVARCHAR"/>
+  <table name="Физические_объёмы" idMethod="native" phpName="физическиеобъёмы">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="Дата" phpName="дата" type="DATE" required="true"/>
+    <column name="Участок_работ" phpName="участокработ" type="INTEGER" required="true"/>
+    <column name="Тип_работ" phpName="типработ" type="INTEGER" required="true"/>
+    <column name="План" phpName="план" type="REAL" size="24"/>
+    <column name="Факт" phpName="факт" type="REAL" size="24"/>
+    <column name="Причина_отставания" phpName="причинаотставания" type="LONGVARCHAR"/>
+    <foreign-key foreignTable="Участки_работ" name="Физические_объём_Участок_работ_fkey">
+      <reference local="Участок_работ" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="Календарь" name="Физические_объёмы_Дата_fkey">
+      <reference local="Дата" foreign="Дата"/>
+    </foreign-key>
+    <foreign-key foreignTable="Типы_работ" name="Физические_объёмы_Тип_работ_fkey">
+      <reference local="Тип_работ" foreign="id"/>
+    </foreign-key>
+    <unique name="Физические_объёмы_id_key">
+      <unique-column name="id"/>
+    </unique>
   </table>
 </database>

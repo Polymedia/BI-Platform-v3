@@ -2,16 +2,45 @@
 
 namespace Base;
 
+use \Календарь as ChildКалендарь;
 use \КалендарьQuery as ChildКалендарьQuery;
+use \Предписания as ChildПредписания;
+use \ПредписанияQuery as ChildПредписанияQuery;
+use \выработка as Childвыработка;
+use \выработкаQuery as ChildвыработкаQuery;
+use \года as Childгода;
+use \годаQuery as ChildгодаQuery;
+use \датыобновленийдашбордов as Childдатыобновленийдашбордов;
+use \датыобновленийдашбордовQuery as ChildдатыобновленийдашбордовQuery;
+use \днинедели as Childднинедели;
+use \днинеделиQuery as ChildднинеделиQuery;
+use \месяца as Childмесяца;
+use \месяцаQuery as ChildмесяцаQuery;
+use \мобилизация as Childмобилизация;
+use \мобилизацияQuery as ChildмобилизацияQuery;
+use \мобилизацияпомесяцам as Childмобилизацияпомесяцам;
+use \мобилизацияпомесяцамQuery as ChildмобилизацияпомесяцамQuery;
+use \мтр as Childмтр;
+use \мтрQuery as ChildмтрQuery;
+use \физическиеобъёмы as Childфизическиеобъёмы;
+use \физическиеобъёмыQuery as ChildфизическиеобъёмыQuery;
 use \DateTime;
 use \Exception;
 use \PDO;
 use Map\КалендарьTableMap;
+use Map\ПредписанияTableMap;
+use Map\выработкаTableMap;
+use Map\датыобновленийдашбордовTableMap;
+use Map\мобилизацияTableMap;
+use Map\мобилизацияпомесяцамTableMap;
+use Map\мтрTableMap;
+use Map\физическиеобъёмыTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
+use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\LogicException;
@@ -90,11 +119,11 @@ abstract class Календарь implements ActiveRecordInterface
     protected $квартал;
 
     /**
-     * The value for the номермесяца field.
+     * The value for the номер_месяца field.
      * 
      * @var        int
      */
-    protected $номермесяца;
+    protected $номер_месяца;
 
     /**
      * The value for the месяц field.
@@ -111,25 +140,94 @@ abstract class Календарь implements ActiveRecordInterface
     protected $день;
 
     /**
-     * The value for the номернедели field.
+     * The value for the номер_недели field.
      * 
      * @var        int
      */
-    protected $номернедели;
+    protected $номер_недели;
 
     /**
-     * The value for the деньнедели field.
+     * The value for the день_недели field.
      * 
      * @var        int
      */
-    protected $деньнедели;
+    protected $день_недели;
 
     /**
-     * The value for the деньвгоду field.
+     * The value for the день_в_году field.
      * 
      * @var        int
      */
-    protected $деньвгоду;
+    protected $день_в_году;
+
+    /**
+     * @var        Childгода
+     */
+    protected $aгода;
+
+    /**
+     * @var        Childднинедели
+     */
+    protected $aднинедели;
+
+    /**
+     * @var        Childмесяца
+     */
+    protected $aмесяца;
+
+    /**
+     * @var        ObjectCollection|Childвыработка[] Collection to store aggregation of Childвыработка objects.
+     */
+    protected $collвыработкаs;
+    protected $collвыработкаsPartial;
+
+    /**
+     * @var        ObjectCollection|Childдатыобновленийдашбордов[] Collection to store aggregation of Childдатыобновленийдашбордов objects.
+     */
+    protected $collдатыобновленийдашбордовs;
+    protected $collдатыобновленийдашбордовsPartial;
+
+    /**
+     * @var        ObjectCollection|Childмтр[] Collection to store aggregation of Childмтр objects.
+     */
+    protected $collмтрs;
+    protected $collмтрsPartial;
+
+    /**
+     * @var        ObjectCollection|Childмобилизация[] Collection to store aggregation of Childмобилизация objects.
+     */
+    protected $collмобилизацияs;
+    protected $collмобилизацияsPartial;
+
+    /**
+     * @var        ObjectCollection|Childмобилизацияпомесяцам[] Collection to store aggregation of Childмобилизацияпомесяцам objects.
+     */
+    protected $collмобилизацияпомесяцамs;
+    protected $collмобилизацияпомесяцамsPartial;
+
+    /**
+     * @var        ObjectCollection|ChildПредписания[] Collection to store aggregation of ChildПредписания objects.
+     */
+    protected $collПредписанияsRelatedByдатавыдачи;
+    protected $collПредписанияsRelatedByдатавыдачиPartial;
+
+    /**
+     * @var        ObjectCollection|ChildПредписания[] Collection to store aggregation of ChildПредписания objects.
+     */
+    protected $collПредписанияsRelatedByплановаядатаустранения;
+    protected $collПредписанияsRelatedByплановаядатаустраненияPartial;
+
+    /**
+     * @var        ObjectCollection|ChildПредписания[] Collection to store aggregation of ChildПредписания objects.
+     */
+    protected $collПредписанияsRelatedByфактическаядатаустранения;
+    protected $collПредписанияsRelatedByфактическаядатаустраненияPartial;
+
+    /**
+     * @var        ObjectCollection|Childфизическиеобъёмы[] Collection to store aggregation of Childфизическиеобъёмы objects.
+     */
+    protected $collфизическиеобъёмыs;
+    protected $collфизическиеобъёмыsPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -138,6 +236,60 @@ abstract class Календарь implements ActiveRecordInterface
      * @var boolean
      */
     protected $alreadyInSave = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|Childвыработка[]
+     */
+    protected $�ыработкаsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|Childдатыобновленийдашбордов[]
+     */
+    protected $�атыобновленийдашбордовsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|Childмтр[]
+     */
+    protected $�трsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|Childмобилизация[]
+     */
+    protected $�обилизацияsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|Childмобилизацияпомесяцам[]
+     */
+    protected $�обилизацияпомесяцамsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildПредписания[]
+     */
+    protected $�редписанияsRelatedByдатавыдачиScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildПредписания[]
+     */
+    protected $�редписанияsRelatedByплановаядатаустраненияScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildПредписания[]
+     */
+    protected $�редписанияsRelatedByфактическаядатаустраненияScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|Childфизическиеобъёмы[]
+     */
+    protected $�изическиеобъёмыsScheduledForDeletion = null;
 
     /**
      * Initializes internal state of Base\Календарь object.
@@ -375,7 +527,7 @@ abstract class Календарь implements ActiveRecordInterface
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function getДата($format = NULL)
+    public function getдата($format = NULL)
     {
         if ($format === null) {
             return $this->дата;
@@ -389,7 +541,7 @@ abstract class Календарь implements ActiveRecordInterface
      * 
      * @return int
      */
-    public function getГод()
+    public function getгод()
     {
         return $this->год;
     }
@@ -399,7 +551,7 @@ abstract class Календарь implements ActiveRecordInterface
      * 
      * @return int
      */
-    public function getПолугодие()
+    public function getполугодие()
     {
         return $this->полугодие;
     }
@@ -409,19 +561,19 @@ abstract class Календарь implements ActiveRecordInterface
      * 
      * @return int
      */
-    public function getКвартал()
+    public function getквартал()
     {
         return $this->квартал;
     }
 
     /**
-     * Get the [номермесяца] column value.
+     * Get the [номер_месяца] column value.
      * 
      * @return int
      */
-    public function getНомермесяца()
+    public function getномермесяца()
     {
-        return $this->номермесяца;
+        return $this->номер_месяца;
     }
 
     /**
@@ -429,7 +581,7 @@ abstract class Календарь implements ActiveRecordInterface
      * 
      * @return string
      */
-    public function getМесяц()
+    public function getмесяц()
     {
         return $this->месяц;
     }
@@ -439,39 +591,39 @@ abstract class Календарь implements ActiveRecordInterface
      * 
      * @return int
      */
-    public function getДень()
+    public function getдень()
     {
         return $this->день;
     }
 
     /**
-     * Get the [номернедели] column value.
+     * Get the [номер_недели] column value.
      * 
      * @return int
      */
-    public function getНомернедели()
+    public function getномернедели()
     {
-        return $this->номернедели;
+        return $this->номер_недели;
     }
 
     /**
-     * Get the [деньнедели] column value.
+     * Get the [день_недели] column value.
      * 
      * @return int
      */
-    public function getДеньнедели()
+    public function getденьнедели()
     {
-        return $this->деньнедели;
+        return $this->день_недели;
     }
 
     /**
-     * Get the [деньвгоду] column value.
+     * Get the [день_в_году] column value.
      * 
      * @return int
      */
-    public function getДеньвгоду()
+    public function getденьвгоду()
     {
-        return $this->деньвгоду;
+        return $this->день_в_году;
     }
 
     /**
@@ -481,7 +633,7 @@ abstract class Календарь implements ActiveRecordInterface
      *               Empty strings are treated as NULL.
      * @return $this|\Календарь The current object (for fluent API support)
      */
-    public function setДата($v)
+    public function setдата($v)
     {
         $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->дата !== null || $dt !== null) {
@@ -492,7 +644,7 @@ abstract class Календарь implements ActiveRecordInterface
         } // if either are not null
 
         return $this;
-    } // setДата()
+    } // setдата()
 
     /**
      * Set the value of [год] column.
@@ -500,7 +652,7 @@ abstract class Календарь implements ActiveRecordInterface
      * @param int $v new value
      * @return $this|\Календарь The current object (for fluent API support)
      */
-    public function setГод($v)
+    public function setгод($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -511,8 +663,12 @@ abstract class Календарь implements ActiveRecordInterface
             $this->modifiedColumns[КалендарьTableMap::COL_ГОД] = true;
         }
 
+        if ($this->aгода !== null && $this->aгода->getId() !== $v) {
+            $this->aгода = null;
+        }
+
         return $this;
-    } // setГод()
+    } // setгод()
 
     /**
      * Set the value of [полугодие] column.
@@ -520,7 +676,7 @@ abstract class Календарь implements ActiveRecordInterface
      * @param int $v new value
      * @return $this|\Календарь The current object (for fluent API support)
      */
-    public function setПолугодие($v)
+    public function setполугодие($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -532,7 +688,7 @@ abstract class Календарь implements ActiveRecordInterface
         }
 
         return $this;
-    } // setПолугодие()
+    } // setполугодие()
 
     /**
      * Set the value of [квартал] column.
@@ -540,7 +696,7 @@ abstract class Календарь implements ActiveRecordInterface
      * @param int $v new value
      * @return $this|\Календарь The current object (for fluent API support)
      */
-    public function setКвартал($v)
+    public function setквартал($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -552,27 +708,31 @@ abstract class Календарь implements ActiveRecordInterface
         }
 
         return $this;
-    } // setКвартал()
+    } // setквартал()
 
     /**
-     * Set the value of [номермесяца] column.
+     * Set the value of [номер_месяца] column.
      * 
      * @param int $v new value
      * @return $this|\Календарь The current object (for fluent API support)
      */
-    public function setНомермесяца($v)
+    public function setномермесяца($v)
     {
         if ($v !== null) {
             $v = (int) $v;
         }
 
-        if ($this->номермесяца !== $v) {
-            $this->номермесяца = $v;
-            $this->modifiedColumns[КалендарьTableMap::COL_НОМЕРМЕСЯЦА] = true;
+        if ($this->номер_месяца !== $v) {
+            $this->номер_месяца = $v;
+            $this->modifiedColumns[КалендарьTableMap::COL_НОМЕР_МЕСЯЦА] = true;
+        }
+
+        if ($this->aмесяца !== null && $this->aмесяца->getId() !== $v) {
+            $this->aмесяца = null;
         }
 
         return $this;
-    } // setНомермесяца()
+    } // setномермесяца()
 
     /**
      * Set the value of [месяц] column.
@@ -580,7 +740,7 @@ abstract class Календарь implements ActiveRecordInterface
      * @param string $v new value
      * @return $this|\Календарь The current object (for fluent API support)
      */
-    public function setМесяц($v)
+    public function setмесяц($v)
     {
         if ($v !== null) {
             $v = (string) $v;
@@ -592,7 +752,7 @@ abstract class Календарь implements ActiveRecordInterface
         }
 
         return $this;
-    } // setМесяц()
+    } // setмесяц()
 
     /**
      * Set the value of [день] column.
@@ -600,7 +760,7 @@ abstract class Календарь implements ActiveRecordInterface
      * @param int $v new value
      * @return $this|\Календарь The current object (for fluent API support)
      */
-    public function setДень($v)
+    public function setдень($v)
     {
         if ($v !== null) {
             $v = (int) $v;
@@ -612,67 +772,71 @@ abstract class Календарь implements ActiveRecordInterface
         }
 
         return $this;
-    } // setДень()
+    } // setдень()
 
     /**
-     * Set the value of [номернедели] column.
+     * Set the value of [номер_недели] column.
      * 
      * @param int $v new value
      * @return $this|\Календарь The current object (for fluent API support)
      */
-    public function setНомернедели($v)
+    public function setномернедели($v)
     {
         if ($v !== null) {
             $v = (int) $v;
         }
 
-        if ($this->номернедели !== $v) {
-            $this->номернедели = $v;
-            $this->modifiedColumns[КалендарьTableMap::COL_НОМЕРНЕДЕЛИ] = true;
+        if ($this->номер_недели !== $v) {
+            $this->номер_недели = $v;
+            $this->modifiedColumns[КалендарьTableMap::COL_НОМЕР_НЕДЕЛИ] = true;
         }
 
         return $this;
-    } // setНомернедели()
+    } // setномернедели()
 
     /**
-     * Set the value of [деньнедели] column.
+     * Set the value of [день_недели] column.
      * 
      * @param int $v new value
      * @return $this|\Календарь The current object (for fluent API support)
      */
-    public function setДеньнедели($v)
+    public function setденьнедели($v)
     {
         if ($v !== null) {
             $v = (int) $v;
         }
 
-        if ($this->деньнедели !== $v) {
-            $this->деньнедели = $v;
-            $this->modifiedColumns[КалендарьTableMap::COL_ДЕНЬНЕДЕЛИ] = true;
+        if ($this->день_недели !== $v) {
+            $this->день_недели = $v;
+            $this->modifiedColumns[КалендарьTableMap::COL_ДЕНЬ_НЕДЕЛИ] = true;
+        }
+
+        if ($this->aднинедели !== null && $this->aднинедели->getId() !== $v) {
+            $this->aднинедели = null;
         }
 
         return $this;
-    } // setДеньнедели()
+    } // setденьнедели()
 
     /**
-     * Set the value of [деньвгоду] column.
+     * Set the value of [день_в_году] column.
      * 
      * @param int $v new value
      * @return $this|\Календарь The current object (for fluent API support)
      */
-    public function setДеньвгоду($v)
+    public function setденьвгоду($v)
     {
         if ($v !== null) {
             $v = (int) $v;
         }
 
-        if ($this->деньвгоду !== $v) {
-            $this->деньвгоду = $v;
-            $this->modifiedColumns[КалендарьTableMap::COL_ДЕНЬВГОДУ] = true;
+        if ($this->день_в_году !== $v) {
+            $this->день_в_году = $v;
+            $this->modifiedColumns[КалендарьTableMap::COL_ДЕНЬ_В_ГОДУ] = true;
         }
 
         return $this;
-    } // setДеньвгоду()
+    } // setденьвгоду()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -710,38 +874,38 @@ abstract class Календарь implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : КалендарьTableMap::translateFieldName('Дата', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : КалендарьTableMap::translateFieldName('дата', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00') {
                 $col = null;
             }
             $this->дата = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : КалендарьTableMap::translateFieldName('Год', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : КалендарьTableMap::translateFieldName('год', TableMap::TYPE_PHPNAME, $indexType)];
             $this->год = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : КалендарьTableMap::translateFieldName('Полугодие', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : КалендарьTableMap::translateFieldName('полугодие', TableMap::TYPE_PHPNAME, $indexType)];
             $this->полугодие = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : КалендарьTableMap::translateFieldName('Квартал', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : КалендарьTableMap::translateFieldName('квартал', TableMap::TYPE_PHPNAME, $indexType)];
             $this->квартал = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : КалендарьTableMap::translateFieldName('Номермесяца', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->номермесяца = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : КалендарьTableMap::translateFieldName('номермесяца', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->номер_месяца = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : КалендарьTableMap::translateFieldName('Месяц', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : КалендарьTableMap::translateFieldName('месяц', TableMap::TYPE_PHPNAME, $indexType)];
             $this->месяц = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : КалендарьTableMap::translateFieldName('День', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : КалендарьTableMap::translateFieldName('день', TableMap::TYPE_PHPNAME, $indexType)];
             $this->день = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : КалендарьTableMap::translateFieldName('Номернедели', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->номернедели = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : КалендарьTableMap::translateFieldName('номернедели', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->номер_недели = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : КалендарьTableMap::translateFieldName('Деньнедели', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->деньнедели = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : КалендарьTableMap::translateFieldName('деньнедели', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->день_недели = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : КалендарьTableMap::translateFieldName('Деньвгоду', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->деньвгоду = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : КалендарьTableMap::translateFieldName('деньвгоду', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->день_в_году = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -772,6 +936,15 @@ abstract class Календарь implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
+        if ($this->aгода !== null && $this->год !== $this->aгода->getId()) {
+            $this->aгода = null;
+        }
+        if ($this->aмесяца !== null && $this->номер_месяца !== $this->aмесяца->getId()) {
+            $this->aмесяца = null;
+        }
+        if ($this->aднинедели !== null && $this->день_недели !== $this->aднинедели->getId()) {
+            $this->aднинедели = null;
+        }
     } // ensureConsistency
 
     /**
@@ -810,6 +983,27 @@ abstract class Календарь implements ActiveRecordInterface
         $this->hydrate($row, 0, true, $dataFetcher->getIndexType()); // rehydrate
 
         if ($deep) {  // also de-associate any related objects?
+
+            $this->aгода = null;
+            $this->aднинедели = null;
+            $this->aмесяца = null;
+            $this->collвыработкаs = null;
+
+            $this->collдатыобновленийдашбордовs = null;
+
+            $this->collмтрs = null;
+
+            $this->collмобилизацияs = null;
+
+            $this->collмобилизацияпомесяцамs = null;
+
+            $this->collПредписанияsRelatedByдатавыдачи = null;
+
+            $this->collПредписанияsRelatedByплановаядатаустранения = null;
+
+            $this->collПредписанияsRelatedByфактическаядатаустранения = null;
+
+            $this->collфизическиеобъёмыs = null;
 
         } // if (deep)
     }
@@ -910,6 +1104,32 @@ abstract class Календарь implements ActiveRecordInterface
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
 
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aгода !== null) {
+                if ($this->aгода->isModified() || $this->aгода->isNew()) {
+                    $affectedRows += $this->aгода->save($con);
+                }
+                $this->setгода($this->aгода);
+            }
+
+            if ($this->aднинедели !== null) {
+                if ($this->aднинедели->isModified() || $this->aднинедели->isNew()) {
+                    $affectedRows += $this->aднинедели->save($con);
+                }
+                $this->setднинедели($this->aднинедели);
+            }
+
+            if ($this->aмесяца !== null) {
+                if ($this->aмесяца->isModified() || $this->aмесяца->isNew()) {
+                    $affectedRows += $this->aмесяца->save($con);
+                }
+                $this->setмесяца($this->aмесяца);
+            }
+
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -919,6 +1139,160 @@ abstract class Календарь implements ActiveRecordInterface
                     $affectedRows += $this->doUpdate($con);
                 }
                 $this->resetModified();
+            }
+
+            if ($this->�ыработкаsScheduledForDeletion !== null) {
+                if (!$this->�ыработкаsScheduledForDeletion->isEmpty()) {
+                    \выработкаQuery::create()
+                        ->filterByPrimaryKeys($this->�ыработкаsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->�ыработкаsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collвыработкаs !== null) {
+                foreach ($this->collвыработкаs as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->�атыобновленийдашбордовsScheduledForDeletion !== null) {
+                if (!$this->�атыобновленийдашбордовsScheduledForDeletion->isEmpty()) {
+                    \датыобновленийдашбордовQuery::create()
+                        ->filterByPrimaryKeys($this->�атыобновленийдашбордовsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->�атыобновленийдашбордовsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collдатыобновленийдашбордовs !== null) {
+                foreach ($this->collдатыобновленийдашбордовs as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->�трsScheduledForDeletion !== null) {
+                if (!$this->�трsScheduledForDeletion->isEmpty()) {
+                    \мтрQuery::create()
+                        ->filterByPrimaryKeys($this->�трsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->�трsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collмтрs !== null) {
+                foreach ($this->collмтрs as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->�обилизацияsScheduledForDeletion !== null) {
+                if (!$this->�обилизацияsScheduledForDeletion->isEmpty()) {
+                    \мобилизацияQuery::create()
+                        ->filterByPrimaryKeys($this->�обилизацияsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->�обилизацияsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collмобилизацияs !== null) {
+                foreach ($this->collмобилизацияs as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->�обилизацияпомесяцамsScheduledForDeletion !== null) {
+                if (!$this->�обилизацияпомесяцамsScheduledForDeletion->isEmpty()) {
+                    \мобилизацияпомесяцамQuery::create()
+                        ->filterByPrimaryKeys($this->�обилизацияпомесяцамsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->�обилизацияпомесяцамsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collмобилизацияпомесяцамs !== null) {
+                foreach ($this->collмобилизацияпомесяцамs as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->�редписанияsRelatedByдатавыдачиScheduledForDeletion !== null) {
+                if (!$this->�редписанияsRelatedByдатавыдачиScheduledForDeletion->isEmpty()) {
+                    \ПредписанияQuery::create()
+                        ->filterByPrimaryKeys($this->�редписанияsRelatedByдатавыдачиScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->�редписанияsRelatedByдатавыдачиScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collПредписанияsRelatedByдатавыдачи !== null) {
+                foreach ($this->collПредписанияsRelatedByдатавыдачи as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->�редписанияsRelatedByплановаядатаустраненияScheduledForDeletion !== null) {
+                if (!$this->�редписанияsRelatedByплановаядатаустраненияScheduledForDeletion->isEmpty()) {
+                    \ПредписанияQuery::create()
+                        ->filterByPrimaryKeys($this->�редписанияsRelatedByплановаядатаустраненияScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->�редписанияsRelatedByплановаядатаустраненияScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collПредписанияsRelatedByплановаядатаустранения !== null) {
+                foreach ($this->collПредписанияsRelatedByплановаядатаустранения as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->�редписанияsRelatedByфактическаядатаустраненияScheduledForDeletion !== null) {
+                if (!$this->�редписанияsRelatedByфактическаядатаустраненияScheduledForDeletion->isEmpty()) {
+                    foreach ($this->�редписанияsRelatedByфактическаядатаустраненияScheduledForDeletion as $�редписанияRelatedByфактическаядатаустранения) {
+                        // need to save related object because we set the relation to null
+                        $�редписанияRelatedByфактическаядатаустранения->save($con);
+                    }
+                    $this->�редписанияsRelatedByфактическаядатаустраненияScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collПредписанияsRelatedByфактическаядатаустранения !== null) {
+                foreach ($this->collПредписанияsRelatedByфактическаядатаустранения as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->�изическиеобъёмыsScheduledForDeletion !== null) {
+                if (!$this->�изическиеобъёмыsScheduledForDeletion->isEmpty()) {
+                    \физическиеобъёмыQuery::create()
+                        ->filterByPrimaryKeys($this->�изическиеобъёмыsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->�изическиеобъёмыsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collфизическиеобъёмыs !== null) {
+                foreach ($this->collфизическиеобъёмыs as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             $this->alreadyInSave = false;
@@ -955,8 +1329,8 @@ abstract class Календарь implements ActiveRecordInterface
         if ($this->isColumnModified(КалендарьTableMap::COL_КВАРТАЛ)) {
             $modifiedColumns[':p' . $index++]  = 'Квартал';
         }
-        if ($this->isColumnModified(КалендарьTableMap::COL_НОМЕРМЕСЯЦА)) {
-            $modifiedColumns[':p' . $index++]  = 'НомерМесяца';
+        if ($this->isColumnModified(КалендарьTableMap::COL_НОМЕР_МЕСЯЦА)) {
+            $modifiedColumns[':p' . $index++]  = 'Номер_месяца';
         }
         if ($this->isColumnModified(КалендарьTableMap::COL_МЕСЯЦ)) {
             $modifiedColumns[':p' . $index++]  = 'Месяц';
@@ -964,14 +1338,14 @@ abstract class Календарь implements ActiveRecordInterface
         if ($this->isColumnModified(КалендарьTableMap::COL_ДЕНЬ)) {
             $modifiedColumns[':p' . $index++]  = 'День';
         }
-        if ($this->isColumnModified(КалендарьTableMap::COL_НОМЕРНЕДЕЛИ)) {
-            $modifiedColumns[':p' . $index++]  = 'НомерНедели';
+        if ($this->isColumnModified(КалендарьTableMap::COL_НОМЕР_НЕДЕЛИ)) {
+            $modifiedColumns[':p' . $index++]  = 'Номер_недели';
         }
-        if ($this->isColumnModified(КалендарьTableMap::COL_ДЕНЬНЕДЕЛИ)) {
-            $modifiedColumns[':p' . $index++]  = 'ДеньНедели';
+        if ($this->isColumnModified(КалендарьTableMap::COL_ДЕНЬ_НЕДЕЛИ)) {
+            $modifiedColumns[':p' . $index++]  = 'День_недели';
         }
-        if ($this->isColumnModified(КалендарьTableMap::COL_ДЕНЬВГОДУ)) {
-            $modifiedColumns[':p' . $index++]  = 'ДеньВГоду';
+        if ($this->isColumnModified(КалендарьTableMap::COL_ДЕНЬ_В_ГОДУ)) {
+            $modifiedColumns[':p' . $index++]  = 'День_в_году';
         }
 
         $sql = sprintf(
@@ -996,8 +1370,8 @@ abstract class Календарь implements ActiveRecordInterface
                     case 'Квартал':                        
                         $stmt->bindValue($identifier, $this->квартал, PDO::PARAM_INT);
                         break;
-                    case 'НомерМесяца':                        
-                        $stmt->bindValue($identifier, $this->номермесяца, PDO::PARAM_INT);
+                    case 'Номер_месяца':                        
+                        $stmt->bindValue($identifier, $this->номер_месяца, PDO::PARAM_INT);
                         break;
                     case 'Месяц':                        
                         $stmt->bindValue($identifier, $this->месяц, PDO::PARAM_STR);
@@ -1005,14 +1379,14 @@ abstract class Календарь implements ActiveRecordInterface
                     case 'День':                        
                         $stmt->bindValue($identifier, $this->день, PDO::PARAM_INT);
                         break;
-                    case 'НомерНедели':                        
-                        $stmt->bindValue($identifier, $this->номернедели, PDO::PARAM_INT);
+                    case 'Номер_недели':                        
+                        $stmt->bindValue($identifier, $this->номер_недели, PDO::PARAM_INT);
                         break;
-                    case 'ДеньНедели':                        
-                        $stmt->bindValue($identifier, $this->деньнедели, PDO::PARAM_INT);
+                    case 'День_недели':                        
+                        $stmt->bindValue($identifier, $this->день_недели, PDO::PARAM_INT);
                         break;
-                    case 'ДеньВГоду':                        
-                        $stmt->bindValue($identifier, $this->деньвгоду, PDO::PARAM_INT);
+                    case 'День_в_году':                        
+                        $stmt->bindValue($identifier, $this->день_в_году, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -1070,34 +1444,34 @@ abstract class Календарь implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getДата();
+                return $this->getдата();
                 break;
             case 1:
-                return $this->getГод();
+                return $this->getгод();
                 break;
             case 2:
-                return $this->getПолугодие();
+                return $this->getполугодие();
                 break;
             case 3:
-                return $this->getКвартал();
+                return $this->getквартал();
                 break;
             case 4:
-                return $this->getНомермесяца();
+                return $this->getномермесяца();
                 break;
             case 5:
-                return $this->getМесяц();
+                return $this->getмесяц();
                 break;
             case 6:
-                return $this->getДень();
+                return $this->getдень();
                 break;
             case 7:
-                return $this->getНомернедели();
+                return $this->getномернедели();
                 break;
             case 8:
-                return $this->getДеньнедели();
+                return $this->getденьнедели();
                 break;
             case 9:
-                return $this->getДеньвгоду();
+                return $this->getденьвгоду();
                 break;
             default:
                 return null;
@@ -1116,10 +1490,11 @@ abstract class Календарь implements ActiveRecordInterface
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
      * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
-    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
+    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
 
         if (isset($alreadyDumpedObjects['Календарь'][$this->hashCode()])) {
@@ -1128,16 +1503,16 @@ abstract class Календарь implements ActiveRecordInterface
         $alreadyDumpedObjects['Календарь'][$this->hashCode()] = true;
         $keys = КалендарьTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getДата(),
-            $keys[1] => $this->getГод(),
-            $keys[2] => $this->getПолугодие(),
-            $keys[3] => $this->getКвартал(),
-            $keys[4] => $this->getНомермесяца(),
-            $keys[5] => $this->getМесяц(),
-            $keys[6] => $this->getДень(),
-            $keys[7] => $this->getНомернедели(),
-            $keys[8] => $this->getДеньнедели(),
-            $keys[9] => $this->getДеньвгоду(),
+            $keys[0] => $this->getдата(),
+            $keys[1] => $this->getгод(),
+            $keys[2] => $this->getполугодие(),
+            $keys[3] => $this->getквартал(),
+            $keys[4] => $this->getномермесяца(),
+            $keys[5] => $this->getмесяц(),
+            $keys[6] => $this->getдень(),
+            $keys[7] => $this->getномернедели(),
+            $keys[8] => $this->getденьнедели(),
+            $keys[9] => $this->getденьвгоду(),
         );
         if ($result[$keys[0]] instanceof \DateTime) {
             $result[$keys[0]] = $result[$keys[0]]->format('c');
@@ -1148,6 +1523,188 @@ abstract class Календарь implements ActiveRecordInterface
             $result[$key] = $virtualColumn;
         }
         
+        if ($includeForeignObjects) {
+            if (null !== $this->aгода) {
+                
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = '�ода';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'Года';
+                        break;
+                    default:
+                        $key = 'года';
+                }
+        
+                $result[$key] = $this->aгода->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aднинедели) {
+                
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = '�нинедели';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'Дни_недели';
+                        break;
+                    default:
+                        $key = 'днинедели';
+                }
+        
+                $result[$key] = $this->aднинедели->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aмесяца) {
+                
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = '�есяца';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'Месяца';
+                        break;
+                    default:
+                        $key = 'месяца';
+                }
+        
+                $result[$key] = $this->aмесяца->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collвыработкаs) {
+                
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = '�ыработкаs';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'Выработкаs';
+                        break;
+                    default:
+                        $key = 'выработкаs';
+                }
+        
+                $result[$key] = $this->collвыработкаs->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collдатыобновленийдашбордовs) {
+                
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = '�атыобновленийдашбордовs';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'Даты_обновлений_дашбордовs';
+                        break;
+                    default:
+                        $key = 'датыобновленийдашбордовs';
+                }
+        
+                $result[$key] = $this->collдатыобновленийдашбордовs->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collмтрs) {
+                
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = '�трs';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'МТРs';
+                        break;
+                    default:
+                        $key = 'мтрs';
+                }
+        
+                $result[$key] = $this->collмтрs->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collмобилизацияs) {
+                
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = '�обилизацияs';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'Мобилизацияs';
+                        break;
+                    default:
+                        $key = 'мобилизацияs';
+                }
+        
+                $result[$key] = $this->collмобилизацияs->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collмобилизацияпомесяцамs) {
+                
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = '�обилизацияпомесяцамs';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'Мобилизация_по_месяцамs';
+                        break;
+                    default:
+                        $key = 'мобилизацияпомесяцамs';
+                }
+        
+                $result[$key] = $this->collмобилизацияпомесяцамs->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collПредписанияsRelatedByдатавыдачи) {
+                
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = '�редписанияs';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'Предписанияs';
+                        break;
+                    default:
+                        $key = 'Предписанияs';
+                }
+        
+                $result[$key] = $this->collПредписанияsRelatedByдатавыдачи->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collПредписанияsRelatedByплановаядатаустранения) {
+                
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = '�редписанияs';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'Предписанияs';
+                        break;
+                    default:
+                        $key = 'Предписанияs';
+                }
+        
+                $result[$key] = $this->collПредписанияsRelatedByплановаядатаустранения->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collПредписанияsRelatedByфактическаядатаустранения) {
+                
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = '�редписанияs';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'Предписанияs';
+                        break;
+                    default:
+                        $key = 'Предписанияs';
+                }
+        
+                $result[$key] = $this->collПредписанияsRelatedByфактическаядатаустранения->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collфизическиеобъёмыs) {
+                
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = '�изическиеобъёмыs';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'Физические_объёмыs';
+                        break;
+                    default:
+                        $key = 'физическиеобъёмыs';
+                }
+        
+                $result[$key] = $this->collфизическиеобъёмыs->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+        }
 
         return $result;
     }
@@ -1182,34 +1739,34 @@ abstract class Календарь implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                $this->setДата($value);
+                $this->setдата($value);
                 break;
             case 1:
-                $this->setГод($value);
+                $this->setгод($value);
                 break;
             case 2:
-                $this->setПолугодие($value);
+                $this->setполугодие($value);
                 break;
             case 3:
-                $this->setКвартал($value);
+                $this->setквартал($value);
                 break;
             case 4:
-                $this->setНомермесяца($value);
+                $this->setномермесяца($value);
                 break;
             case 5:
-                $this->setМесяц($value);
+                $this->setмесяц($value);
                 break;
             case 6:
-                $this->setДень($value);
+                $this->setдень($value);
                 break;
             case 7:
-                $this->setНомернедели($value);
+                $this->setномернедели($value);
                 break;
             case 8:
-                $this->setДеньнедели($value);
+                $this->setденьнедели($value);
                 break;
             case 9:
-                $this->setДеньвгоду($value);
+                $this->setденьвгоду($value);
                 break;
         } // switch()
 
@@ -1238,34 +1795,34 @@ abstract class Календарь implements ActiveRecordInterface
         $keys = КалендарьTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setДата($arr[$keys[0]]);
+            $this->setдата($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setГод($arr[$keys[1]]);
+            $this->setгод($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setПолугодие($arr[$keys[2]]);
+            $this->setполугодие($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setКвартал($arr[$keys[3]]);
+            $this->setквартал($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setНомермесяца($arr[$keys[4]]);
+            $this->setномермесяца($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setМесяц($arr[$keys[5]]);
+            $this->setмесяц($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setДень($arr[$keys[6]]);
+            $this->setдень($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setНомернедели($arr[$keys[7]]);
+            $this->setномернедели($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setДеньнедели($arr[$keys[8]]);
+            $this->setденьнедели($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
-            $this->setДеньвгоду($arr[$keys[9]]);
+            $this->setденьвгоду($arr[$keys[9]]);
         }
     }
 
@@ -1320,8 +1877,8 @@ abstract class Календарь implements ActiveRecordInterface
         if ($this->isColumnModified(КалендарьTableMap::COL_КВАРТАЛ)) {
             $criteria->add(КалендарьTableMap::COL_КВАРТАЛ, $this->квартал);
         }
-        if ($this->isColumnModified(КалендарьTableMap::COL_НОМЕРМЕСЯЦА)) {
-            $criteria->add(КалендарьTableMap::COL_НОМЕРМЕСЯЦА, $this->номермесяца);
+        if ($this->isColumnModified(КалендарьTableMap::COL_НОМЕР_МЕСЯЦА)) {
+            $criteria->add(КалендарьTableMap::COL_НОМЕР_МЕСЯЦА, $this->номер_месяца);
         }
         if ($this->isColumnModified(КалендарьTableMap::COL_МЕСЯЦ)) {
             $criteria->add(КалендарьTableMap::COL_МЕСЯЦ, $this->месяц);
@@ -1329,14 +1886,14 @@ abstract class Календарь implements ActiveRecordInterface
         if ($this->isColumnModified(КалендарьTableMap::COL_ДЕНЬ)) {
             $criteria->add(КалендарьTableMap::COL_ДЕНЬ, $this->день);
         }
-        if ($this->isColumnModified(КалендарьTableMap::COL_НОМЕРНЕДЕЛИ)) {
-            $criteria->add(КалендарьTableMap::COL_НОМЕРНЕДЕЛИ, $this->номернедели);
+        if ($this->isColumnModified(КалендарьTableMap::COL_НОМЕР_НЕДЕЛИ)) {
+            $criteria->add(КалендарьTableMap::COL_НОМЕР_НЕДЕЛИ, $this->номер_недели);
         }
-        if ($this->isColumnModified(КалендарьTableMap::COL_ДЕНЬНЕДЕЛИ)) {
-            $criteria->add(КалендарьTableMap::COL_ДЕНЬНЕДЕЛИ, $this->деньнедели);
+        if ($this->isColumnModified(КалендарьTableMap::COL_ДЕНЬ_НЕДЕЛИ)) {
+            $criteria->add(КалендарьTableMap::COL_ДЕНЬ_НЕДЕЛИ, $this->день_недели);
         }
-        if ($this->isColumnModified(КалендарьTableMap::COL_ДЕНЬВГОДУ)) {
-            $criteria->add(КалендарьTableMap::COL_ДЕНЬВГОДУ, $this->деньвгоду);
+        if ($this->isColumnModified(КалендарьTableMap::COL_ДЕНЬ_В_ГОДУ)) {
+            $criteria->add(КалендарьTableMap::COL_ДЕНЬ_В_ГОДУ, $this->день_в_году);
         }
 
         return $criteria;
@@ -1368,7 +1925,7 @@ abstract class Календарь implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = null !== $this->getДата();
+        $validPk = null !== $this->getдата();
 
         $validPrimaryKeyFKs = 0;
         $primaryKeyFKs = [];
@@ -1388,7 +1945,7 @@ abstract class Календарь implements ActiveRecordInterface
      */
     public function getPrimaryKey()
     {
-        return $this->getДата();
+        return $this->getдата();
     }
 
     /**
@@ -1399,7 +1956,7 @@ abstract class Календарь implements ActiveRecordInterface
      */
     public function setPrimaryKey($key)
     {
-        $this->setДата($key);
+        $this->setдата($key);
     }
 
     /**
@@ -1408,7 +1965,7 @@ abstract class Календарь implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull()
     {
-        return null === $this->getДата();
+        return null === $this->getдата();
     }
 
     /**
@@ -1424,16 +1981,78 @@ abstract class Календарь implements ActiveRecordInterface
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setДата($this->getДата());
-        $copyObj->setГод($this->getГод());
-        $copyObj->setПолугодие($this->getПолугодие());
-        $copyObj->setКвартал($this->getКвартал());
-        $copyObj->setНомермесяца($this->getНомермесяца());
-        $copyObj->setМесяц($this->getМесяц());
-        $copyObj->setДень($this->getДень());
-        $copyObj->setНомернедели($this->getНомернедели());
-        $copyObj->setДеньнедели($this->getДеньнедели());
-        $copyObj->setДеньвгоду($this->getДеньвгоду());
+        $copyObj->setдата($this->getдата());
+        $copyObj->setгод($this->getгод());
+        $copyObj->setполугодие($this->getполугодие());
+        $copyObj->setквартал($this->getквартал());
+        $copyObj->setномермесяца($this->getномермесяца());
+        $copyObj->setмесяц($this->getмесяц());
+        $copyObj->setдень($this->getдень());
+        $copyObj->setномернедели($this->getномернедели());
+        $copyObj->setденьнедели($this->getденьнедели());
+        $copyObj->setденьвгоду($this->getденьвгоду());
+
+        if ($deepCopy) {
+            // important: temporarily setNew(false) because this affects the behavior of
+            // the getter/setter methods for fkey referrer objects.
+            $copyObj->setNew(false);
+
+            foreach ($this->getвыработкаs() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addвыработка($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getдатыобновленийдашбордовs() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addдатыобновленийдашбордов($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getмтрs() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addмтр($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getмобилизацияs() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addмобилизация($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getмобилизацияпомесяцамs() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addмобилизацияпомесяцам($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getПредписанияsRelatedByдатавыдачи() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addПредписанияRelatedByдатавыдачи($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getПредписанияsRelatedByплановаядатаустранения() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addПредписанияRelatedByплановаядатаустранения($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getПредписанияsRelatedByфактическаядатаустранения() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addПредписанияRelatedByфактическаядатаустранения($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getфизическиеобъёмыs() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addфизическиеобъёмы($relObj->copy($deepCopy));
+                }
+            }
+
+        } // if ($deepCopy)
+
         if ($makeNew) {
             $copyObj->setNew(true);
         }
@@ -1462,22 +2081,3149 @@ abstract class Календарь implements ActiveRecordInterface
     }
 
     /**
+     * Declares an association between this object and a Childгода object.
+     *
+     * @param  Childгода $v
+     * @return $this|\Календарь The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setгода(Childгода $v = null)
+    {
+        if ($v === null) {
+            $this->setгод(NULL);
+        } else {
+            $this->setгод($v->getId());
+        }
+
+        $this->aгода = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the Childгода object, it will not be re-added.
+        if ($v !== null) {
+            $v->addКалендарь($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated Childгода object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return Childгода The associated Childгода object.
+     * @throws PropelException
+     */
+    public function getгода(ConnectionInterface $con = null)
+    {
+        if ($this->aгода === null && ($this->год !== null)) {
+            $this->aгода = ChildгодаQuery::create()->findPk($this->год, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aгода->addКалендарьs($this);
+             */
+        }
+
+        return $this->aгода;
+    }
+
+    /**
+     * Declares an association between this object and a Childднинедели object.
+     *
+     * @param  Childднинедели $v
+     * @return $this|\Календарь The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setднинедели(Childднинедели $v = null)
+    {
+        if ($v === null) {
+            $this->setденьнедели(NULL);
+        } else {
+            $this->setденьнедели($v->getId());
+        }
+
+        $this->aднинедели = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the Childднинедели object, it will not be re-added.
+        if ($v !== null) {
+            $v->addКалендарь($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated Childднинедели object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return Childднинедели The associated Childднинедели object.
+     * @throws PropelException
+     */
+    public function getднинедели(ConnectionInterface $con = null)
+    {
+        if ($this->aднинедели === null && ($this->день_недели !== null)) {
+            $this->aднинедели = ChildднинеделиQuery::create()->findPk($this->день_недели, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aднинедели->addКалендарьs($this);
+             */
+        }
+
+        return $this->aднинедели;
+    }
+
+    /**
+     * Declares an association between this object and a Childмесяца object.
+     *
+     * @param  Childмесяца $v
+     * @return $this|\Календарь The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setмесяца(Childмесяца $v = null)
+    {
+        if ($v === null) {
+            $this->setномермесяца(NULL);
+        } else {
+            $this->setномермесяца($v->getId());
+        }
+
+        $this->aмесяца = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the Childмесяца object, it will not be re-added.
+        if ($v !== null) {
+            $v->addКалендарь($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated Childмесяца object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return Childмесяца The associated Childмесяца object.
+     * @throws PropelException
+     */
+    public function getмесяца(ConnectionInterface $con = null)
+    {
+        if ($this->aмесяца === null && ($this->номер_месяца !== null)) {
+            $this->aмесяца = ChildмесяцаQuery::create()->findPk($this->номер_месяца, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aмесяца->addКалендарьs($this);
+             */
+        }
+
+        return $this->aмесяца;
+    }
+
+
+    /**
+     * Initializes a collection based on the name of a relation.
+     * Avoids crafting an 'init[$relationName]s' method name
+     * that wouldn't work when StandardEnglishPluralizer is used.
+     *
+     * @param      string $relationName The name of the relation to initialize
+     * @return void
+     */
+    public function initRelation($relationName)
+    {
+        if ('выработка' == $relationName) {
+            return $this->initвыработкаs();
+        }
+        if ('датыобновленийдашбордов' == $relationName) {
+            return $this->initдатыобновленийдашбордовs();
+        }
+        if ('мтр' == $relationName) {
+            return $this->initмтрs();
+        }
+        if ('мобилизация' == $relationName) {
+            return $this->initмобилизацияs();
+        }
+        if ('мобилизацияпомесяцам' == $relationName) {
+            return $this->initмобилизацияпомесяцамs();
+        }
+        if ('ПредписанияRelatedByдатавыдачи' == $relationName) {
+            return $this->initПредписанияsRelatedByдатавыдачи();
+        }
+        if ('ПредписанияRelatedByплановаядатаустранения' == $relationName) {
+            return $this->initПредписанияsRelatedByплановаядатаустранения();
+        }
+        if ('ПредписанияRelatedByфактическаядатаустранения' == $relationName) {
+            return $this->initПредписанияsRelatedByфактическаядатаустранения();
+        }
+        if ('физическиеобъёмы' == $relationName) {
+            return $this->initфизическиеобъёмыs();
+        }
+    }
+
+    /**
+     * Clears out the collвыработкаs collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addвыработкаs()
+     */
+    public function clearвыработкаs()
+    {
+        $this->collвыработкаs = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collвыработкаs collection loaded partially.
+     */
+    public function resetPartialвыработкаs($v = true)
+    {
+        $this->collвыработкаsPartial = $v;
+    }
+
+    /**
+     * Initializes the collвыработкаs collection.
+     *
+     * By default this just sets the collвыработкаs collection to an empty array (like clearcollвыработкаs());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initвыработкаs($overrideExisting = true)
+    {
+        if (null !== $this->collвыработкаs && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = выработкаTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collвыработкаs = new $collectionClassName;
+        $this->collвыработкаs->setModel('\выработка');
+    }
+
+    /**
+     * Gets an array of Childвыработка objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildКалендарь is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|Childвыработка[] List of Childвыработка objects
+     * @throws PropelException
+     */
+    public function getвыработкаs(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collвыработкаsPartial && !$this->isNew();
+        if (null === $this->collвыработкаs || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collвыработкаs) {
+                // return empty collection
+                $this->initвыработкаs();
+            } else {
+                $collвыработкаs = ChildвыработкаQuery::create(null, $criteria)
+                    ->filterByКалендарь($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collвыработкаsPartial && count($collвыработкаs)) {
+                        $this->initвыработкаs(false);
+
+                        foreach ($collвыработкаs as $obj) {
+                            if (false == $this->collвыработкаs->contains($obj)) {
+                                $this->collвыработкаs->append($obj);
+                            }
+                        }
+
+                        $this->collвыработкаsPartial = true;
+                    }
+
+                    return $collвыработкаs;
+                }
+
+                if ($partial && $this->collвыработкаs) {
+                    foreach ($this->collвыработкаs as $obj) {
+                        if ($obj->isNew()) {
+                            $collвыработкаs[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collвыработкаs = $collвыработкаs;
+                $this->collвыработкаsPartial = false;
+            }
+        }
+
+        return $this->collвыработкаs;
+    }
+
+    /**
+     * Sets a collection of Childвыработка objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $�ыработкаs A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildКалендарь The current object (for fluent API support)
+     */
+    public function setвыработкаs(Collection $�ыработкаs, ConnectionInterface $con = null)
+    {
+        /** @var Childвыработка[] $�ыработкаsToDelete */
+        $�ыработкаsToDelete = $this->getвыработкаs(new Criteria(), $con)->diff($�ыработкаs);
+
+        
+        $this->�ыработкаsScheduledForDeletion = $�ыработкаsToDelete;
+
+        foreach ($�ыработкаsToDelete as $�ыработкаRemoved) {
+            $�ыработкаRemoved->setКалендарь(null);
+        }
+
+        $this->collвыработкаs = null;
+        foreach ($�ыработкаs as $�ыработка) {
+            $this->addвыработка($�ыработка);
+        }
+
+        $this->collвыработкаs = $�ыработкаs;
+        $this->collвыработкаsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related выработка objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related выработка objects.
+     * @throws PropelException
+     */
+    public function countвыработкаs(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collвыработкаsPartial && !$this->isNew();
+        if (null === $this->collвыработкаs || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collвыработкаs) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getвыработкаs());
+            }
+
+            $query = ChildвыработкаQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByКалендарь($this)
+                ->count($con);
+        }
+
+        return count($this->collвыработкаs);
+    }
+
+    /**
+     * Method called to associate a Childвыработка object to this object
+     * through the Childвыработка foreign key attribute.
+     *
+     * @param  Childвыработка $l Childвыработка
+     * @return $this|\Календарь The current object (for fluent API support)
+     */
+    public function addвыработка(Childвыработка $l)
+    {
+        if ($this->collвыработкаs === null) {
+            $this->initвыработкаs();
+            $this->collвыработкаsPartial = true;
+        }
+
+        if (!$this->collвыработкаs->contains($l)) {
+            $this->doAddвыработка($l);
+
+            if ($this->�ыработкаsScheduledForDeletion and $this->�ыработкаsScheduledForDeletion->contains($l)) {
+                $this->�ыработкаsScheduledForDeletion->remove($this->�ыработкаsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Childвыработка $�ыработка The Childвыработка object to add.
+     */
+    protected function doAddвыработка(Childвыработка $�ыработка)
+    {
+        $this->collвыработкаs[]= $�ыработка;
+        $�ыработка->setКалендарь($this);
+    }
+
+    /**
+     * @param  Childвыработка $�ыработка The Childвыработка object to remove.
+     * @return $this|ChildКалендарь The current object (for fluent API support)
+     */
+    public function removeвыработка(Childвыработка $�ыработка)
+    {
+        if ($this->getвыработкаs()->contains($�ыработка)) {
+            $pos = $this->collвыработкаs->search($�ыработка);
+            $this->collвыработкаs->remove($pos);
+            if (null === $this->�ыработкаsScheduledForDeletion) {
+                $this->�ыработкаsScheduledForDeletion = clone $this->collвыработкаs;
+                $this->�ыработкаsScheduledForDeletion->clear();
+            }
+            $this->�ыработкаsScheduledForDeletion[]= clone $�ыработка;
+            $�ыработка->setКалендарь(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related выработкаs from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|Childвыработка[] List of Childвыработка objects
+     */
+    public function getвыработкаsJoinтипыработ(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildвыработкаQuery::create(null, $criteria);
+        $query->joinWith('типыработ', $joinBehavior);
+
+        return $this->getвыработкаs($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related выработкаs from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|Childвыработка[] List of Childвыработка objects
+     */
+    public function getвыработкаsJoinтипытехникивыработка(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildвыработкаQuery::create(null, $criteria);
+        $query->joinWith('типытехникивыработка', $joinBehavior);
+
+        return $this->getвыработкаs($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related выработкаs from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|Childвыработка[] List of Childвыработка objects
+     */
+    public function getвыработкаsJoinучасткиработ(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildвыработкаQuery::create(null, $criteria);
+        $query->joinWith('участкиработ', $joinBehavior);
+
+        return $this->getвыработкаs($query, $con);
+    }
+
+    /**
+     * Clears out the collдатыобновленийдашбордовs collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addдатыобновленийдашбордовs()
+     */
+    public function clearдатыобновленийдашбордовs()
+    {
+        $this->collдатыобновленийдашбордовs = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collдатыобновленийдашбордовs collection loaded partially.
+     */
+    public function resetPartialдатыобновленийдашбордовs($v = true)
+    {
+        $this->collдатыобновленийдашбордовsPartial = $v;
+    }
+
+    /**
+     * Initializes the collдатыобновленийдашбордовs collection.
+     *
+     * By default this just sets the collдатыобновленийдашбордовs collection to an empty array (like clearcollдатыобновленийдашбордовs());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initдатыобновленийдашбордовs($overrideExisting = true)
+    {
+        if (null !== $this->collдатыобновленийдашбордовs && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = датыобновленийдашбордовTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collдатыобновленийдашбордовs = new $collectionClassName;
+        $this->collдатыобновленийдашбордовs->setModel('\датыобновленийдашбордов');
+    }
+
+    /**
+     * Gets an array of Childдатыобновленийдашбордов objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildКалендарь is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|Childдатыобновленийдашбордов[] List of Childдатыобновленийдашбордов objects
+     * @throws PropelException
+     */
+    public function getдатыобновленийдашбордовs(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collдатыобновленийдашбордовsPartial && !$this->isNew();
+        if (null === $this->collдатыобновленийдашбордовs || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collдатыобновленийдашбордовs) {
+                // return empty collection
+                $this->initдатыобновленийдашбордовs();
+            } else {
+                $collдатыобновленийдашбордовs = ChildдатыобновленийдашбордовQuery::create(null, $criteria)
+                    ->filterByКалендарь($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collдатыобновленийдашбордовsPartial && count($collдатыобновленийдашбордовs)) {
+                        $this->initдатыобновленийдашбордовs(false);
+
+                        foreach ($collдатыобновленийдашбордовs as $obj) {
+                            if (false == $this->collдатыобновленийдашбордовs->contains($obj)) {
+                                $this->collдатыобновленийдашбордовs->append($obj);
+                            }
+                        }
+
+                        $this->collдатыобновленийдашбордовsPartial = true;
+                    }
+
+                    return $collдатыобновленийдашбордовs;
+                }
+
+                if ($partial && $this->collдатыобновленийдашбордовs) {
+                    foreach ($this->collдатыобновленийдашбордовs as $obj) {
+                        if ($obj->isNew()) {
+                            $collдатыобновленийдашбордовs[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collдатыобновленийдашбордовs = $collдатыобновленийдашбордовs;
+                $this->collдатыобновленийдашбордовsPartial = false;
+            }
+        }
+
+        return $this->collдатыобновленийдашбордовs;
+    }
+
+    /**
+     * Sets a collection of Childдатыобновленийдашбордов objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $�атыобновленийдашбордовs A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildКалендарь The current object (for fluent API support)
+     */
+    public function setдатыобновленийдашбордовs(Collection $�атыобновленийдашбордовs, ConnectionInterface $con = null)
+    {
+        /** @var Childдатыобновленийдашбордов[] $�атыобновленийдашбордовsToDelete */
+        $�атыобновленийдашбордовsToDelete = $this->getдатыобновленийдашбордовs(new Criteria(), $con)->diff($�атыобновленийдашбордовs);
+
+        
+        $this->�атыобновленийдашбордовsScheduledForDeletion = $�атыобновленийдашбордовsToDelete;
+
+        foreach ($�атыобновленийдашбордовsToDelete as $�атыобновленийдашбордовRemoved) {
+            $�атыобновленийдашбордовRemoved->setКалендарь(null);
+        }
+
+        $this->collдатыобновленийдашбордовs = null;
+        foreach ($�атыобновленийдашбордовs as $�атыобновленийдашбордов) {
+            $this->addдатыобновленийдашбордов($�атыобновленийдашбордов);
+        }
+
+        $this->collдатыобновленийдашбордовs = $�атыобновленийдашбордовs;
+        $this->collдатыобновленийдашбордовsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related датыобновленийдашбордов objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related датыобновленийдашбордов objects.
+     * @throws PropelException
+     */
+    public function countдатыобновленийдашбордовs(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collдатыобновленийдашбордовsPartial && !$this->isNew();
+        if (null === $this->collдатыобновленийдашбордовs || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collдатыобновленийдашбордовs) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getдатыобновленийдашбордовs());
+            }
+
+            $query = ChildдатыобновленийдашбордовQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByКалендарь($this)
+                ->count($con);
+        }
+
+        return count($this->collдатыобновленийдашбордовs);
+    }
+
+    /**
+     * Method called to associate a Childдатыобновленийдашбордов object to this object
+     * through the Childдатыобновленийдашбордов foreign key attribute.
+     *
+     * @param  Childдатыобновленийдашбордов $l Childдатыобновленийдашбордов
+     * @return $this|\Календарь The current object (for fluent API support)
+     */
+    public function addдатыобновленийдашбордов(Childдатыобновленийдашбордов $l)
+    {
+        if ($this->collдатыобновленийдашбордовs === null) {
+            $this->initдатыобновленийдашбордовs();
+            $this->collдатыобновленийдашбордовsPartial = true;
+        }
+
+        if (!$this->collдатыобновленийдашбордовs->contains($l)) {
+            $this->doAddдатыобновленийдашбордов($l);
+
+            if ($this->�атыобновленийдашбордовsScheduledForDeletion and $this->�атыобновленийдашбордовsScheduledForDeletion->contains($l)) {
+                $this->�атыобновленийдашбордовsScheduledForDeletion->remove($this->�атыобновленийдашбордовsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Childдатыобновленийдашбордов $�атыобновленийдашбордов The Childдатыобновленийдашбордов object to add.
+     */
+    protected function doAddдатыобновленийдашбордов(Childдатыобновленийдашбордов $�атыобновленийдашбордов)
+    {
+        $this->collдатыобновленийдашбордовs[]= $�атыобновленийдашбордов;
+        $�атыобновленийдашбордов->setКалендарь($this);
+    }
+
+    /**
+     * @param  Childдатыобновленийдашбордов $�атыобновленийдашбордов The Childдатыобновленийдашбордов object to remove.
+     * @return $this|ChildКалендарь The current object (for fluent API support)
+     */
+    public function removeдатыобновленийдашбордов(Childдатыобновленийдашбордов $�атыобновленийдашбордов)
+    {
+        if ($this->getдатыобновленийдашбордовs()->contains($�атыобновленийдашбордов)) {
+            $pos = $this->collдатыобновленийдашбордовs->search($�атыобновленийдашбордов);
+            $this->collдатыобновленийдашбордовs->remove($pos);
+            if (null === $this->�атыобновленийдашбордовsScheduledForDeletion) {
+                $this->�атыобновленийдашбордовsScheduledForDeletion = clone $this->collдатыобновленийдашбордовs;
+                $this->�атыобновленийдашбордовsScheduledForDeletion->clear();
+            }
+            $this->�атыобновленийдашбордовsScheduledForDeletion[]= clone $�атыобновленийдашбордов;
+            $�атыобновленийдашбордов->setКалендарь(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related датыобновленийдашбордовs from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|Childдатыобновленийдашбордов[] List of Childдатыобновленийдашбордов objects
+     */
+    public function getдатыобновленийдашбордовsJoinПроекты(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildдатыобновленийдашбордовQuery::create(null, $criteria);
+        $query->joinWith('Проекты', $joinBehavior);
+
+        return $this->getдатыобновленийдашбордовs($query, $con);
+    }
+
+    /**
+     * Clears out the collмтрs collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addмтрs()
+     */
+    public function clearмтрs()
+    {
+        $this->collмтрs = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collмтрs collection loaded partially.
+     */
+    public function resetPartialмтрs($v = true)
+    {
+        $this->collмтрsPartial = $v;
+    }
+
+    /**
+     * Initializes the collмтрs collection.
+     *
+     * By default this just sets the collмтрs collection to an empty array (like clearcollмтрs());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initмтрs($overrideExisting = true)
+    {
+        if (null !== $this->collмтрs && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = мтрTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collмтрs = new $collectionClassName;
+        $this->collмтрs->setModel('\мтр');
+    }
+
+    /**
+     * Gets an array of Childмтр objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildКалендарь is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|Childмтр[] List of Childмтр objects
+     * @throws PropelException
+     */
+    public function getмтрs(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collмтрsPartial && !$this->isNew();
+        if (null === $this->collмтрs || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collмтрs) {
+                // return empty collection
+                $this->initмтрs();
+            } else {
+                $collмтрs = ChildмтрQuery::create(null, $criteria)
+                    ->filterByКалендарь($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collмтрsPartial && count($collмтрs)) {
+                        $this->initмтрs(false);
+
+                        foreach ($collмтрs as $obj) {
+                            if (false == $this->collмтрs->contains($obj)) {
+                                $this->collмтрs->append($obj);
+                            }
+                        }
+
+                        $this->collмтрsPartial = true;
+                    }
+
+                    return $collмтрs;
+                }
+
+                if ($partial && $this->collмтрs) {
+                    foreach ($this->collмтрs as $obj) {
+                        if ($obj->isNew()) {
+                            $collмтрs[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collмтрs = $collмтрs;
+                $this->collмтрsPartial = false;
+            }
+        }
+
+        return $this->collмтрs;
+    }
+
+    /**
+     * Sets a collection of Childмтр objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $�трs A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildКалендарь The current object (for fluent API support)
+     */
+    public function setмтрs(Collection $�трs, ConnectionInterface $con = null)
+    {
+        /** @var Childмтр[] $�трsToDelete */
+        $�трsToDelete = $this->getмтрs(new Criteria(), $con)->diff($�трs);
+
+        
+        $this->�трsScheduledForDeletion = $�трsToDelete;
+
+        foreach ($�трsToDelete as $�трRemoved) {
+            $�трRemoved->setКалендарь(null);
+        }
+
+        $this->collмтрs = null;
+        foreach ($�трs as $�тр) {
+            $this->addмтр($�тр);
+        }
+
+        $this->collмтрs = $�трs;
+        $this->collмтрsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related мтр objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related мтр objects.
+     * @throws PropelException
+     */
+    public function countмтрs(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collмтрsPartial && !$this->isNew();
+        if (null === $this->collмтрs || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collмтрs) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getмтрs());
+            }
+
+            $query = ChildмтрQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByКалендарь($this)
+                ->count($con);
+        }
+
+        return count($this->collмтрs);
+    }
+
+    /**
+     * Method called to associate a Childмтр object to this object
+     * through the Childмтр foreign key attribute.
+     *
+     * @param  Childмтр $l Childмтр
+     * @return $this|\Календарь The current object (for fluent API support)
+     */
+    public function addмтр(Childмтр $l)
+    {
+        if ($this->collмтрs === null) {
+            $this->initмтрs();
+            $this->collмтрsPartial = true;
+        }
+
+        if (!$this->collмтрs->contains($l)) {
+            $this->doAddмтр($l);
+
+            if ($this->�трsScheduledForDeletion and $this->�трsScheduledForDeletion->contains($l)) {
+                $this->�трsScheduledForDeletion->remove($this->�трsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Childмтр $�тр The Childмтр object to add.
+     */
+    protected function doAddмтр(Childмтр $�тр)
+    {
+        $this->collмтрs[]= $�тр;
+        $�тр->setКалендарь($this);
+    }
+
+    /**
+     * @param  Childмтр $�тр The Childмтр object to remove.
+     * @return $this|ChildКалендарь The current object (for fluent API support)
+     */
+    public function removeмтр(Childмтр $�тр)
+    {
+        if ($this->getмтрs()->contains($�тр)) {
+            $pos = $this->collмтрs->search($�тр);
+            $this->collмтрs->remove($pos);
+            if (null === $this->�трsScheduledForDeletion) {
+                $this->�трsScheduledForDeletion = clone $this->collмтрs;
+                $this->�трsScheduledForDeletion->clear();
+            }
+            $this->�трsScheduledForDeletion[]= clone $�тр;
+            $�тр->setКалендарь(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related мтрs from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|Childмтр[] List of Childмтр objects
+     */
+    public function getмтрsJoinподрядчикимтр(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildмтрQuery::create(null, $criteria);
+        $query->joinWith('подрядчикимтр', $joinBehavior);
+
+        return $this->getмтрs($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related мтрs from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|Childмтр[] List of Childмтр objects
+     */
+    public function getмтрsJoinПроекты(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildмтрQuery::create(null, $criteria);
+        $query->joinWith('Проекты', $joinBehavior);
+
+        return $this->getмтрs($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related мтрs from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|Childмтр[] List of Childмтр objects
+     */
+    public function getмтрsJoinстатуссостояниятехники(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildмтрQuery::create(null, $criteria);
+        $query->joinWith('статуссостояниятехники', $joinBehavior);
+
+        return $this->getмтрs($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related мтрs from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|Childмтр[] List of Childмтр objects
+     */
+    public function getмтрsJoinтипытехникимтр(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildмтрQuery::create(null, $criteria);
+        $query->joinWith('типытехникимтр', $joinBehavior);
+
+        return $this->getмтрs($query, $con);
+    }
+
+    /**
+     * Clears out the collмобилизацияs collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addмобилизацияs()
+     */
+    public function clearмобилизацияs()
+    {
+        $this->collмобилизацияs = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collмобилизацияs collection loaded partially.
+     */
+    public function resetPartialмобилизацияs($v = true)
+    {
+        $this->collмобилизацияsPartial = $v;
+    }
+
+    /**
+     * Initializes the collмобилизацияs collection.
+     *
+     * By default this just sets the collмобилизацияs collection to an empty array (like clearcollмобилизацияs());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initмобилизацияs($overrideExisting = true)
+    {
+        if (null !== $this->collмобилизацияs && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = мобилизацияTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collмобилизацияs = new $collectionClassName;
+        $this->collмобилизацияs->setModel('\мобилизация');
+    }
+
+    /**
+     * Gets an array of Childмобилизация objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildКалендарь is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|Childмобилизация[] List of Childмобилизация objects
+     * @throws PropelException
+     */
+    public function getмобилизацияs(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collмобилизацияsPartial && !$this->isNew();
+        if (null === $this->collмобилизацияs || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collмобилизацияs) {
+                // return empty collection
+                $this->initмобилизацияs();
+            } else {
+                $collмобилизацияs = ChildмобилизацияQuery::create(null, $criteria)
+                    ->filterByКалендарь($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collмобилизацияsPartial && count($collмобилизацияs)) {
+                        $this->initмобилизацияs(false);
+
+                        foreach ($collмобилизацияs as $obj) {
+                            if (false == $this->collмобилизацияs->contains($obj)) {
+                                $this->collмобилизацияs->append($obj);
+                            }
+                        }
+
+                        $this->collмобилизацияsPartial = true;
+                    }
+
+                    return $collмобилизацияs;
+                }
+
+                if ($partial && $this->collмобилизацияs) {
+                    foreach ($this->collмобилизацияs as $obj) {
+                        if ($obj->isNew()) {
+                            $collмобилизацияs[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collмобилизацияs = $collмобилизацияs;
+                $this->collмобилизацияsPartial = false;
+            }
+        }
+
+        return $this->collмобилизацияs;
+    }
+
+    /**
+     * Sets a collection of Childмобилизация objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $�обилизацияs A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildКалендарь The current object (for fluent API support)
+     */
+    public function setмобилизацияs(Collection $�обилизацияs, ConnectionInterface $con = null)
+    {
+        /** @var Childмобилизация[] $�обилизацияsToDelete */
+        $�обилизацияsToDelete = $this->getмобилизацияs(new Criteria(), $con)->diff($�обилизацияs);
+
+        
+        $this->�обилизацияsScheduledForDeletion = $�обилизацияsToDelete;
+
+        foreach ($�обилизацияsToDelete as $�обилизацияRemoved) {
+            $�обилизацияRemoved->setКалендарь(null);
+        }
+
+        $this->collмобилизацияs = null;
+        foreach ($�обилизацияs as $�обилизация) {
+            $this->addмобилизация($�обилизация);
+        }
+
+        $this->collмобилизацияs = $�обилизацияs;
+        $this->collмобилизацияsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related мобилизация objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related мобилизация objects.
+     * @throws PropelException
+     */
+    public function countмобилизацияs(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collмобилизацияsPartial && !$this->isNew();
+        if (null === $this->collмобилизацияs || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collмобилизацияs) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getмобилизацияs());
+            }
+
+            $query = ChildмобилизацияQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByКалендарь($this)
+                ->count($con);
+        }
+
+        return count($this->collмобилизацияs);
+    }
+
+    /**
+     * Method called to associate a Childмобилизация object to this object
+     * through the Childмобилизация foreign key attribute.
+     *
+     * @param  Childмобилизация $l Childмобилизация
+     * @return $this|\Календарь The current object (for fluent API support)
+     */
+    public function addмобилизация(Childмобилизация $l)
+    {
+        if ($this->collмобилизацияs === null) {
+            $this->initмобилизацияs();
+            $this->collмобилизацияsPartial = true;
+        }
+
+        if (!$this->collмобилизацияs->contains($l)) {
+            $this->doAddмобилизация($l);
+
+            if ($this->�обилизацияsScheduledForDeletion and $this->�обилизацияsScheduledForDeletion->contains($l)) {
+                $this->�обилизацияsScheduledForDeletion->remove($this->�обилизацияsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Childмобилизация $�обилизация The Childмобилизация object to add.
+     */
+    protected function doAddмобилизация(Childмобилизация $�обилизация)
+    {
+        $this->collмобилизацияs[]= $�обилизация;
+        $�обилизация->setКалендарь($this);
+    }
+
+    /**
+     * @param  Childмобилизация $�обилизация The Childмобилизация object to remove.
+     * @return $this|ChildКалендарь The current object (for fluent API support)
+     */
+    public function removeмобилизация(Childмобилизация $�обилизация)
+    {
+        if ($this->getмобилизацияs()->contains($�обилизация)) {
+            $pos = $this->collмобилизацияs->search($�обилизация);
+            $this->collмобилизацияs->remove($pos);
+            if (null === $this->�обилизацияsScheduledForDeletion) {
+                $this->�обилизацияsScheduledForDeletion = clone $this->collмобилизацияs;
+                $this->�обилизацияsScheduledForDeletion->clear();
+            }
+            $this->�обилизацияsScheduledForDeletion[]= clone $�обилизация;
+            $�обилизация->setКалендарь(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related мобилизацияs from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|Childмобилизация[] List of Childмобилизация objects
+     */
+    public function getмобилизацияsJoinПроекты(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildмобилизацияQuery::create(null, $criteria);
+        $query->joinWith('Проекты', $joinBehavior);
+
+        return $this->getмобилизацияs($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related мобилизацияs from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|Childмобилизация[] List of Childмобилизация objects
+     */
+    public function getмобилизацияsJoinтипытехникимобилизация(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildмобилизацияQuery::create(null, $criteria);
+        $query->joinWith('типытехникимобилизация', $joinBehavior);
+
+        return $this->getмобилизацияs($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related мобилизацияs from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|Childмобилизация[] List of Childмобилизация objects
+     */
+    public function getмобилизацияsJoinучасткиработмобилизация(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildмобилизацияQuery::create(null, $criteria);
+        $query->joinWith('участкиработмобилизация', $joinBehavior);
+
+        return $this->getмобилизацияs($query, $con);
+    }
+
+    /**
+     * Clears out the collмобилизацияпомесяцамs collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addмобилизацияпомесяцамs()
+     */
+    public function clearмобилизацияпомесяцамs()
+    {
+        $this->collмобилизацияпомесяцамs = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collмобилизацияпомесяцамs collection loaded partially.
+     */
+    public function resetPartialмобилизацияпомесяцамs($v = true)
+    {
+        $this->collмобилизацияпомесяцамsPartial = $v;
+    }
+
+    /**
+     * Initializes the collмобилизацияпомесяцамs collection.
+     *
+     * By default this just sets the collмобилизацияпомесяцамs collection to an empty array (like clearcollмобилизацияпомесяцамs());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initмобилизацияпомесяцамs($overrideExisting = true)
+    {
+        if (null !== $this->collмобилизацияпомесяцамs && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = мобилизацияпомесяцамTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collмобилизацияпомесяцамs = new $collectionClassName;
+        $this->collмобилизацияпомесяцамs->setModel('\мобилизацияпомесяцам');
+    }
+
+    /**
+     * Gets an array of Childмобилизацияпомесяцам objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildКалендарь is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|Childмобилизацияпомесяцам[] List of Childмобилизацияпомесяцам objects
+     * @throws PropelException
+     */
+    public function getмобилизацияпомесяцамs(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collмобилизацияпомесяцамsPartial && !$this->isNew();
+        if (null === $this->collмобилизацияпомесяцамs || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collмобилизацияпомесяцамs) {
+                // return empty collection
+                $this->initмобилизацияпомесяцамs();
+            } else {
+                $collмобилизацияпомесяцамs = ChildмобилизацияпомесяцамQuery::create(null, $criteria)
+                    ->filterByКалендарь($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collмобилизацияпомесяцамsPartial && count($collмобилизацияпомесяцамs)) {
+                        $this->initмобилизацияпомесяцамs(false);
+
+                        foreach ($collмобилизацияпомесяцамs as $obj) {
+                            if (false == $this->collмобилизацияпомесяцамs->contains($obj)) {
+                                $this->collмобилизацияпомесяцамs->append($obj);
+                            }
+                        }
+
+                        $this->collмобилизацияпомесяцамsPartial = true;
+                    }
+
+                    return $collмобилизацияпомесяцамs;
+                }
+
+                if ($partial && $this->collмобилизацияпомесяцамs) {
+                    foreach ($this->collмобилизацияпомесяцамs as $obj) {
+                        if ($obj->isNew()) {
+                            $collмобилизацияпомесяцамs[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collмобилизацияпомесяцамs = $collмобилизацияпомесяцамs;
+                $this->collмобилизацияпомесяцамsPartial = false;
+            }
+        }
+
+        return $this->collмобилизацияпомесяцамs;
+    }
+
+    /**
+     * Sets a collection of Childмобилизацияпомесяцам objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $�обилизацияпомесяцамs A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildКалендарь The current object (for fluent API support)
+     */
+    public function setмобилизацияпомесяцамs(Collection $�обилизацияпомесяцамs, ConnectionInterface $con = null)
+    {
+        /** @var Childмобилизацияпомесяцам[] $�обилизацияпомесяцамsToDelete */
+        $�обилизацияпомесяцамsToDelete = $this->getмобилизацияпомесяцамs(new Criteria(), $con)->diff($�обилизацияпомесяцамs);
+
+        
+        $this->�обилизацияпомесяцамsScheduledForDeletion = $�обилизацияпомесяцамsToDelete;
+
+        foreach ($�обилизацияпомесяцамsToDelete as $�обилизацияпомесяцамRemoved) {
+            $�обилизацияпомесяцамRemoved->setКалендарь(null);
+        }
+
+        $this->collмобилизацияпомесяцамs = null;
+        foreach ($�обилизацияпомесяцамs as $�обилизацияпомесяцам) {
+            $this->addмобилизацияпомесяцам($�обилизацияпомесяцам);
+        }
+
+        $this->collмобилизацияпомесяцамs = $�обилизацияпомесяцамs;
+        $this->collмобилизацияпомесяцамsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related мобилизацияпомесяцам objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related мобилизацияпомесяцам objects.
+     * @throws PropelException
+     */
+    public function countмобилизацияпомесяцамs(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collмобилизацияпомесяцамsPartial && !$this->isNew();
+        if (null === $this->collмобилизацияпомесяцамs || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collмобилизацияпомесяцамs) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getмобилизацияпомесяцамs());
+            }
+
+            $query = ChildмобилизацияпомесяцамQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByКалендарь($this)
+                ->count($con);
+        }
+
+        return count($this->collмобилизацияпомесяцамs);
+    }
+
+    /**
+     * Method called to associate a Childмобилизацияпомесяцам object to this object
+     * through the Childмобилизацияпомесяцам foreign key attribute.
+     *
+     * @param  Childмобилизацияпомесяцам $l Childмобилизацияпомесяцам
+     * @return $this|\Календарь The current object (for fluent API support)
+     */
+    public function addмобилизацияпомесяцам(Childмобилизацияпомесяцам $l)
+    {
+        if ($this->collмобилизацияпомесяцамs === null) {
+            $this->initмобилизацияпомесяцамs();
+            $this->collмобилизацияпомесяцамsPartial = true;
+        }
+
+        if (!$this->collмобилизацияпомесяцамs->contains($l)) {
+            $this->doAddмобилизацияпомесяцам($l);
+
+            if ($this->�обилизацияпомесяцамsScheduledForDeletion and $this->�обилизацияпомесяцамsScheduledForDeletion->contains($l)) {
+                $this->�обилизацияпомесяцамsScheduledForDeletion->remove($this->�обилизацияпомесяцамsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Childмобилизацияпомесяцам $�обилизацияпомесяцам The Childмобилизацияпомесяцам object to add.
+     */
+    protected function doAddмобилизацияпомесяцам(Childмобилизацияпомесяцам $�обилизацияпомесяцам)
+    {
+        $this->collмобилизацияпомесяцамs[]= $�обилизацияпомесяцам;
+        $�обилизацияпомесяцам->setКалендарь($this);
+    }
+
+    /**
+     * @param  Childмобилизацияпомесяцам $�обилизацияпомесяцам The Childмобилизацияпомесяцам object to remove.
+     * @return $this|ChildКалендарь The current object (for fluent API support)
+     */
+    public function removeмобилизацияпомесяцам(Childмобилизацияпомесяцам $�обилизацияпомесяцам)
+    {
+        if ($this->getмобилизацияпомесяцамs()->contains($�обилизацияпомесяцам)) {
+            $pos = $this->collмобилизацияпомесяцамs->search($�обилизацияпомесяцам);
+            $this->collмобилизацияпомесяцамs->remove($pos);
+            if (null === $this->�обилизацияпомесяцамsScheduledForDeletion) {
+                $this->�обилизацияпомесяцамsScheduledForDeletion = clone $this->collмобилизацияпомесяцамs;
+                $this->�обилизацияпомесяцамsScheduledForDeletion->clear();
+            }
+            $this->�обилизацияпомесяцамsScheduledForDeletion[]= clone $�обилизацияпомесяцам;
+            $�обилизацияпомесяцам->setКалендарь(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related мобилизацияпомесяцамs from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|Childмобилизацияпомесяцам[] List of Childмобилизацияпомесяцам objects
+     */
+    public function getмобилизацияпомесяцамsJoinучасткиработмобилизация(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildмобилизацияпомесяцамQuery::create(null, $criteria);
+        $query->joinWith('участкиработмобилизация', $joinBehavior);
+
+        return $this->getмобилизацияпомесяцамs($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related мобилизацияпомесяцамs from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|Childмобилизацияпомесяцам[] List of Childмобилизацияпомесяцам objects
+     */
+    public function getмобилизацияпомесяцамsJoinтипытехникимобилизация(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildмобилизацияпомесяцамQuery::create(null, $criteria);
+        $query->joinWith('типытехникимобилизация', $joinBehavior);
+
+        return $this->getмобилизацияпомесяцамs($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related мобилизацияпомесяцамs from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|Childмобилизацияпомесяцам[] List of Childмобилизацияпомесяцам objects
+     */
+    public function getмобилизацияпомесяцамsJoinгода(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildмобилизацияпомесяцамQuery::create(null, $criteria);
+        $query->joinWith('года', $joinBehavior);
+
+        return $this->getмобилизацияпомесяцамs($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related мобилизацияпомесяцамs from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|Childмобилизацияпомесяцам[] List of Childмобилизацияпомесяцам objects
+     */
+    public function getмобилизацияпомесяцамsJoinмесяца(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildмобилизацияпомесяцамQuery::create(null, $criteria);
+        $query->joinWith('месяца', $joinBehavior);
+
+        return $this->getмобилизацияпомесяцамs($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related мобилизацияпомесяцамs from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|Childмобилизацияпомесяцам[] List of Childмобилизацияпомесяцам objects
+     */
+    public function getмобилизацияпомесяцамsJoinПроекты(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildмобилизацияпомесяцамQuery::create(null, $criteria);
+        $query->joinWith('Проекты', $joinBehavior);
+
+        return $this->getмобилизацияпомесяцамs($query, $con);
+    }
+
+    /**
+     * Clears out the collПредписанияsRelatedByдатавыдачи collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addПредписанияsRelatedByдатавыдачи()
+     */
+    public function clearПредписанияsRelatedByдатавыдачи()
+    {
+        $this->collПредписанияsRelatedByдатавыдачи = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collПредписанияsRelatedByдатавыдачи collection loaded partially.
+     */
+    public function resetPartialПредписанияsRelatedByдатавыдачи($v = true)
+    {
+        $this->collПредписанияsRelatedByдатавыдачиPartial = $v;
+    }
+
+    /**
+     * Initializes the collПредписанияsRelatedByдатавыдачи collection.
+     *
+     * By default this just sets the collПредписанияsRelatedByдатавыдачи collection to an empty array (like clearcollПредписанияsRelatedByдатавыдачи());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initПредписанияsRelatedByдатавыдачи($overrideExisting = true)
+    {
+        if (null !== $this->collПредписанияsRelatedByдатавыдачи && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = ПредписанияTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collПредписанияsRelatedByдатавыдачи = new $collectionClassName;
+        $this->collПредписанияsRelatedByдатавыдачи->setModel('\Предписания');
+    }
+
+    /**
+     * Gets an array of ChildПредписания objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildКалендарь is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildПредписания[] List of ChildПредписания objects
+     * @throws PropelException
+     */
+    public function getПредписанияsRelatedByдатавыдачи(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collПредписанияsRelatedByдатавыдачиPartial && !$this->isNew();
+        if (null === $this->collПредписанияsRelatedByдатавыдачи || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collПредписанияsRelatedByдатавыдачи) {
+                // return empty collection
+                $this->initПредписанияsRelatedByдатавыдачи();
+            } else {
+                $collПредписанияsRelatedByдатавыдачи = ChildПредписанияQuery::create(null, $criteria)
+                    ->filterByКалендарьRelatedByдатавыдачи($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collПредписанияsRelatedByдатавыдачиPartial && count($collПредписанияsRelatedByдатавыдачи)) {
+                        $this->initПредписанияsRelatedByдатавыдачи(false);
+
+                        foreach ($collПредписанияsRelatedByдатавыдачи as $obj) {
+                            if (false == $this->collПредписанияsRelatedByдатавыдачи->contains($obj)) {
+                                $this->collПредписанияsRelatedByдатавыдачи->append($obj);
+                            }
+                        }
+
+                        $this->collПредписанияsRelatedByдатавыдачиPartial = true;
+                    }
+
+                    return $collПредписанияsRelatedByдатавыдачи;
+                }
+
+                if ($partial && $this->collПредписанияsRelatedByдатавыдачи) {
+                    foreach ($this->collПредписанияsRelatedByдатавыдачи as $obj) {
+                        if ($obj->isNew()) {
+                            $collПредписанияsRelatedByдатавыдачи[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collПредписанияsRelatedByдатавыдачи = $collПредписанияsRelatedByдатавыдачи;
+                $this->collПредписанияsRelatedByдатавыдачиPartial = false;
+            }
+        }
+
+        return $this->collПредписанияsRelatedByдатавыдачи;
+    }
+
+    /**
+     * Sets a collection of ChildПредписания objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $�редписанияsRelatedByдатавыдачи A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildКалендарь The current object (for fluent API support)
+     */
+    public function setПредписанияsRelatedByдатавыдачи(Collection $�редписанияsRelatedByдатавыдачи, ConnectionInterface $con = null)
+    {
+        /** @var ChildПредписания[] $�редписанияsRelatedByдатавыдачиToDelete */
+        $�редписанияsRelatedByдатавыдачиToDelete = $this->getПредписанияsRelatedByдатавыдачи(new Criteria(), $con)->diff($�редписанияsRelatedByдатавыдачи);
+
+        
+        $this->�редписанияsRelatedByдатавыдачиScheduledForDeletion = $�редписанияsRelatedByдатавыдачиToDelete;
+
+        foreach ($�редписанияsRelatedByдатавыдачиToDelete as $�редписанияRelatedByдатавыдачиRemoved) {
+            $�редписанияRelatedByдатавыдачиRemoved->setКалендарьRelatedByдатавыдачи(null);
+        }
+
+        $this->collПредписанияsRelatedByдатавыдачи = null;
+        foreach ($�редписанияsRelatedByдатавыдачи as $�редписанияRelatedByдатавыдачи) {
+            $this->addПредписанияRelatedByдатавыдачи($�редписанияRelatedByдатавыдачи);
+        }
+
+        $this->collПредписанияsRelatedByдатавыдачи = $�редписанияsRelatedByдатавыдачи;
+        $this->collПредписанияsRelatedByдатавыдачиPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Предписания objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Предписания objects.
+     * @throws PropelException
+     */
+    public function countПредписанияsRelatedByдатавыдачи(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collПредписанияsRelatedByдатавыдачиPartial && !$this->isNew();
+        if (null === $this->collПредписанияsRelatedByдатавыдачи || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collПредписанияsRelatedByдатавыдачи) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getПредписанияsRelatedByдатавыдачи());
+            }
+
+            $query = ChildПредписанияQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByКалендарьRelatedByдатавыдачи($this)
+                ->count($con);
+        }
+
+        return count($this->collПредписанияsRelatedByдатавыдачи);
+    }
+
+    /**
+     * Method called to associate a ChildПредписания object to this object
+     * through the ChildПредписания foreign key attribute.
+     *
+     * @param  ChildПредписания $l ChildПредписания
+     * @return $this|\Календарь The current object (for fluent API support)
+     */
+    public function addПредписанияRelatedByдатавыдачи(ChildПредписания $l)
+    {
+        if ($this->collПредписанияsRelatedByдатавыдачи === null) {
+            $this->initПредписанияsRelatedByдатавыдачи();
+            $this->collПредписанияsRelatedByдатавыдачиPartial = true;
+        }
+
+        if (!$this->collПредписанияsRelatedByдатавыдачи->contains($l)) {
+            $this->doAddПредписанияRelatedByдатавыдачи($l);
+
+            if ($this->�редписанияsRelatedByдатавыдачиScheduledForDeletion and $this->�редписанияsRelatedByдатавыдачиScheduledForDeletion->contains($l)) {
+                $this->�редписанияsRelatedByдатавыдачиScheduledForDeletion->remove($this->�редписанияsRelatedByдатавыдачиScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildПредписания $�редписанияRelatedByдатавыдачи The ChildПредписания object to add.
+     */
+    protected function doAddПредписанияRelatedByдатавыдачи(ChildПредписания $�редписанияRelatedByдатавыдачи)
+    {
+        $this->collПредписанияsRelatedByдатавыдачи[]= $�редписанияRelatedByдатавыдачи;
+        $�редписанияRelatedByдатавыдачи->setКалендарьRelatedByдатавыдачи($this);
+    }
+
+    /**
+     * @param  ChildПредписания $�редписанияRelatedByдатавыдачи The ChildПредписания object to remove.
+     * @return $this|ChildКалендарь The current object (for fluent API support)
+     */
+    public function removeПредписанияRelatedByдатавыдачи(ChildПредписания $�редписанияRelatedByдатавыдачи)
+    {
+        if ($this->getПредписанияsRelatedByдатавыдачи()->contains($�редписанияRelatedByдатавыдачи)) {
+            $pos = $this->collПредписанияsRelatedByдатавыдачи->search($�редписанияRelatedByдатавыдачи);
+            $this->collПредписанияsRelatedByдатавыдачи->remove($pos);
+            if (null === $this->�редписанияsRelatedByдатавыдачиScheduledForDeletion) {
+                $this->�редписанияsRelatedByдатавыдачиScheduledForDeletion = clone $this->collПредписанияsRelatedByдатавыдачи;
+                $this->�редписанияsRelatedByдатавыдачиScheduledForDeletion->clear();
+            }
+            $this->�редписанияsRelatedByдатавыдачиScheduledForDeletion[]= clone $�редписанияRelatedByдатавыдачи;
+            $�редписанияRelatedByдатавыдачи->setКалендарьRelatedByдатавыдачи(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related ПредписанияsRelatedByдатавыдачи from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildПредписания[] List of ChildПредписания objects
+     */
+    public function getПредписанияsRelatedByдатавыдачиJoinКонтролирующиеОрганы(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildПредписанияQuery::create(null, $criteria);
+        $query->joinWith('КонтролирующиеОрганы', $joinBehavior);
+
+        return $this->getПредписанияsRelatedByдатавыдачи($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related ПредписанияsRelatedByдатавыдачи from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildПредписания[] List of ChildПредписания objects
+     */
+    public function getПредписанияsRelatedByдатавыдачиJoinПодрядчикиПредписания(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildПредписанияQuery::create(null, $criteria);
+        $query->joinWith('ПодрядчикиПредписания', $joinBehavior);
+
+        return $this->getПредписанияsRelatedByдатавыдачи($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related ПредписанияsRelatedByдатавыдачи from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildПредписания[] List of ChildПредписания objects
+     */
+    public function getПредписанияsRelatedByдатавыдачиJoinПроекты(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildПредписанияQuery::create(null, $criteria);
+        $query->joinWith('Проекты', $joinBehavior);
+
+        return $this->getПредписанияsRelatedByдатавыдачи($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related ПредписанияsRelatedByдатавыдачи from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildПредписания[] List of ChildПредписания objects
+     */
+    public function getПредписанияsRelatedByдатавыдачиJoinСтатусыЗаявкиЗавершение(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildПредписанияQuery::create(null, $criteria);
+        $query->joinWith('СтатусыЗаявкиЗавершение', $joinBehavior);
+
+        return $this->getПредписанияsRelatedByдатавыдачи($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related ПредписанияsRelatedByдатавыдачи from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildПредписания[] List of ChildПредписания objects
+     */
+    public function getПредписанияsRelatedByдатавыдачиJoinСтатусыЗаявкиПросрочка(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildПредписанияQuery::create(null, $criteria);
+        $query->joinWith('СтатусыЗаявкиПросрочка', $joinBehavior);
+
+        return $this->getПредписанияsRelatedByдатавыдачи($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related ПредписанияsRelatedByдатавыдачи from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildПредписания[] List of ChildПредписания objects
+     */
+    public function getПредписанияsRelatedByдатавыдачиJoinТипыЗамечаний(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildПредписанияQuery::create(null, $criteria);
+        $query->joinWith('ТипыЗамечаний', $joinBehavior);
+
+        return $this->getПредписанияsRelatedByдатавыдачи($query, $con);
+    }
+
+    /**
+     * Clears out the collПредписанияsRelatedByплановаядатаустранения collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addПредписанияsRelatedByплановаядатаустранения()
+     */
+    public function clearПредписанияsRelatedByплановаядатаустранения()
+    {
+        $this->collПредписанияsRelatedByплановаядатаустранения = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collПредписанияsRelatedByплановаядатаустранения collection loaded partially.
+     */
+    public function resetPartialПредписанияsRelatedByплановаядатаустранения($v = true)
+    {
+        $this->collПредписанияsRelatedByплановаядатаустраненияPartial = $v;
+    }
+
+    /**
+     * Initializes the collПредписанияsRelatedByплановаядатаустранения collection.
+     *
+     * By default this just sets the collПредписанияsRelatedByплановаядатаустранения collection to an empty array (like clearcollПредписанияsRelatedByплановаядатаустранения());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initПредписанияsRelatedByплановаядатаустранения($overrideExisting = true)
+    {
+        if (null !== $this->collПредписанияsRelatedByплановаядатаустранения && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = ПредписанияTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collПредписанияsRelatedByплановаядатаустранения = new $collectionClassName;
+        $this->collПредписанияsRelatedByплановаядатаустранения->setModel('\Предписания');
+    }
+
+    /**
+     * Gets an array of ChildПредписания objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildКалендарь is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildПредписания[] List of ChildПредписания objects
+     * @throws PropelException
+     */
+    public function getПредписанияsRelatedByплановаядатаустранения(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collПредписанияsRelatedByплановаядатаустраненияPartial && !$this->isNew();
+        if (null === $this->collПредписанияsRelatedByплановаядатаустранения || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collПредписанияsRelatedByплановаядатаустранения) {
+                // return empty collection
+                $this->initПредписанияsRelatedByплановаядатаустранения();
+            } else {
+                $collПредписанияsRelatedByплановаядатаустранения = ChildПредписанияQuery::create(null, $criteria)
+                    ->filterByКалендарьRelatedByплановаядатаустранения($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collПредписанияsRelatedByплановаядатаустраненияPartial && count($collПредписанияsRelatedByплановаядатаустранения)) {
+                        $this->initПредписанияsRelatedByплановаядатаустранения(false);
+
+                        foreach ($collПредписанияsRelatedByплановаядатаустранения as $obj) {
+                            if (false == $this->collПредписанияsRelatedByплановаядатаустранения->contains($obj)) {
+                                $this->collПредписанияsRelatedByплановаядатаустранения->append($obj);
+                            }
+                        }
+
+                        $this->collПредписанияsRelatedByплановаядатаустраненияPartial = true;
+                    }
+
+                    return $collПредписанияsRelatedByплановаядатаустранения;
+                }
+
+                if ($partial && $this->collПредписанияsRelatedByплановаядатаустранения) {
+                    foreach ($this->collПредписанияsRelatedByплановаядатаустранения as $obj) {
+                        if ($obj->isNew()) {
+                            $collПредписанияsRelatedByплановаядатаустранения[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collПредписанияsRelatedByплановаядатаустранения = $collПредписанияsRelatedByплановаядатаустранения;
+                $this->collПредписанияsRelatedByплановаядатаустраненияPartial = false;
+            }
+        }
+
+        return $this->collПредписанияsRelatedByплановаядатаустранения;
+    }
+
+    /**
+     * Sets a collection of ChildПредписания objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $�редписанияsRelatedByплановаядатаустранения A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildКалендарь The current object (for fluent API support)
+     */
+    public function setПредписанияsRelatedByплановаядатаустранения(Collection $�редписанияsRelatedByплановаядатаустранения, ConnectionInterface $con = null)
+    {
+        /** @var ChildПредписания[] $�редписанияsRelatedByплановаядатаустраненияToDelete */
+        $�редписанияsRelatedByплановаядатаустраненияToDelete = $this->getПредписанияsRelatedByплановаядатаустранения(new Criteria(), $con)->diff($�редписанияsRelatedByплановаядатаустранения);
+
+        
+        $this->�редписанияsRelatedByплановаядатаустраненияScheduledForDeletion = $�редписанияsRelatedByплановаядатаустраненияToDelete;
+
+        foreach ($�редписанияsRelatedByплановаядатаустраненияToDelete as $�редписанияRelatedByплановаядатаустраненияRemoved) {
+            $�редписанияRelatedByплановаядатаустраненияRemoved->setКалендарьRelatedByплановаядатаустранения(null);
+        }
+
+        $this->collПредписанияsRelatedByплановаядатаустранения = null;
+        foreach ($�редписанияsRelatedByплановаядатаустранения as $�редписанияRelatedByплановаядатаустранения) {
+            $this->addПредписанияRelatedByплановаядатаустранения($�редписанияRelatedByплановаядатаустранения);
+        }
+
+        $this->collПредписанияsRelatedByплановаядатаустранения = $�редписанияsRelatedByплановаядатаустранения;
+        $this->collПредписанияsRelatedByплановаядатаустраненияPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Предписания objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Предписания objects.
+     * @throws PropelException
+     */
+    public function countПредписанияsRelatedByплановаядатаустранения(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collПредписанияsRelatedByплановаядатаустраненияPartial && !$this->isNew();
+        if (null === $this->collПредписанияsRelatedByплановаядатаустранения || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collПредписанияsRelatedByплановаядатаустранения) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getПредписанияsRelatedByплановаядатаустранения());
+            }
+
+            $query = ChildПредписанияQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByКалендарьRelatedByплановаядатаустранения($this)
+                ->count($con);
+        }
+
+        return count($this->collПредписанияsRelatedByплановаядатаустранения);
+    }
+
+    /**
+     * Method called to associate a ChildПредписания object to this object
+     * through the ChildПредписания foreign key attribute.
+     *
+     * @param  ChildПредписания $l ChildПредписания
+     * @return $this|\Календарь The current object (for fluent API support)
+     */
+    public function addПредписанияRelatedByплановаядатаустранения(ChildПредписания $l)
+    {
+        if ($this->collПредписанияsRelatedByплановаядатаустранения === null) {
+            $this->initПредписанияsRelatedByплановаядатаустранения();
+            $this->collПредписанияsRelatedByплановаядатаустраненияPartial = true;
+        }
+
+        if (!$this->collПредписанияsRelatedByплановаядатаустранения->contains($l)) {
+            $this->doAddПредписанияRelatedByплановаядатаустранения($l);
+
+            if ($this->�редписанияsRelatedByплановаядатаустраненияScheduledForDeletion and $this->�редписанияsRelatedByплановаядатаустраненияScheduledForDeletion->contains($l)) {
+                $this->�редписанияsRelatedByплановаядатаустраненияScheduledForDeletion->remove($this->�редписанияsRelatedByплановаядатаустраненияScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildПредписания $�редписанияRelatedByплановаядатаустранения The ChildПредписания object to add.
+     */
+    protected function doAddПредписанияRelatedByплановаядатаустранения(ChildПредписания $�редписанияRelatedByплановаядатаустранения)
+    {
+        $this->collПредписанияsRelatedByплановаядатаустранения[]= $�редписанияRelatedByплановаядатаустранения;
+        $�редписанияRelatedByплановаядатаустранения->setКалендарьRelatedByплановаядатаустранения($this);
+    }
+
+    /**
+     * @param  ChildПредписания $�редписанияRelatedByплановаядатаустранения The ChildПредписания object to remove.
+     * @return $this|ChildКалендарь The current object (for fluent API support)
+     */
+    public function removeПредписанияRelatedByплановаядатаустранения(ChildПредписания $�редписанияRelatedByплановаядатаустранения)
+    {
+        if ($this->getПредписанияsRelatedByплановаядатаустранения()->contains($�редписанияRelatedByплановаядатаустранения)) {
+            $pos = $this->collПредписанияsRelatedByплановаядатаустранения->search($�редписанияRelatedByплановаядатаустранения);
+            $this->collПредписанияsRelatedByплановаядатаустранения->remove($pos);
+            if (null === $this->�редписанияsRelatedByплановаядатаустраненияScheduledForDeletion) {
+                $this->�редписанияsRelatedByплановаядатаустраненияScheduledForDeletion = clone $this->collПредписанияsRelatedByплановаядатаустранения;
+                $this->�редписанияsRelatedByплановаядатаустраненияScheduledForDeletion->clear();
+            }
+            $this->�редписанияsRelatedByплановаядатаустраненияScheduledForDeletion[]= clone $�редписанияRelatedByплановаядатаустранения;
+            $�редписанияRelatedByплановаядатаустранения->setКалендарьRelatedByплановаядатаустранения(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related ПредписанияsRelatedByплановаядатаустранения from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildПредписания[] List of ChildПредписания objects
+     */
+    public function getПредписанияsRelatedByплановаядатаустраненияJoinКонтролирующиеОрганы(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildПредписанияQuery::create(null, $criteria);
+        $query->joinWith('КонтролирующиеОрганы', $joinBehavior);
+
+        return $this->getПредписанияsRelatedByплановаядатаустранения($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related ПредписанияsRelatedByплановаядатаустранения from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildПредписания[] List of ChildПредписания objects
+     */
+    public function getПредписанияsRelatedByплановаядатаустраненияJoinПодрядчикиПредписания(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildПредписанияQuery::create(null, $criteria);
+        $query->joinWith('ПодрядчикиПредписания', $joinBehavior);
+
+        return $this->getПредписанияsRelatedByплановаядатаустранения($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related ПредписанияsRelatedByплановаядатаустранения from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildПредписания[] List of ChildПредписания objects
+     */
+    public function getПредписанияsRelatedByплановаядатаустраненияJoinПроекты(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildПредписанияQuery::create(null, $criteria);
+        $query->joinWith('Проекты', $joinBehavior);
+
+        return $this->getПредписанияsRelatedByплановаядатаустранения($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related ПредписанияsRelatedByплановаядатаустранения from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildПредписания[] List of ChildПредписания objects
+     */
+    public function getПредписанияsRelatedByплановаядатаустраненияJoinСтатусыЗаявкиЗавершение(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildПредписанияQuery::create(null, $criteria);
+        $query->joinWith('СтатусыЗаявкиЗавершение', $joinBehavior);
+
+        return $this->getПредписанияsRelatedByплановаядатаустранения($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related ПредписанияsRelatedByплановаядатаустранения from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildПредписания[] List of ChildПредписания objects
+     */
+    public function getПредписанияsRelatedByплановаядатаустраненияJoinСтатусыЗаявкиПросрочка(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildПредписанияQuery::create(null, $criteria);
+        $query->joinWith('СтатусыЗаявкиПросрочка', $joinBehavior);
+
+        return $this->getПредписанияsRelatedByплановаядатаустранения($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related ПредписанияsRelatedByплановаядатаустранения from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildПредписания[] List of ChildПредписания objects
+     */
+    public function getПредписанияsRelatedByплановаядатаустраненияJoinТипыЗамечаний(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildПредписанияQuery::create(null, $criteria);
+        $query->joinWith('ТипыЗамечаний', $joinBehavior);
+
+        return $this->getПредписанияsRelatedByплановаядатаустранения($query, $con);
+    }
+
+    /**
+     * Clears out the collПредписанияsRelatedByфактическаядатаустранения collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addПредписанияsRelatedByфактическаядатаустранения()
+     */
+    public function clearПредписанияsRelatedByфактическаядатаустранения()
+    {
+        $this->collПредписанияsRelatedByфактическаядатаустранения = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collПредписанияsRelatedByфактическаядатаустранения collection loaded partially.
+     */
+    public function resetPartialПредписанияsRelatedByфактическаядатаустранения($v = true)
+    {
+        $this->collПредписанияsRelatedByфактическаядатаустраненияPartial = $v;
+    }
+
+    /**
+     * Initializes the collПредписанияsRelatedByфактическаядатаустранения collection.
+     *
+     * By default this just sets the collПредписанияsRelatedByфактическаядатаустранения collection to an empty array (like clearcollПредписанияsRelatedByфактическаядатаустранения());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initПредписанияsRelatedByфактическаядатаустранения($overrideExisting = true)
+    {
+        if (null !== $this->collПредписанияsRelatedByфактическаядатаустранения && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = ПредписанияTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collПредписанияsRelatedByфактическаядатаустранения = new $collectionClassName;
+        $this->collПредписанияsRelatedByфактическаядатаустранения->setModel('\Предписания');
+    }
+
+    /**
+     * Gets an array of ChildПредписания objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildКалендарь is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildПредписания[] List of ChildПредписания objects
+     * @throws PropelException
+     */
+    public function getПредписанияsRelatedByфактическаядатаустранения(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collПредписанияsRelatedByфактическаядатаустраненияPartial && !$this->isNew();
+        if (null === $this->collПредписанияsRelatedByфактическаядатаустранения || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collПредписанияsRelatedByфактическаядатаустранения) {
+                // return empty collection
+                $this->initПредписанияsRelatedByфактическаядатаустранения();
+            } else {
+                $collПредписанияsRelatedByфактическаядатаустранения = ChildПредписанияQuery::create(null, $criteria)
+                    ->filterByКалендарьRelatedByфактическаядатаустранения($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collПредписанияsRelatedByфактическаядатаустраненияPartial && count($collПредписанияsRelatedByфактическаядатаустранения)) {
+                        $this->initПредписанияsRelatedByфактическаядатаустранения(false);
+
+                        foreach ($collПредписанияsRelatedByфактическаядатаустранения as $obj) {
+                            if (false == $this->collПредписанияsRelatedByфактическаядатаустранения->contains($obj)) {
+                                $this->collПредписанияsRelatedByфактическаядатаустранения->append($obj);
+                            }
+                        }
+
+                        $this->collПредписанияsRelatedByфактическаядатаустраненияPartial = true;
+                    }
+
+                    return $collПредписанияsRelatedByфактическаядатаустранения;
+                }
+
+                if ($partial && $this->collПредписанияsRelatedByфактическаядатаустранения) {
+                    foreach ($this->collПредписанияsRelatedByфактическаядатаустранения as $obj) {
+                        if ($obj->isNew()) {
+                            $collПредписанияsRelatedByфактическаядатаустранения[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collПредписанияsRelatedByфактическаядатаустранения = $collПредписанияsRelatedByфактическаядатаустранения;
+                $this->collПредписанияsRelatedByфактическаядатаустраненияPartial = false;
+            }
+        }
+
+        return $this->collПредписанияsRelatedByфактическаядатаустранения;
+    }
+
+    /**
+     * Sets a collection of ChildПредписания objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $�редписанияsRelatedByфактическаядатаустранения A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildКалендарь The current object (for fluent API support)
+     */
+    public function setПредписанияsRelatedByфактическаядатаустранения(Collection $�редписанияsRelatedByфактическаядатаустранения, ConnectionInterface $con = null)
+    {
+        /** @var ChildПредписания[] $�редписанияsRelatedByфактическаядатаустраненияToDelete */
+        $�редписанияsRelatedByфактическаядатаустраненияToDelete = $this->getПредписанияsRelatedByфактическаядатаустранения(new Criteria(), $con)->diff($�редписанияsRelatedByфактическаядатаустранения);
+
+        
+        $this->�редписанияsRelatedByфактическаядатаустраненияScheduledForDeletion = $�редписанияsRelatedByфактическаядатаустраненияToDelete;
+
+        foreach ($�редписанияsRelatedByфактическаядатаустраненияToDelete as $�редписанияRelatedByфактическаядатаустраненияRemoved) {
+            $�редписанияRelatedByфактическаядатаустраненияRemoved->setКалендарьRelatedByфактическаядатаустранения(null);
+        }
+
+        $this->collПредписанияsRelatedByфактическаядатаустранения = null;
+        foreach ($�редписанияsRelatedByфактическаядатаустранения as $�редписанияRelatedByфактическаядатаустранения) {
+            $this->addПредписанияRelatedByфактическаядатаустранения($�редписанияRelatedByфактическаядатаустранения);
+        }
+
+        $this->collПредписанияsRelatedByфактическаядатаустранения = $�редписанияsRelatedByфактическаядатаустранения;
+        $this->collПредписанияsRelatedByфактическаядатаустраненияPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Предписания objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Предписания objects.
+     * @throws PropelException
+     */
+    public function countПредписанияsRelatedByфактическаядатаустранения(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collПредписанияsRelatedByфактическаядатаустраненияPartial && !$this->isNew();
+        if (null === $this->collПредписанияsRelatedByфактическаядатаустранения || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collПредписанияsRelatedByфактическаядатаустранения) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getПредписанияsRelatedByфактическаядатаустранения());
+            }
+
+            $query = ChildПредписанияQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByКалендарьRelatedByфактическаядатаустранения($this)
+                ->count($con);
+        }
+
+        return count($this->collПредписанияsRelatedByфактическаядатаустранения);
+    }
+
+    /**
+     * Method called to associate a ChildПредписания object to this object
+     * through the ChildПредписания foreign key attribute.
+     *
+     * @param  ChildПредписания $l ChildПредписания
+     * @return $this|\Календарь The current object (for fluent API support)
+     */
+    public function addПредписанияRelatedByфактическаядатаустранения(ChildПредписания $l)
+    {
+        if ($this->collПредписанияsRelatedByфактическаядатаустранения === null) {
+            $this->initПредписанияsRelatedByфактическаядатаустранения();
+            $this->collПредписанияsRelatedByфактическаядатаустраненияPartial = true;
+        }
+
+        if (!$this->collПредписанияsRelatedByфактическаядатаустранения->contains($l)) {
+            $this->doAddПредписанияRelatedByфактическаядатаустранения($l);
+
+            if ($this->�редписанияsRelatedByфактическаядатаустраненияScheduledForDeletion and $this->�редписанияsRelatedByфактическаядатаустраненияScheduledForDeletion->contains($l)) {
+                $this->�редписанияsRelatedByфактическаядатаустраненияScheduledForDeletion->remove($this->�редписанияsRelatedByфактическаядатаустраненияScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildПредписания $�редписанияRelatedByфактическаядатаустранения The ChildПредписания object to add.
+     */
+    protected function doAddПредписанияRelatedByфактическаядатаустранения(ChildПредписания $�редписанияRelatedByфактическаядатаустранения)
+    {
+        $this->collПредписанияsRelatedByфактическаядатаустранения[]= $�редписанияRelatedByфактическаядатаустранения;
+        $�редписанияRelatedByфактическаядатаустранения->setКалендарьRelatedByфактическаядатаустранения($this);
+    }
+
+    /**
+     * @param  ChildПредписания $�редписанияRelatedByфактическаядатаустранения The ChildПредписания object to remove.
+     * @return $this|ChildКалендарь The current object (for fluent API support)
+     */
+    public function removeПредписанияRelatedByфактическаядатаустранения(ChildПредписания $�редписанияRelatedByфактическаядатаустранения)
+    {
+        if ($this->getПредписанияsRelatedByфактическаядатаустранения()->contains($�редписанияRelatedByфактическаядатаустранения)) {
+            $pos = $this->collПредписанияsRelatedByфактическаядатаустранения->search($�редписанияRelatedByфактическаядатаустранения);
+            $this->collПредписанияsRelatedByфактическаядатаустранения->remove($pos);
+            if (null === $this->�редписанияsRelatedByфактическаядатаустраненияScheduledForDeletion) {
+                $this->�редписанияsRelatedByфактическаядатаустраненияScheduledForDeletion = clone $this->collПредписанияsRelatedByфактическаядатаустранения;
+                $this->�редписанияsRelatedByфактическаядатаустраненияScheduledForDeletion->clear();
+            }
+            $this->�редписанияsRelatedByфактическаядатаустраненияScheduledForDeletion[]= $�редписанияRelatedByфактическаядатаустранения;
+            $�редписанияRelatedByфактическаядатаустранения->setКалендарьRelatedByфактическаядатаустранения(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related ПредписанияsRelatedByфактическаядатаустранения from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildПредписания[] List of ChildПредписания objects
+     */
+    public function getПредписанияsRelatedByфактическаядатаустраненияJoinКонтролирующиеОрганы(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildПредписанияQuery::create(null, $criteria);
+        $query->joinWith('КонтролирующиеОрганы', $joinBehavior);
+
+        return $this->getПредписанияsRelatedByфактическаядатаустранения($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related ПредписанияsRelatedByфактическаядатаустранения from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildПредписания[] List of ChildПредписания objects
+     */
+    public function getПредписанияsRelatedByфактическаядатаустраненияJoinПодрядчикиПредписания(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildПредписанияQuery::create(null, $criteria);
+        $query->joinWith('ПодрядчикиПредписания', $joinBehavior);
+
+        return $this->getПредписанияsRelatedByфактическаядатаустранения($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related ПредписанияsRelatedByфактическаядатаустранения from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildПредписания[] List of ChildПредписания objects
+     */
+    public function getПредписанияsRelatedByфактическаядатаустраненияJoinПроекты(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildПредписанияQuery::create(null, $criteria);
+        $query->joinWith('Проекты', $joinBehavior);
+
+        return $this->getПредписанияsRelatedByфактическаядатаустранения($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related ПредписанияsRelatedByфактическаядатаустранения from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildПредписания[] List of ChildПредписания objects
+     */
+    public function getПредписанияsRelatedByфактическаядатаустраненияJoinСтатусыЗаявкиЗавершение(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildПредписанияQuery::create(null, $criteria);
+        $query->joinWith('СтатусыЗаявкиЗавершение', $joinBehavior);
+
+        return $this->getПредписанияsRelatedByфактическаядатаустранения($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related ПредписанияsRelatedByфактическаядатаустранения from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildПредписания[] List of ChildПредписания objects
+     */
+    public function getПредписанияsRelatedByфактическаядатаустраненияJoinСтатусыЗаявкиПросрочка(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildПредписанияQuery::create(null, $criteria);
+        $query->joinWith('СтатусыЗаявкиПросрочка', $joinBehavior);
+
+        return $this->getПредписанияsRelatedByфактическаядатаустранения($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related ПредписанияsRelatedByфактическаядатаустранения from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildПредписания[] List of ChildПредписания objects
+     */
+    public function getПредписанияsRelatedByфактическаядатаустраненияJoinТипыЗамечаний(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildПредписанияQuery::create(null, $criteria);
+        $query->joinWith('ТипыЗамечаний', $joinBehavior);
+
+        return $this->getПредписанияsRelatedByфактическаядатаустранения($query, $con);
+    }
+
+    /**
+     * Clears out the collфизическиеобъёмыs collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addфизическиеобъёмыs()
+     */
+    public function clearфизическиеобъёмыs()
+    {
+        $this->collфизическиеобъёмыs = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collфизическиеобъёмыs collection loaded partially.
+     */
+    public function resetPartialфизическиеобъёмыs($v = true)
+    {
+        $this->collфизическиеобъёмыsPartial = $v;
+    }
+
+    /**
+     * Initializes the collфизическиеобъёмыs collection.
+     *
+     * By default this just sets the collфизическиеобъёмыs collection to an empty array (like clearcollфизическиеобъёмыs());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initфизическиеобъёмыs($overrideExisting = true)
+    {
+        if (null !== $this->collфизическиеобъёмыs && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = физическиеобъёмыTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collфизическиеобъёмыs = new $collectionClassName;
+        $this->collфизическиеобъёмыs->setModel('\физическиеобъёмы');
+    }
+
+    /**
+     * Gets an array of Childфизическиеобъёмы objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildКалендарь is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|Childфизическиеобъёмы[] List of Childфизическиеобъёмы objects
+     * @throws PropelException
+     */
+    public function getфизическиеобъёмыs(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collфизическиеобъёмыsPartial && !$this->isNew();
+        if (null === $this->collфизическиеобъёмыs || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collфизическиеобъёмыs) {
+                // return empty collection
+                $this->initфизическиеобъёмыs();
+            } else {
+                $collфизическиеобъёмыs = ChildфизическиеобъёмыQuery::create(null, $criteria)
+                    ->filterByКалендарь($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collфизическиеобъёмыsPartial && count($collфизическиеобъёмыs)) {
+                        $this->initфизическиеобъёмыs(false);
+
+                        foreach ($collфизическиеобъёмыs as $obj) {
+                            if (false == $this->collфизическиеобъёмыs->contains($obj)) {
+                                $this->collфизическиеобъёмыs->append($obj);
+                            }
+                        }
+
+                        $this->collфизическиеобъёмыsPartial = true;
+                    }
+
+                    return $collфизическиеобъёмыs;
+                }
+
+                if ($partial && $this->collфизическиеобъёмыs) {
+                    foreach ($this->collфизическиеобъёмыs as $obj) {
+                        if ($obj->isNew()) {
+                            $collфизическиеобъёмыs[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collфизическиеобъёмыs = $collфизическиеобъёмыs;
+                $this->collфизическиеобъёмыsPartial = false;
+            }
+        }
+
+        return $this->collфизическиеобъёмыs;
+    }
+
+    /**
+     * Sets a collection of Childфизическиеобъёмы objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $�изическиеобъёмыs A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildКалендарь The current object (for fluent API support)
+     */
+    public function setфизическиеобъёмыs(Collection $�изическиеобъёмыs, ConnectionInterface $con = null)
+    {
+        /** @var Childфизическиеобъёмы[] $�изическиеобъёмыsToDelete */
+        $�изическиеобъёмыsToDelete = $this->getфизическиеобъёмыs(new Criteria(), $con)->diff($�изическиеобъёмыs);
+
+        
+        $this->�изическиеобъёмыsScheduledForDeletion = $�изическиеобъёмыsToDelete;
+
+        foreach ($�изическиеобъёмыsToDelete as $�изическиеобъёмыRemoved) {
+            $�изическиеобъёмыRemoved->setКалендарь(null);
+        }
+
+        $this->collфизическиеобъёмыs = null;
+        foreach ($�изическиеобъёмыs as $�изическиеобъёмы) {
+            $this->addфизическиеобъёмы($�изическиеобъёмы);
+        }
+
+        $this->collфизическиеобъёмыs = $�изическиеобъёмыs;
+        $this->collфизическиеобъёмыsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related физическиеобъёмы objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related физическиеобъёмы objects.
+     * @throws PropelException
+     */
+    public function countфизическиеобъёмыs(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collфизическиеобъёмыsPartial && !$this->isNew();
+        if (null === $this->collфизическиеобъёмыs || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collфизическиеобъёмыs) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getфизическиеобъёмыs());
+            }
+
+            $query = ChildфизическиеобъёмыQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByКалендарь($this)
+                ->count($con);
+        }
+
+        return count($this->collфизическиеобъёмыs);
+    }
+
+    /**
+     * Method called to associate a Childфизическиеобъёмы object to this object
+     * through the Childфизическиеобъёмы foreign key attribute.
+     *
+     * @param  Childфизическиеобъёмы $l Childфизическиеобъёмы
+     * @return $this|\Календарь The current object (for fluent API support)
+     */
+    public function addфизическиеобъёмы(Childфизическиеобъёмы $l)
+    {
+        if ($this->collфизическиеобъёмыs === null) {
+            $this->initфизическиеобъёмыs();
+            $this->collфизическиеобъёмыsPartial = true;
+        }
+
+        if (!$this->collфизическиеобъёмыs->contains($l)) {
+            $this->doAddфизическиеобъёмы($l);
+
+            if ($this->�изическиеобъёмыsScheduledForDeletion and $this->�изическиеобъёмыsScheduledForDeletion->contains($l)) {
+                $this->�изическиеобъёмыsScheduledForDeletion->remove($this->�изическиеобъёмыsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Childфизическиеобъёмы $�изическиеобъёмы The Childфизическиеобъёмы object to add.
+     */
+    protected function doAddфизическиеобъёмы(Childфизическиеобъёмы $�изическиеобъёмы)
+    {
+        $this->collфизическиеобъёмыs[]= $�изическиеобъёмы;
+        $�изическиеобъёмы->setКалендарь($this);
+    }
+
+    /**
+     * @param  Childфизическиеобъёмы $�изическиеобъёмы The Childфизическиеобъёмы object to remove.
+     * @return $this|ChildКалендарь The current object (for fluent API support)
+     */
+    public function removeфизическиеобъёмы(Childфизическиеобъёмы $�изическиеобъёмы)
+    {
+        if ($this->getфизическиеобъёмыs()->contains($�изическиеобъёмы)) {
+            $pos = $this->collфизическиеобъёмыs->search($�изическиеобъёмы);
+            $this->collфизическиеобъёмыs->remove($pos);
+            if (null === $this->�изическиеобъёмыsScheduledForDeletion) {
+                $this->�изическиеобъёмыsScheduledForDeletion = clone $this->collфизическиеобъёмыs;
+                $this->�изическиеобъёмыsScheduledForDeletion->clear();
+            }
+            $this->�изическиеобъёмыsScheduledForDeletion[]= clone $�изическиеобъёмы;
+            $�изическиеобъёмы->setКалендарь(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related физическиеобъёмыs from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|Childфизическиеобъёмы[] List of Childфизическиеобъёмы objects
+     */
+    public function getфизическиеобъёмыsJoinучасткиработ(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildфизическиеобъёмыQuery::create(null, $criteria);
+        $query->joinWith('участкиработ', $joinBehavior);
+
+        return $this->getфизическиеобъёмыs($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Календарь is new, it will return
+     * an empty collection; or if this Календарь has previously
+     * been saved, it will retrieve related физическиеобъёмыs from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Календарь.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|Childфизическиеобъёмы[] List of Childфизическиеобъёмы objects
+     */
+    public function getфизическиеобъёмыsJoinтипыработ(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildфизическиеобъёмыQuery::create(null, $criteria);
+        $query->joinWith('типыработ', $joinBehavior);
+
+        return $this->getфизическиеобъёмыs($query, $con);
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
      */
     public function clear()
     {
+        if (null !== $this->aгода) {
+            $this->aгода->removeКалендарь($this);
+        }
+        if (null !== $this->aднинедели) {
+            $this->aднинедели->removeКалендарь($this);
+        }
+        if (null !== $this->aмесяца) {
+            $this->aмесяца->removeКалендарь($this);
+        }
         $this->дата = null;
         $this->год = null;
         $this->полугодие = null;
         $this->квартал = null;
-        $this->номермесяца = null;
+        $this->номер_месяца = null;
         $this->месяц = null;
         $this->день = null;
-        $this->номернедели = null;
-        $this->деньнедели = null;
-        $this->деньвгоду = null;
+        $this->номер_недели = null;
+        $this->день_недели = null;
+        $this->день_в_году = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();
@@ -1496,8 +5242,65 @@ abstract class Календарь implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
+            if ($this->collвыработкаs) {
+                foreach ($this->collвыработкаs as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collдатыобновленийдашбордовs) {
+                foreach ($this->collдатыобновленийдашбордовs as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collмтрs) {
+                foreach ($this->collмтрs as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collмобилизацияs) {
+                foreach ($this->collмобилизацияs as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collмобилизацияпомесяцамs) {
+                foreach ($this->collмобилизацияпомесяцамs as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collПредписанияsRelatedByдатавыдачи) {
+                foreach ($this->collПредписанияsRelatedByдатавыдачи as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collПредписанияsRelatedByплановаядатаустранения) {
+                foreach ($this->collПредписанияsRelatedByплановаядатаустранения as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collПредписанияsRelatedByфактическаядатаустранения) {
+                foreach ($this->collПредписанияsRelatedByфактическаядатаустранения as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collфизическиеобъёмыs) {
+                foreach ($this->collфизическиеобъёмыs as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
+        $this->collвыработкаs = null;
+        $this->collдатыобновленийдашбордовs = null;
+        $this->collмтрs = null;
+        $this->collмобилизацияs = null;
+        $this->collмобилизацияпомесяцамs = null;
+        $this->collПредписанияsRelatedByдатавыдачи = null;
+        $this->collПредписанияsRelatedByплановаядатаустранения = null;
+        $this->collПредписанияsRelatedByфактическаядатаустранения = null;
+        $this->collфизическиеобъёмыs = null;
+        $this->aгода = null;
+        $this->aднинедели = null;
+        $this->aмесяца = null;
     }
 
     /**

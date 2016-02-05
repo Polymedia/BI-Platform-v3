@@ -44,9 +44,9 @@ class Columns extends Widget
                     visiology.model.'.$this->name.'.onInit = visiology.defaults.highcharts.onInitColumn;
                     visiology.model.'.$this->name.'.onUpdate = visiology.defaults.highcharts.onUpdateColumn;
                 }
-                function onUser_'.$this->name.'(widget) {
-                    '.$content.'
-                }
+            </script>
+                '.$content.'
+            <script type="text/javascript">
                 function onDeploy_'.$this->name.'(visiology) {
                     visiology.model.'.$this->name.'.onInit($(\'#'.$this->name.'\'));
                     visiology.model.'.$this->name.'.ko_options = ko.computed(function() {

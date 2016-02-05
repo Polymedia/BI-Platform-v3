@@ -130,29 +130,10 @@ visiology.defaults.highcharts.onUpdateColumn = function (filtered, widget, eleme
 visiology.defaults.highcharts.onInitPie = function (element) {
     $(element).highcharts({
         chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false,
             type: 'pie'
         },
         title: {
-            text: 'Browser market shares January, 2015 to May, 2015'
-        },
-        tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-        },
-        plotOptions: {
-            pie: {
-                allowPointSelect: true,
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: true,
-                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                    style: {
-                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                    }
-                }
-            }
+            text: ''
         },
         series: []
     });
@@ -192,8 +173,6 @@ visiology.defaults.highcharts.onUpdatePie = function (filtered, widget, element)
 
     var chart = $(element).highcharts();
 
-    chart.setTitle({text: chart_data.title});
-
     while(chart.series.length > 0) {
         chart.series[0].remove(false);
     }
@@ -208,39 +187,20 @@ visiology.defaults.highcharts.onUpdatePie = function (filtered, widget, element)
 // *** Create model
 visiology.model = {};
 
-// *** Data came from a server
-var bigData = [];
-var years = [2014, 2015, 2016];
-var groups = [["South", "North"], ["South", "North"], ["South", "North"]];
-var categories = [
-    ["Electronics", "Mobile", "Cars", "Computers"],
-    ["Electronics", "Mobile", "Cars", "Computers", "Tabs", "Services"],
-    ["Electronics", "Computers", "Tabs"]];
-var managers = [
-    ["Roy Smith", "Barbara Wake", "Garry Kleine", "Liz Washington"],
-    ["Roy Smith", "Barbara Wake", "Garry Kleine", "Liz Washington", "Mike Sober"],
-    ["Roy Smith", "Barbara Wake", "Sarah Hails"]
-];
-for (var j = 0; j < years.length; j++) {
-    for (var i = 0; i < 20000; i++) {
-        bigData.push({
-            id: i,
-            year: years[j],
-            group: groups[j][Math.floor(Math.random() * groups[j].length)],
-            category: categories[j][Math.floor(Math.random() * categories[j].length)],
-            manager: managers[j][Math.floor(Math.random() * managers[j].length)],
-            amount: Math.random() * 100
-        });
-    }
-}
-visiology.data = bigData; // Sets global data
-
 visiology.run = function ()
 {
+    if (onRequestVisiologyData !== undefined)
+        visiology.data = onRequestVisiologyData(); // Sets global data
+    else
+        visiology.data = {};
+
     $("[data-visiology-name]").each(function(index, element) {
         var widget_name = $(element).attr("data-visiology-name");
         eval('onConstruct_' + widget_name + '(visiology)');
-        eval('onUser_' + widget_name + '(visiology.model.' + widget_name + ')');
+
+        if (eval("typeof onUser_" + widget_name + " === 'function'"))
+            eval('onUser_' + widget_name + '(visiology.model.' + widget_name + ')');
+
         eval('onDeploy_' + widget_name + '(visiology)');
     });
 
