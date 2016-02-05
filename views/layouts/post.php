@@ -41,10 +41,10 @@ AppAssetHead::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             ['label' => 'Demo Dashboard', 'url' => ['/demo-dashboard']],
-            ['label' => 'Dynamic Widgets', 'url' => ['/']],
+            ['label' => 'Client Filter Widgets', 'url' => ['/filter-client']],
             //['label' => 'Create', 'url' => ['/site/contact']],
             ['label' => 'Excel Files', 'url' => ['/files']],
-            ['label' => 'Web Editor', 'url' => ['/files']],
+            ['label' => 'Web Editor', 'url' => ['/entry/entry']],
             Yii::$app->user->isGuest ?
                 ['label' => 'Login', 'url' => ['/site/login']] :
                 [

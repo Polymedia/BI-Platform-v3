@@ -5,3 +5,4 @@
 {use class="app\components\ChildDashboard"}
 {assign "hc" HighchartsAsset::register($this)->withScripts(['highcharts', 'modules/exporting', 'modules/drilldown', 'modules/data'])}
 
+Hello world!
