@@ -69,8 +69,7 @@ class DashboardController extends BaseDashboardController
             $model2->filterByRegionName($regionFilter->selectedValue);
         }
 
-        $model2 = $model2->withColumn('SUM(unemployment_youth)')->groupByRegionName() // Group by не работает
-            ->orderByRegionName()->orderByYear()->find();
+        $model2 = $model2->orderByRegionName()->orderByYear()->find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $model,
