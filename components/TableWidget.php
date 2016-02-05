@@ -27,11 +27,15 @@ class TableWidget extends InputWidget
         echo '<table class="table table-bordered">';
         foreach ($this->view->params[$this->name] as $item) {
             echo '<tr>';
-                foreach($item as $value) {
+            if (is_array($item)) {
+                foreach ($item as $value) {
                     echo '<td>';
                     echo $value;
                     echo '</td>';
                 }
+            }
+            else
+                echo $item;
             echo '</tr>';
         }
         echo '</table>';
