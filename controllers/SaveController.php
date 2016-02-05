@@ -20,6 +20,6 @@ class SaveController extends Controller
 
         fclose($file);
 
-        return $this->render('save', ['text' => "GOOD"]);
+        //return $this->render('save', ['text' => "GOOD"]);
     }
 }

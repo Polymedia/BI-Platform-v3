@@ -11,7 +11,7 @@ use yii\helpers\Html;
 <body>
 <form>
     <div id="PUKAN" >
-        <?= $text ?>
+        <H1> GOOD</H1>
     </div>
 </form>
 </body>
