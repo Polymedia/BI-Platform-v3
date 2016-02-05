@@ -33,6 +33,9 @@ class VisioWidget extends Component
      */
     public function setData($values)
     {
+        if (is_object($values))
+            $values = $values->toArray();
+
         $this->_data = $values;
         return $this;
     }
@@ -51,6 +54,9 @@ class VisioWidget extends Component
      */
     public function setSeries($values)
     {
+        if (is_object($values))
+            $values = $values->toArray();
+
         $this->_series = $values;
         return $this;
     }
@@ -69,6 +75,9 @@ class VisioWidget extends Component
      */
     public function setCategories($values)
     {
+        if (is_object($values))
+            $values = $values->toArray();
+
         $this->_categories = $values;
         return $this;
     }
