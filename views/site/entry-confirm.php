@@ -46,7 +46,7 @@ use app\controllers\SaveController;
             $file = fopen($fullPath, "r");
 
             while(!feof($file)) {
-	            echo htmlentities(fgets($file));
+	            echo htmlentities(fgets($file)) . "<br />";
 	        }
 
             fclose($file);

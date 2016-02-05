@@ -15,7 +15,8 @@ class SaveController extends Controller
         $file = fopen($postFile, "wb");
 
         $resText = str_replace("&gt", ">", $postText);
-        fwrite($file, $postText);
+        $resText = preg_replace("#(<br\s*/?>\s*)+#","\n", $resText);
+        fwrite($file, $resText);
 
         fclose($file);
 
