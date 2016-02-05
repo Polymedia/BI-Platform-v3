@@ -61,7 +61,7 @@ class FilterClientController extends BaseDashboardController
 
         pg_close($dbconn);
 
-        return $this->render('index.php', [
+        return $this->render('index.tpl', [
             'data' => $data
         ]);
     }
