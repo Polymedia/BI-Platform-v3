@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Alexander
- * Date: 03.02.2016
- * Time: 16:37
- */
 
 namespace app\components;
 
@@ -15,7 +9,7 @@ use yii\helpers\Html;
 use app\components;
 use yii\helpers\Json;
 
-class HistogramWidget extends Widget
+class PieWidget extends Widget
 {
     public $title = "Title";
     public $subtitle = "";
@@ -42,7 +36,7 @@ class HistogramWidget extends Widget
 
             $series_hc[] = [
                 'name' => $k,
-                'type' => 'column',
+                'type' => 'pie',
                 'data' => $v,
             ];
 
