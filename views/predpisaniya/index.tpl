@@ -1,7 +1,16 @@
+{use class="app\components\HistogramWidget"}
+{use class="miloschuman\highcharts\Highcharts"}
+{use class="miloschuman\highcharts\HighchartsAsset"}
+{use class="app\components\ChildDashboard"}
+{assign "hc" HighchartsAsset::register($this)->withScripts(['highcharts', 'modules/exporting', 'modules/drilldown', 'modules/data'])}
+
+
 {use class="app\components\MultipleSelect"}
 {*{use class="app\components\ChildDashboard"}*}
 
 {use class="app\components\TableWidget"}
+
+{use class="app\components\HistogramWidget"}
 
 Проект
 {MultipleSelect::widget(['name' => 'filter_project'])}
@@ -32,6 +41,11 @@
 
 {*{ChildDashboard::widget()}*}
 
-{TableWidget::widget(['name' => 'widget_xz'])}
+{*{TableWidget::widget(['name' => 'widget_xz'])}*}
 
-{TableWidget::widget(['name' => 'widget_xz_1'])}
+{*{TableWidget::widget(['name' => 'widget_xz_1'])}*}
+
+
+
+
+{HistogramWidget::widget(['name' => 'widget_hist1', 'title' => "Выдавшие"])}
