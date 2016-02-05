@@ -2,14 +2,7 @@
 
 namespace app\controllers;
 
-use UnemploymentQuery;
-use PeopleQuery;
 use Yii;
-use yii\data\ActiveDataProvider;
-
-use app\models\UnemploymentAR;
-use app\models\PeopleAR;
-use models;
 use yii\filters\AccessControl;
 
 class DemoDashboardController extends BaseDashboardController
@@ -22,7 +15,7 @@ class DemoDashboardController extends BaseDashboardController
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['?'],
+                        'roles' => ['@'],
                     ],
                 ],
             ],

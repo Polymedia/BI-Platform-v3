@@ -9,5 +9,4 @@
 
 {HistogramWidget::widget(['name' => 'widget_hist', 'title' => "Динамическая перерисовка"])}
 
-
 {HistogramWidget::widget(['name' => 'widget_hist2', 'title' => "Мое название"])}
