@@ -24,7 +24,7 @@ class PortfolioController extends BaseDashboardController
     public function actionIndex()
     {
 
-        $t = ПроектыQuery::create()->select('*')->orderBy('id')->find()->toArray();
+        $t = ПроектыQuery::create()->orderById()->find()->toArray();
 
         $w = $this->getWidget('widget_portfolio');
         $w->setData($t);
