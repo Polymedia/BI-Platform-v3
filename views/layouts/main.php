@@ -10,6 +10,7 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 use yii\widgets\Pjax;
+use yii\helpers\Url;
 
 AppAsset::register($this);
 AppAssetHead::register($this);
@@ -30,7 +31,7 @@ AppAssetHead::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => 'My Company',
+        'brandLabel' => 'Visiology',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
@@ -39,10 +40,11 @@ AppAssetHead::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'About', 'url' => ['/site/about']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
-            ['label' => 'Files', 'url' => ['/files']],
+            ['label' => 'Demo Dashboard', 'url' => ['/demo-dashboard']],
+            ['label' => 'Dynamic Widgets', 'url' => ['/']],
+            //['label' => 'Create', 'url' => ['/site/contact']],
+            ['label' => 'Excel Files', 'url' => ['/files']],
+            ['label' => 'Web Editor', 'url' => ['/files']],
             Yii::$app->user->isGuest ?
                 ['label' => 'Login', 'url' => ['/site/login']] :
                 [
@@ -61,8 +63,10 @@ AppAssetHead::register($this);
         ]) ?>
 
         <?php Pjax::begin(['timeout' => '100000000', 'scrollTo' => false]); ?>
+        <?php echo Html::beginForm(Url::canonical(),'get', ['data-pjax' => '1']); ?>
         <a id="pjax_reload" href=""></a>
         <?= $content ?>
+        <?php echo Html::endForm(); ?>
         <?php Pjax::end(); ?>
     </div>
 </div>

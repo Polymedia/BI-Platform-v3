@@ -17,9 +17,6 @@ class TableWidget extends InputWidget
 {
     public $title;
 
-    public $data;
-
-
     public function init()
     {
         parent::init();

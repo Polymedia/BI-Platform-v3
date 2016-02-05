@@ -13,14 +13,13 @@
 {use class="miloschuman\highcharts\Highcharts"}
 {assign "hc" HighchartsAsset::register($this)->withScripts(['highcharts', 'modules/exporting', 'modules/drilldown', 'modules/data'])}
 
-
-{foreach $projects as $project}
+{foreach $projects as $key => $project}
 <div class="container fluid">
     <div class="row">
         <div class="col-md-4">
             <div class="row">
                 <div class="col-md-4">
-                    <img src="/img/{$project["Проекты.Картинка"]}" class="img-responsive">
+                    <img src="/img/{$project["картинка"]}" class="img-responsive">
                 </div>
                 <div class="col-md-8">
                     <p>
@@ -28,7 +27,7 @@
                     </p>
                     <p>
                         <b>
-                            {$project["Проекты.Руководитель"]}
+                            {$project["руководитель"]}
                         </b>
                     </p>
                     <br>
@@ -37,7 +36,7 @@
                     </p>
                     <p>
                         <b>
-                            {$project["Проекты.Заказчик"]}
+                            {$project["заказчик"]}
                         </b>
                     </p>
                     <br>
@@ -46,7 +45,7 @@
                     </p>
                     <p>
                         <b>
-                            {$project["Проекты.Подрядчики"]}
+                            {$project["подрядчики"]}
                         </b>
                     </p>
                     <br>
@@ -57,7 +56,7 @@
         </div>
         <div class="col-md-4">
             <p>
-                {HistogramWidget::widget(['model2' => $model2, 'title' => "Безработные"])}
+                {HistogramWidget::widget(['name' => "widget_portfolio_{$key}", 'title' => "Безработные"])}
             </p>
         </div>
         <div class="col-md-4">

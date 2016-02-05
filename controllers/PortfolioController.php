@@ -24,42 +24,23 @@ class PortfolioController extends BaseDashboardController
     public function actionIndex()
     {
 
-        $t = ПроектыQuery::create()->select('*')->orderBy('id')->find()->toArray();
+        $t = ПроектыQuery::create()->orderById()->find()->toArray();
 
         $w = $this->getWidget('widget_portfolio');
         $w->setData($t);
 
+        foreach ($t as $key => $project)
+        {
+            $widget = $this->getWidget('widget_portfolio_'.$key);
 
-        
+            $w_data = array(rand(10,100), rand(10,100), rand(10,100), rand(10,100));
 
-        $model = UnemploymentAR::find();
-        $model2 = UnemploymentQuery::create();
-
-        $regionFilter = $this->getFilter('filter_region');
-        $regionFilter->setPossibleValues(UnemploymentQuery::create()->distinct()->select('region_name')->find());
-
-        if ($regionFilter->isSelected()) {
-            $model->where(['region_name' => $regionFilter->selectedValue]);
-            $model2->filterByRegionName($regionFilter->selectedValue);
+            $widget->setSeries($w_data);
+            $widget->setCategories(array("1", "2", "3", "4"));
         }
 
-        $model2 = $model2->find();
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => $model,
-            'pagination' => [
-                'pageSize' => 10,
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'unemployment_adult' => SORT_DESC
-                ]
-            ],
-        ]);
 
 
-
-
-        return $this->render('index.tpl', ['projects' => $t, 'model2' => $model2, 'dataProvider' => $dataProvider]);
+        return $this->render('index.tpl', ['projects' => $t]);
     }
 }

@@ -17,9 +17,10 @@ class HistogramWidget extends Widget
 {
     public $title;
 
+    public $name;
+
     public $model2;
 
-    public $tmp1, $tmp2;
 
     public function init()
     {
@@ -28,24 +29,29 @@ class HistogramWidget extends Widget
 
     public function run()
     {
-        $text = '<script type="text/javascript"> var data = [';
+        $series = $this->view->params[$this->name.'_series'];
+        $categories = $this->view->params[$this->name.'_categories'];
+        $id = $this->getId();
 
-        foreach ($this->model2 as $model) {
-            $text .=  $model->getUnemploymentYouth().',';
-        }
+
+        $text = '<script type="text/javascript"> var data'.$id.' = [';
+
+
+        foreach ($series as $serie)
+            $text .= $serie.',';
+
 
         $text .= ']</script>';
 
         echo $text;
 
-        $id = $this->getId();
 
         echo '<div id="'.$id.'" data-pjax-exclude style="min-width: 310px; height: 400px; margin: 0 auto"></div>';
 
         $text2 ='
         function refreshChart() {
             var chart = $(\'#'.$id.'\').highcharts();
-            chart.series[0].setData(data);
+            chart.series[0].setData(data'.$id.');
         }
 
         $(\'#'.$id.'\').highcharts({
@@ -55,9 +61,11 @@ class HistogramWidget extends Widget
         xAxis: [{
         categories: [';
 
-        foreach ($this->model2 as $model) {
-            $text2 .=  '"'.$model->getRegionName().'",';
+
+        foreach ($categories as $category) {
+            $text2 .= $category.',';
         }
+
         $text2 .= ']
         }],
         yAxis: [{ // Primary yAxis
@@ -74,14 +82,12 @@ class HistogramWidget extends Widget
             series: [{
             name: \'Tokyo\',
                 type: \'column\',
-                data: data
+                data: data'.$id.'
             }]
         });
 
         $(document).on(\'pjax:complete\', refreshChart);';
         $this->view->registerJs($text2);
-
-
 
         parent::run();
     }

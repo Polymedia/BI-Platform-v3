@@ -5,7 +5,7 @@ $serviceContainer->setAdapterClass('default', 'pgsql');
 $manager = new \Propel\Runtime\Connection\ConnectionManagerSingle();
 $manager->setConfiguration(array (
   'classname' => 'Propel\\Runtime\\Connection\\ConnectionWrapper',
-  'dsn' => 'pgsql:host=192.168.44.94;dbname=bi3',
+  'dsn' => 'pgsql:host=192.168.44.94;dbname=bi4',
   'user' => 'postgres',
   'password' => 'vAy7swuT',
   'attributes' =>

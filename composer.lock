@@ -417,12 +417,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/miloschuman/yii2-highcharts.git",
-                "reference": "5d4cd1cc7b5d7ab482565035eeab8a359512aa02"
+                "reference": "ef8fc7d6b47a568b2092e3472ea3f2000a2f0308"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/miloschuman/yii2-highcharts/zipball/5d4cd1cc7b5d7ab482565035eeab8a359512aa02",
-                "reference": "5d4cd1cc7b5d7ab482565035eeab8a359512aa02",
+                "url": "https://api.github.com/repos/miloschuman/yii2-highcharts/zipball/ef8fc7d6b47a568b2092e3472ea3f2000a2f0308",
+                "reference": "ef8fc7d6b47a568b2092e3472ea3f2000a2f0308",
                 "shasum": ""
             },
             "require": {
@@ -454,7 +454,7 @@
                 "widget",
                 "yii2"
             ],
-            "time": "2016-01-27 18:10:23"
+            "time": "2016-02-04 19:31:11"
         },
         {
             "name": "phpoffice/phpexcel",

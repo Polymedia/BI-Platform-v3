@@ -67,6 +67,7 @@ class DashboardController extends BaseDashboardController
             $model2->filterByRegionName($regionFilter->selectedValue);
         }
 
+
         $model2 = $model2->find();
 
         $dataProvider = new ActiveDataProvider([
@@ -80,6 +81,14 @@ class DashboardController extends BaseDashboardController
                 ]
             ],
         ]);
+
+
+
+        //var_dump($model2->toArray());
+        $w = $this->getWidget('widget_hist');
+
+        $w->setData($model2->toArray(), $model2->getColumnValues(''));
+        //$w->setCategories(UnemploymentQuery::create()->distinct()->select('region_name')->find());
 
 
 
@@ -107,6 +116,9 @@ class DashboardController extends BaseDashboardController
                 ]
             ],
         ]);
+
+
+
 
         return $this->render('table.tpl', [
             'dataProvider' => $dataProvider,  // GridView
