@@ -43,7 +43,7 @@ class Select extends Widget {
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu_'.$id.'">';
 
         foreach ($this->allValues as $v) {
-            echo "<li><a href=".Url::current(['filter_region' => $v]).">${v}</a></li>";
+            echo "<li><a href=".Url::current([$this->name => $v]).">${v}</a></li>";
         }
 
         echo '</ul>
