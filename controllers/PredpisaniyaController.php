@@ -26,9 +26,11 @@ class PredpisaniyaController extends BaseDashboardController
 {
     public function actionIndex()
     {
-
+        $allProjects = ПроектыQuery::create()->select('Проект')->find();
         $projectFilter = $this->getFilter('filter_project');
-        $projectFilter->setPossibleValues(ПроектыQuery::create()->select('Проект')->find());
+        $projectFilter->setPossibleValues($allProjects);
+        if (!$projectFilter->isSelected() && count($allProjects))
+            $projectFilter->setSelectedValues($allProjects[0]);
 
         $classificationFilter = $this->getFilter('filter_classification');
         $classificationFilter->setPossibleValues(ТипыЗамечанийQuery::create()->select('Тип_замечания')->find());
