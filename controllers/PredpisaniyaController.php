@@ -29,27 +29,65 @@ class PredpisaniyaController extends BaseDashboardController
         $allProjects = ПроектыQuery::create()->select('Проект')->find();
         $projectFilter = $this->getFilter('filter_project');
         $projectFilter->setPossibleValues($allProjects);
-        if (!$projectFilter->isSelected() && count($allProjects))
+        if (!$projectFilter->isSelected() && count($allProjects->possibleValues))
             $projectFilter->setSelectedValues($allProjects[0]);
 
+
+        $allClassifications = ПредписанияQuery::create()->select('ТипыЗамечаний.Тип_замечания')
+            ->useПроектыQuery()->filterByпроект($projectFilter->selectedValue)->endUse()
+            ->useТипыЗамечанийQuery()->endUse()
+            ->distinct();
+
         $classificationFilter = $this->getFilter('filter_classification');
-        $classificationFilter->setPossibleValues(ТипыЗамечанийQuery::create()->select('Тип_замечания')->find());
+        $classificationFilter->setPossibleValues($allClassifications->find());
+        if (!$classificationFilter->isSelected())
+            $classificationFilter->setSelectedValues($classificationFilter->possibleValues);
+
+
+        $allPodryadchiks = ПредписанияQuery::create()->select('ПодрядчикиПредписания.Подрядчик')
+            ->useПроектыQuery()->filterByпроект($projectFilter->selectedValue)->endUse()
+            ->useПодрядчикиПредписанияQuery()->endUse()
+            ->useТипыЗамечанийQuery()->filterByтипзамечания($classificationFilter->selectedValue)->endUse()
+            ->distinct();
 
         $podryadchikFilter = $this->getFilter('filter_podryadchik');
-        $podryadchikFilter->setPossibleValues(ПодрядчикиПредписанияQuery::create()->select('Подрядчик')->find());
+        $podryadchikFilter->setPossibleValues($allPodryadchiks->find());
+        if (!$podryadchikFilter->isSelected())
+            $podryadchikFilter->setSelectedValues($podryadchikFilter->possibleValues);
 
         $zamechaniyaFilter = $this->getFilter('filter_zamechaniya');
         $zamechaniyaFilter->setPossibleValues(СтатусыЗаявкиЗавершениеQuery::create()->select('Статус_завершения')->find());
+        if (!$zamechaniyaFilter->isSelected() && count($zamechaniyaFilter->possibleValues))
+            $zamechaniyaFilter->setSelectedValues($zamechaniyaFilter->possibleValues[0]);
+
+
+        $dates = ПредписанияQuery::create()->select('Дата_выдачи')->distinct()->orderByдатавыдачи('DESC')->find()->toArray();
+        $lastDate = $dates[0];
+        $firstDate = end($dates);
+
+        $lastDateInt = strtotime($lastDate);
+        $firstDateInt = strtotime($firstDate);
+        $date = $lastDateInt;
+        $dates = [];
+
+        while ($date >= $firstDateInt) {
+            $dates[] = date("Y-m-d", $date);
+            $date -= 86400;
+        }
 
         $datefromFilter = $this->getFilter('filter_datefrom');
-        $datefromFilter->setPossibleValues(ПредписанияQuery::create()->select('Дата_выдачи')->distinct()->orderByдатавыдачи('DESC')->find());
+        $datefromFilter->setPossibleValues($dates);
+        if (!$datefromFilter->isSelected() && count($datefromFilter->possibleValues)) {
+            $datefromFilter->setSelectedValues($firstDate);
+        }
 
         $datetoFilter = $this->getFilter('filter_dateto');
-        $datetoFilter->setPossibleValues(ПредписанияQuery::create()->select('Плановая_дата_устранения')->distinct()->orderByплановаядатаустранения('DESC')->find());
+        $datetoFilter->setPossibleValues($dates);
+        if (!$datetoFilter->isSelected() && count($datetoFilter->possibleValues)) {
+            $datetoFilter->setSelectedValues($lastDate);
+        }
 
-        //echo var_dump("1111".$projectFilter->selectedValue);
-
-        $query = ПредписанияQuery::create()->useПроектыQuery()->filterByпроект($projectFilter->selectedValues)->endUse();
+        $query = ПредписанияQuery::create()->useПроектыQuery()->filterByпроект($projectFilter->selectedValue)->endUse();
 
         if ($classificationFilter->selectedValues)
             $query = $query->useТипыЗамечанийQuery()->filterByтипзамечания($classificationFilter->selectedValues)->endUse();
