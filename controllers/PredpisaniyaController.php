@@ -47,8 +47,10 @@ class PredpisaniyaController extends BaseDashboardController
         $allPodryadchiks = ПредписанияQuery::create()->select('ПодрядчикиПредписания.Подрядчик')
             ->useПроектыQuery()->filterByпроект($projectFilter->selectedValue)->endUse()
             ->useПодрядчикиПредписанияQuery()->endUse()
-            ->useТипыЗамечанийQuery()->filterByтипзамечания($classificationFilter->selectedValue)->endUse()
+            ->useТипыЗамечанийQuery()->filterByтипзамечания($classificationFilter->selectedValues)->endUse()
             ->distinct();
+
+        //echo var_dump($allPodryadchiks->toString());
 
         $podryadchikFilter = $this->getFilter('filter_podryadchik');
         $podryadchikFilter->setPossibleValues($allPodryadchiks->find());
@@ -104,10 +106,59 @@ class PredpisaniyaController extends BaseDashboardController
         if ($podryadchikFilter->selectedValues)
             $t_right = $t_right->useПодрядчикиПредписанияQuery()->filterByподрядчик($podryadchikFilter->selectedValues)->endUse();
 
-
+        $query_1 = clone $t_right;
 
         if ($datefromFilter->selectedValue && $datetoFilter->selectedValue)
             $t_right = $t_right->filterByдатавыдачи($datefromFilter->selectedValue, '>=')->filterByдатавыдачи($datetoFilter->selectedValue, '<=');
+
+        ////////////////////////////////////////
+
+
+        $prosrochenoNaNachalo = clone $query_1;
+        $prosrochenoNaNachalo = $prosrochenoNaNachalo->
+            where('Плановая_дата_устранения < \''.$datefromFilter->selectedValue.'\'')->
+            where('(Фактическая_дата_устранения > Плановая_дата_устранения AND Фактическая_дата_устранения > \''.$datefromFilter->selectedValue.'\' OR Фактическая_дата_устранения is NULL)');
+        //echo var_dump(count($prosrochenoNaNachalo->find()->toArray()));
+        //echo var_dump($prosrochenoNaNachalo->toString());
+        //echo var_dump(date('Y-m-d'));
+
+        /////////////////////////////////////////
+
+        $propsrochenoZaPeriodUstraneno = clone $query_1;
+        $propsrochenoZaPeriodUstraneno = $propsrochenoZaPeriodUstraneno->
+            where('Плановая_дата_устранения > \''.$datefromFilter->selectedValue.'\'')->
+            where('Плановая_дата_устранения < \''.$datetoFilter->selectedValue.'\'')->
+            where('Фактическая_дата_устранения > Плановая_дата_устранения')->
+            where('Фактическая_дата_устранения < \''.$datetoFilter->selectedValue.'\'')
+        ;
+        //echo var_dump(count($propsrochenoZaPeriodUstraneno->find()->toArray()));
+        //echo var_dump($propsrochenoZaPeriod->toString());
+
+        ////////////////////////////////////////
+
+        $propsrochenoZaPeriodNeUstraneno = clone $query_1;
+        $propsrochenoZaPeriodNeUstraneno = $propsrochenoZaPeriodNeUstraneno->
+            where('Плановая_дата_устранения > \''.$datefromFilter->selectedValue.'\'')->
+            where('Плановая_дата_устранения < \''.$datetoFilter->selectedValue.'\'')->
+            where('Фактическая_дата_устранения > Плановая_дата_устранения')->
+            where('(Фактическая_дата_устранения > \''.$datetoFilter->selectedValue.'\' OR Фактическая_дата_устранения is NULL)');
+        ;
+
+        //echo var_dump(count($propsrochenoZaPeriodNeUstraneno->find()->toArray()));
+        //echo var_dump($propsrochenoZaPeriodNeUstraneno->toString());
+
+        ////////////////////////////////////////
+
+        $prosrochenoNaNachaloUstraneno = clone $query_1;
+        $prosrochenoNaNachaloUstraneno = $prosrochenoNaNachaloUstraneno->
+            where('Плановая_дата_устранения < \''.$datefromFilter->selectedValue.'\'')->
+            where('Фактическая_дата_устранения > \''.$datefromFilter->selectedValue.'\'')->
+            where('Фактическая_дата_устранения < \''.$datetoFilter->selectedValue.'\'')
+        ;
+
+
+        //echo var_dump(count($prosrochenoNaNachaloUstraneno->find()->toArray()));
+        //echo var_dump($prosrochenoNaNachaloUstraneno->toString());
 
 
         ///////////////////////////////////////
@@ -138,7 +189,6 @@ class PredpisaniyaController extends BaseDashboardController
         }
 
         if (isset($r)) {
-
             $widg3 = $this->getWidget('widget_hist1');
             $widg3->setCategories(ArrayHelper::getColumn($t_left_1->find()->toArray(), "Контролирующие_органы.Контролирующий_орган"));
             $widg3->setSeries($r);
