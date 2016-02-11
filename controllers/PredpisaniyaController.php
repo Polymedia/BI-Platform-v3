@@ -47,12 +47,11 @@ class PredpisaniyaController extends BaseDashboardController
             ->useТипыЗамечанийQuery()->filterByтипзамечания($classificationFilter->selectedValues)->endUse()
             ->distinct();
 
-        //echo var_dump($allPodryadchiks->toString());
-
         $podryadchikFilter = $this->getFilter('filter_podryadchik');
         $podryadchikFilter->setPossibleValues($allPodryadchiks->find());
         if (!$podryadchikFilter->isSelected())
             $podryadchikFilter->setSelectedValues($podryadchikFilter->possibleValues);
+
 
         $zamechaniyaFilter = $this->getFilter('filter_zamechaniya');
         $zamechaniyaFilter->setPossibleValues(СтатусыЗаявкиЗавершениеQuery::create()->select('Статус_завершения')->find());
@@ -97,35 +96,32 @@ class PredpisaniyaController extends BaseDashboardController
         /////////////////////////
 
         // Получаем запрос с выбранным проектом, классификацией и состоянием замечаний
-        $histogrm_query = clone $query;
+        $histogrmQuery = clone $query;
         if ($zamechaniyaFilter->selectedValues)
-            $histogrm_query = $histogrm_query->useСтатусыЗаявкиЗавершениеQuery()->filterByстатусзавершения($zamechaniyaFilter->selectedValues)->endUse();
+            $histogrmQuery = $histogrmQuery->useСтатусыЗаявкиЗавершениеQuery()->filterByстатусзавершения($zamechaniyaFilter->selectedValues)->endUse();
 
         // Получаем запрос с выбранным проектом, классификацией и состоянием замечаний
-        $t_left_1 = clone $histogrm_query;
-        $t_left_1 = $t_left_1->withColumn('COUNT(*)', 'Count')
+        $histogrmCategories = clone $histogrmQuery;
+        $histogrmCategories = $histogrmCategories->withColumn('COUNT(*)', 'Count')
             ->select(['Count', 'Контролирующие_органы.Контролирующий_орган'])
-            ->useКонтролирующиеОрганыQuery()->groupByконтролирующийорган()->endUse();
+            ->useКонтролирующиеОрганыQuery()->groupByконтролирующийорган()->endUse()
+            ->find()->toArray();
 
-//        $t_left_2 = clone $histogrm_query;
-//        $t_left_2 = $t_left_2->withColumn('COUNT(*)', 'Count')->select(['Count', 'Подрядчики_предписания.Подрядчик'])->useПодрядчикиПредписанияQuery()
-//            ->groupByподрядчик()->endUse();
-
-        $t_left_2_2 = clone $histogrm_query;
-        $t_left_2_2 = $t_left_2_2->withColumn('COUNT(*)', 'Count')->select(['Count', 'Подрядчики_предписания.Подрядчик', 'Контролирующие_органы.Контролирующий_орган'])
+        $histogrmSeries = clone $histogrmQuery;
+        $histogrmSeries = $histogrmSeries->withColumn('COUNT(*)', 'Count')->select(['Count', 'Подрядчики_предписания.Подрядчик', 'Контролирующие_органы.Контролирующий_орган'])
             ->useПодрядчикиПредписанияQuery()->groupByподрядчик()->endUse()
-            ->useКонтролирующиеОрганыQuery()->groupByконтролирующийорган()->endUse();
+            ->useКонтролирующиеОрганыQuery()->groupByконтролирующийорган()->endUse()
+            ->find()->toArray();
 
-
-        foreach ($t_left_2_2->find()->toArray() as $el) {
+        $r = [];
+        foreach ($histogrmSeries as $el) {
             $r[$el["Подрядчики_предписания.Подрядчик"]][] = $el["Count"];
         }
 
-        if (isset($r)) {
-            $widg3 = $this->getWidget('widget_histogram');
-            $widg3->setCategories(ArrayHelper::getColumn($t_left_1->find()->toArray(), "Контролирующие_органы.Контролирующий_орган"));
-            $widg3->setSeries($r);
-        }
+        $widgetHistogram = $this->getWidget('widget_histogram');
+        $widgetHistogram->setCategories(ArrayHelper::getColumn($histogrmCategories, "Контролирующие_органы.Контролирующий_орган"));
+        $widgetHistogram->setSeries($r);
+
 
         ///////////////////////////////////////
 
