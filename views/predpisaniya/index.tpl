@@ -116,7 +116,9 @@
                     <td style="width: 259px; height: 39px;">
                         <div class="col-md-6">{PieWidget::widget(['name' => 'widget_pie_left', 'title' => "Левый круг"])}</div>
                     </td>
-                    <td style="width: 260px; height: 39px;"/>
+                    <td style="width: 260px; height: 39px;">
+                        <div class="col-md-6">{PieWidget::widget(['name' => 'widget_pie_right', 'title' => "Правый круг"])}</div>
+                    </td>
                 </tr>
                 </tbody>
             </table>

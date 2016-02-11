@@ -118,7 +118,8 @@ class PredpisaniyaController extends BaseDashboardController
         $prosrochenoNaNachalo = clone $query_1;
         $prosrochenoNaNachalo = $prosrochenoNaNachalo->
             where('Плановая_дата_устранения < \''.$datefromFilter->selectedValue.'\'')->
-            where('(Фактическая_дата_устранения > Плановая_дата_устранения AND Фактическая_дата_устранения > \''.$datefromFilter->selectedValue.'\' OR Фактическая_дата_устранения is NULL)');
+            where('(Фактическая_дата_устранения > Плановая_дата_устранения AND Фактическая_дата_устранения > \''.$datefromFilter->selectedValue.'\' OR Фактическая_дата_устранения is NULL)')
+            ->count();
         //echo var_dump(count($prosrochenoNaNachalo->find()->toArray()));
         //echo var_dump($prosrochenoNaNachalo->toString());
         //echo var_dump(date('Y-m-d'));
@@ -131,6 +132,7 @@ class PredpisaniyaController extends BaseDashboardController
             where('Плановая_дата_устранения < \''.$datetoFilter->selectedValue.'\'')->
             where('Фактическая_дата_устранения > Плановая_дата_устранения')->
             where('Фактическая_дата_устранения < \''.$datetoFilter->selectedValue.'\'')
+            ->count()
         ;
         //echo var_dump(count($propsrochenoZaPeriodUstraneno->find()->toArray()));
         //echo var_dump($propsrochenoZaPeriod->toString());
@@ -142,7 +144,8 @@ class PredpisaniyaController extends BaseDashboardController
             where('Плановая_дата_устранения > \''.$datefromFilter->selectedValue.'\'')->
             where('Плановая_дата_устранения < \''.$datetoFilter->selectedValue.'\'')->
             where('Фактическая_дата_устранения > Плановая_дата_устранения')->
-            where('(Фактическая_дата_устранения > \''.$datetoFilter->selectedValue.'\' OR Фактическая_дата_устранения is NULL)');
+            where('(Фактическая_дата_устранения > \''.$datetoFilter->selectedValue.'\' OR Фактическая_дата_устранения is NULL)')
+            ->count();
         ;
 
         //echo var_dump(count($propsrochenoZaPeriodNeUstraneno->find()->toArray()));
@@ -155,6 +158,7 @@ class PredpisaniyaController extends BaseDashboardController
             where('Плановая_дата_устранения < \''.$datefromFilter->selectedValue.'\'')->
             where('Фактическая_дата_устранения > \''.$datefromFilter->selectedValue.'\'')->
             where('Фактическая_дата_устранения < \''.$datetoFilter->selectedValue.'\'')
+            ->count()
         ;
 
 
@@ -215,7 +219,13 @@ class PredpisaniyaController extends BaseDashboardController
             $widg4->setSeries($pie_serie);
         }
 
-        
+
+        $widg5 = $this->getWidget('widget_pie_right');
+        $pie_serie_2 = ['Просрочено на начало' => $prosrochenoNaNachalo, 'Просрочено за период' => $propsrochenoZaPeriodNeUstraneno + $propsrochenoZaPeriodUstraneno,
+            'Устранено просроченных за период' => $propsrochenoZaPeriodUstraneno, 'Устранено просроченных на начало' => $prosrochenoNaNachaloUstraneno];
+        $widg5->setSeries($pie_serie_2);
+
+
         return $this->render('index.tpl');
     }
 }
