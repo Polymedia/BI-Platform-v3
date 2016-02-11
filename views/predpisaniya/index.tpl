@@ -92,7 +92,7 @@
 <table>
     <tbody>
     <tr style="height: 50px;">
-        <td style="width: 543px;">{HistogramWidget::widget(['name' => 'widget_hist1', 'title' => "Выдавшие"])}</td>
+        <td style="width: 543px;">{HistogramWidget::widget(['name' => 'widget_histogram', 'title' => ""])}</td>
         <td style="width: 543px;">
             <table>
                 <tbody>
@@ -114,10 +114,10 @@
                 </tr>
                 <tr style="height: 39px;">
                     <td style="width: 259px; height: 39px;">
-                        <div class="col-md-6">{PieWidget::widget(['name' => 'widget_pie_left', 'title' => "Левый круг"])}</div>
+                        <div class="col-md-6">{PieWidget::widget(['name' => "widget_pie_otkritie", 'title' => ""])}</div>
                     </td>
                     <td style="width: 260px; height: 39px;">
-                        <div class="col-md-6">{PieWidget::widget(['name' => 'widget_pie_right', 'title' => "Правый круг"])}</div>
+                        <div class="col-md-6">{PieWidget::widget(['name' => "widget_pie_prosrochennie", 'title' => ""])}</div>
                     </td>
                 </tr>
                 </tbody>
