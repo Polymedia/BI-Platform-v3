@@ -34,7 +34,7 @@
         <td style="width: 427px; text-align: right;">Классификация</td>
         {*<td style="width: 427px;">{MultipleSelect::widget(['name' => 'filter_classification'])}</td>*}
         <td style="width: 427px;">{MultipleSelect::widget(['name' => 'filter_classification'])}</td>
-        <td style="width: 427px;">Последнее обновление данных 22.12.2015</td>
+        <td style="width: 427px;">Последнее обновление данных {$updateDate}</td>
     </tr>
     </tbody>
 </table>

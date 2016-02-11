@@ -9,17 +9,13 @@
 
 namespace app\controllers;
 
-use app\controllers\classes\Helpers;
 use Yii;
-
 
 use yii\helpers\ArrayHelper;
 use ПредписанияQuery;
 use ПроектыQuery;
-use ТипыЗамечанийQuery;
-use ПодрядчикиПредписанияQuery;
 use СтатусыЗаявкиЗавершениеQuery;
-use СтатусыЗаявкиПросрочкаQuery;
+use ДатыОбновленийДашбордовQuery;
 
 
 
@@ -206,6 +202,15 @@ class PredpisaniyaController extends BaseDashboardController
 
         /////////////////////////////////////////////////
 
-        return $this->render('index.tpl');
+        $updateDate = ДатыОбновленийДашбордовQuery::create()
+            ->useПроектыQuery()->filterByпроект($projectFilter->selectedValue)->endUse()
+            ->filterByдашборд('Предписания')
+            ->select('дата')->find()->toArray();
+
+        if (count($updateDate))
+            $updateDate = $updateDate[0];
+
+
+        return $this->render('index.tpl', ['updateDate' => $updateDate]);
     }
 }
