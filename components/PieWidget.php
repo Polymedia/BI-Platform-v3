@@ -53,7 +53,6 @@ class PieWidget extends Widget
             while (chart.series.length > 0) {
                 chart.series[0].remove(false);
             }
-            chart.xAxis[0].setCategories(data_categories_'.$id.');
             data_series_'.$id.'.forEach(function (serie) {
                 chart.addSeries(serie, false);
             });
