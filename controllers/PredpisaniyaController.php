@@ -19,6 +19,7 @@ use ПроектыQuery;
 use ТипыЗамечанийQuery;
 use ПодрядчикиПредписанияQuery;
 use СтатусыЗаявкиЗавершениеQuery;
+use СтатусыЗаявкиПросрочкаQuery;
 
 
 
@@ -194,38 +195,27 @@ class PredpisaniyaController extends BaseDashboardController
             $widg3->setSeries($r);
         }
 
-
-
-        //echo var_dump($t_right->find()->toArray());
-
-        //echo var_dump($t_right->withColumn('COUNT(*)', 'Count')->select(['Count', 'статусзаявкипросрочка'])->groupByстатусзаявкипросрочка()->find()->toArray());
-        //echo var_dump(ArrayHelper::getColumn($t_right->groupByстатусзаявкипросрочка()->find()->toArray(), "статусзаявкипросрочка"));
-
         $widg4 = $this->getWidget('widget_pie_left');
-        //$widg4->setCategories(ArrayHelper::getColumn($t_left_1->find()->toArray(), "Контролирующие_органы.Контролирующий_орган"));
-        $pie_serie = $t_right->withColumn('COUNT(*)', 'Count')->select(['Count', 'статусзаявкипросрочка'])->groupByстатусзаявкипросрочка()->find()->toArray();
+        $pie_serie = $t_right->withColumn('COUNT(*)', 'Count')
+            ->select(['СтатусыЗаявкиПросрочка.Статус_просрочки', 'Count'])
+            ->useСтатусыЗаявкиПросрочкаQuery()
+            ->endUse()
+            ->groupByстатусзаявкипросрочка()->find()->toArray();
+
         foreach ($pie_serie as $el) {
-            $p[$el["статусзаявкипросрочка"]] = $el["Count"];
+            $p[$el["СтатусыЗаявкиПросрочка.Статус_просрочки"]] = $el["Count"];
         }
+
+        $pie_serie = $p;
+
+
+        $widg4->setSeries($pie_serie);
 
         if (isset($p)) {
-            $pie_serie["Открытые замечания"] = $p;
-
             $widg4->setSeries($pie_serie);
-
-
-            $widg5 = $this->getWidget('widget_pie_right');
-            //$widg4->setCategories(ArrayHelper::getColumn($t_left_1->find()->toArray(), "Контролирующие_органы.Контролирующий_орган"));
-            $pie_serie_2 = $t_right->withColumn('COUNT(*)', 'Count')->select(['Count', 'статусзаявкипросрочка'])->groupByстатусзаявкипросрочка()->find()->toArray();
-            foreach ($pie_serie_2 as $el) {
-                $p[$el["статусзаявкипросрочка"]] = $el["Count"];
-            }
-            $pie_serie_2["Просроченные замечания"] = $p;
-            $widg5->setSeries($pie_serie_2);
         }
 
-
-
+        
         return $this->render('index.tpl');
     }
 }
