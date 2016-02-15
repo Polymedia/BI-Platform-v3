@@ -3,6 +3,7 @@
 namespace app\components;
 
 use Yii;
+use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\helpers\StringHelper;
 
@@ -11,6 +12,9 @@ use app\assets\FilterAsset;
 class Filter extends Widget
 {  
     public $multiple;
+    public $method;
+    public $default;
+    public $placeholder;
     
     public function init()
     {
@@ -27,42 +31,44 @@ class Filter extends Widget
             $values[$value] = $value;
         }
         
-        $default = $this->multiple ? array_keys($values) : key($values);
+        if (!$this->default)
+            $default = $this->multiple ? array_keys($values) : key($values);
+            
         $selected = $this->selected($default);
         
         // Setup options
         $options = [
             'id' => $this->name, 
             'name' => $this->name . '[]',
-            'style' => 'width: 300px;'
+            'style' => 'width: 300px;',
+            'class' => 'selectpicker', 
+            'onchange' => 'this.form.submit()'
         ];
         
+        $extra = [];
         if ($this->multiple)
-            $extra = ['multiple' => 'multiple'];
-        else
-            $extra = [
-                'class' => 'selectpicker', 
-                'onchange' => 'this.form.submit()'
-            ];
+            $extra['multiple'] = 'multiple';
+            
+        if ($this->placeholder)
+            $extra['title'] = strval($this->placeholder);
             
         $options = array_merge($options, $extra);
         
+        if (!$this->method)
+            $this->method = 'get';
+        
         // Render
+        echo Html::beginForm(Url::canonical(), $this->method, ['data-pjax' => '1', 'id' => $this->name]);
         echo Html::beginTag('div');
         echo Html::beginTag('select', $options);
         echo Html::renderSelectOptions($selected, $values);
         echo Html::endTag("select");
         echo Html::endTag('div');
+        echo Html::endForm();
         
-        if ($this->multiple) {
-            echo Html::beginTag('script', ['type' => 'text/javascript']);
-            echo "$('select[multiple]').multipleSelect({onClose: function () { $('form').submit() } })";
-            echo Html::endTag('script');
-        } else {
-            echo Html::beginTag('script', ['type' => 'text/javascript']);
-            echo "$('.selectpicker').selectpicker()";
-            echo Html::endTag('script');
-        }
+        echo Html::beginTag('script', ['type' => 'text/javascript']);
+        echo "$('.selectpicker').selectpicker()";
+        echo Html::endTag('script');
         
         parent::run();
     }
