@@ -46,7 +46,7 @@ class Widget extends \yii\base\Widget
     {
         if (is_array($item))
             return $item;
-        else if (method_exists($item, 'toArray'))
+        else if (is_object($item) && method_exists($item, 'toArray'))
             return $item->toArray();
         else
             return [$item];
