@@ -63,10 +63,8 @@ AppAssetHead::register($this);
         ]) ?>
 
         <?php Pjax::begin(['timeout' => '100000000', 'scrollTo' => false]); ?>
-        <?php echo Html::beginForm(Url::canonical(),'get', ['data-pjax' => '1']); ?>
         <a id="pjax_reload" href=""></a>
         <?= $content ?>
-        <?php echo Html::endForm(); ?>
         <?php Pjax::end(); ?>
     </div>
 </div>

@@ -25,7 +25,7 @@
   <table name="Года" idMethod="native" phpName="года">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
   </table>
-  <table name="Даты_обновлений_дашбордов" idMethod="native" phpName="датыобновленийдашбордов">
+  <table name="Даты_обновлений_дашбордов" idMethod="native" phpName="ДатыОбновленийДашбордов">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="Дашборд" phpName="дашборд" type="LONGVARCHAR" required="true"/>
     <column name="Проект" phpName="проект" type="INTEGER"/>
