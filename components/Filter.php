@@ -34,18 +34,17 @@ class Filter extends Widget
         if (!$this->default)
             $default = $this->multiple ? array_keys($values) : key($values);
             
-        $selected = $this->selected($default);
+        $selected = $this->selected($this->default);
         
         // Setup options
         $options = [
             'id' => $this->name, 
             'name' => $this->name . '[]',
             'style' => 'width: 300px;',
-            'class' => 'selectpicker', 
-            'onchange' => 'this.form.submit()'
+            'class' => 'selectpicker'
         ];
         
-        $extra = [];
+        $extra = ['title' => 'Not selected'];
         if ($this->multiple)
             $extra['multiple'] = 'multiple';
             
@@ -66,9 +65,13 @@ class Filter extends Widget
         echo Html::endTag('div');
         echo Html::endForm();
         
-        echo Html::beginTag('script', ['type' => 'text/javascript']);
-        echo "$('.selectpicker').selectpicker()";
-        echo Html::endTag('script');
+        $jsinit = "
+            $('.selectpicker').selectpicker();
+            $('.selectpicker').on('hide.bs.select', function (e) {
+                this.form.submit();
+            });
+        ";
+        $this->view->registerJs($jsinit);
         
         parent::run();
     }
