@@ -4,7 +4,7 @@ namespace app\datasource;
 
 use app\datasource\DataSource;
 
-class TableSource extends DataSource
+class SQLTableSource extends DataSource
 {
     public $table;
     public $columns;

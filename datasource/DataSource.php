@@ -17,7 +17,7 @@ abstract class DataSource implements \IteratorAggregate, \Countable
     public static function create(Array $args)
     {
         $type = DataSource::type($args);
-        $class = __NAMESPACE__ . '\\' . ucfirst($type) . 'Source';
+        $class = __NAMESPACE__ . '\\' . $type . 'Source';
         return new $class($args);
     }
     
