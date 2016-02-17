@@ -3,11 +3,13 @@
 namespace app\components;
 
 use Yii;
+use yii\web\View;
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\helpers\StringHelper;
 
 use app\assets\FilterAsset;
+use app\assets\SelectAsset;
 
 class Filter extends Widget
 {  
@@ -23,6 +25,7 @@ class Filter extends Widget
 
     public function run()
     {
+        SelectAsset::register($this->view);
         FilterAsset::register($this->view);
         
         $values = [];
@@ -32,7 +35,7 @@ class Filter extends Widget
         }
         
         if (!$this->default)
-            $default = $this->multiple ? array_keys($values) : key($values);
+            $this->default = $this->multiple ? array_keys($values) : key($values);
             
         $selected = $this->selected($this->default);
         
@@ -58,20 +61,10 @@ class Filter extends Widget
         
         // Render
         echo Html::beginForm(Url::canonical(), $this->method, ['data-pjax' => '1', 'id' => $this->name]);
-        echo Html::beginTag('div');
-        echo Html::beginTag('select', $options);
+        echo Html::beginTag('select', $options, ['data-pjax' => '1']);
         echo Html::renderSelectOptions($selected, $values);
         echo Html::endTag("select");
-        echo Html::endTag('div');
         echo Html::endForm();
-        
-        $jsinit = "
-            $('.selectpicker').selectpicker();
-            $('.selectpicker').on('hide.bs.select', function (e) {
-                this.form.submit();
-            });
-        ";
-        $this->view->registerJs($jsinit);
         
         parent::run();
     }

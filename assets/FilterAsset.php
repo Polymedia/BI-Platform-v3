@@ -7,17 +7,12 @@ use yii\web\View;
 
 class FilterAsset extends AssetBundle
 {
-    public $jsOptions = ['position' => View::POS_HEAD];
     public $basePath = '@webroot';
     public $baseUrl = '@web';
-    public $css = [
-        'css/bootstrap-select.css'
-    ];
     public $js = [
-        'js/bootstrap-select.js'
+        'js/Filter.js'
     ];
     public $depends = [
-        'yii\web\JqueryAsset',
-        'yii\bootstrap\BootstrapAsset'
+        'yii\web\JqueryAsset'
     ];
 }
