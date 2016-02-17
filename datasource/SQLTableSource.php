@@ -56,8 +56,16 @@ class SQLTableSource extends DataSource
         
         // Apply different options
         // Filter columns
-        if ($this->columns)
+        if ($this->columns) {
+            foreach ($this->columns as $column) {
+                $names = explode('.', $column, 2);
+                if (count($names) > 1) {
+                    $method = 'use' . $names[0] . 'Query';
+                    $this->query = $this->query->$method()->endUse();
+                }  
+            }
             $this->query = $this->query->select($this->columns);
+        }
             
         // Filter columns
         if ($this->distinct)
@@ -92,8 +100,15 @@ class SQLTableSource extends DataSource
     public function filter(Array $filters)
     {
         foreach ($filters as $name => $filter) {
-            $method = 'filterBy' . $name;
-            $this->query = $this->query->$method($filter);
+            $names = explode('.', $name, 2);
+            if (count($names) > 1) {
+                $useMethod = 'use' . $names[0] . 'Query';
+                $filterMethod = 'filterBy' . $names[1];
+                $this->query = $this->query->$useMethod()->$filterMethod($filter)->endUse();  
+            } else {
+                $method = 'filterBy' . $name;
+                $this->query = $this->query->$method($filter);   
+            }
         }
     }
 
