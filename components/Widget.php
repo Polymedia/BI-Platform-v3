@@ -6,6 +6,8 @@ use Yii;
 use app\datasource\DataSource;
 use app\datasource\ArraySource;
 
+use app\assets\WidgetAsset;
+
 class Widget extends \yii\base\Widget
 {
     public $name;
@@ -39,6 +41,7 @@ class Widget extends \yii\base\Widget
 
     public function run()
     {
+        WidgetAsset::register($this->view);
         parent::run();
     }
     
