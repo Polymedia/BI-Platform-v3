@@ -26,7 +26,7 @@ class PredpisaniyaController extends BaseDashboardController
         $allProjects = ПроектыQuery::create()->select('Проект')->find();
         $projectFilter = $this->getFilter('filter_project');
         $projectFilter->setPossibleValues($allProjects);
-        if (!$projectFilter->isSelected() && count($allProjects->possibleValues))
+        if (!$projectFilter->isSelected() && count($projectFilter->possibleValues))
             $projectFilter->setSelectedValues($allProjects[0]);
 
 
