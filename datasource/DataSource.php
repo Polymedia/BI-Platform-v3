@@ -10,7 +10,7 @@ abstract class DataSource implements \IteratorAggregate, \Countable
     {
         if (array_key_exists($name, $items))
             return $items[$name];
-        else if (count($items) > $index)
+        else if (array_key_exists($index, $items))
             return $items[$index];
             
         return NULL;
