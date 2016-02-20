@@ -15,19 +15,12 @@ class ArraySource extends DataSource
     {
         parent::__construct($args);
         
-        if (array_key_exists('values', $args))
-            $this->values = $args['values'];
-        else
-            $this->values = $args[1];
+        $this->values = DataSource::value($args, 'values', 1);
+        $this->headerRow = DataSource::value($args, 'headerRow', 2);
             
         // Check integrity
         if (!is_array($this->values))
             $this->values = [$this->values];
-            
-        if (array_key_exists('headerRow', $args))
-            $this->headerRow = (bool)$args['headerRow'];
-        else if (count($args) > 2)
-            $this->headerRow = (bool)$args[2];
     }
     
     public function header()

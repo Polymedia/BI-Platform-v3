@@ -6,12 +6,19 @@ abstract class DataSource implements \IteratorAggregate, \Countable
 {
     public $type = 'unknown';
     
+    public static function value(Array $items, $name, $index)
+    {
+        if (array_key_exists($name, $items))
+            return $items[$name];
+        else if (count($items) > $index)
+            return $items[$index];
+            
+        return NULL;
+    }
+    
     public static function type(Array $args)
     {
-        if (array_key_exists('name', $args))
-            return strval($args['name']);
-        else
-            return strval($args[0]);
+        return strval(DataSource::value($args, 'type', 0));
     }
     
     public static function create(Array $args)
