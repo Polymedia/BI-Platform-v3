@@ -205,7 +205,8 @@ class PredpisaniyaController extends BaseDashboardController
 
         if (count($updateDate))
             $updateDate = $updateDate[0];
-
+        else
+            $updateDate = '';
 
         return $this->render('index.tpl', ['updateDate' => $updateDate]);
     }
